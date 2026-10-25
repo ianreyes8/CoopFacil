@@ -19,7 +19,8 @@ namespace CoopFacil.Pages
 
         private void EvaluarEstadoSesion()
         {
-            bool estaAutenticado = (Session["IdUsuario"] != null);
+            string nombreUsuario = ObtenerNombreUsuarioSesion();
+            bool estaAutenticado = !string.IsNullOrEmpty(nombreUsuario);
 
             lnkIniciarSesion.Visible = !estaAutenticado;
             btnPortalSocio.Visible = estaAutenticado;
@@ -28,14 +29,37 @@ namespace CoopFacil.Pages
 
             if (estaAutenticado)
             {
-                string nombreCompleto = Session["NombreCompleto"] != null ? Session["NombreCompleto"].ToString() : "";
-                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreCompleto);
+                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
+
+                if (string.IsNullOrEmpty(txtNombre.Text))
+                {
+                    txtNombre.Text = nombreUsuario;
+                }
             }
+        }
+
+        private string ObtenerNombreUsuarioSesion()
+        {
+            string[] clavesNombre = new string[] { "NombreCompleto", "UsuarioNombre", "NombreUsuario", "Usuario", "Nombre", "nombre", "usuario", "IdUsuario" };
+
+            foreach (string clave in clavesNombre)
+            {
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor))
+                    {
+                        return valor;
+                    }
+                }
+            }
+
+            return null;
         }
 
         protected void btnPortalSocio_Click(object sender, EventArgs e)
         {
-            Response.Redirect("../Index.aspx");
+            Response.Redirect("PortalSocio.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)
@@ -47,10 +71,10 @@ namespace CoopFacil.Pages
 
         protected void btnEnviarMensaje_Click(object sender, EventArgs e)
         {
-            // Lógica para procesar el envío del mensaje de contacto
+            // Procesamiento de mensaje de contacto
             pnlMensajeExito.Visible = true;
 
-            // Limpiar campos del formulario
+            // Limpieza de campos del formulario
             txtNombre.Text = string.Empty;
             txtEmail.Text = string.Empty;
             txtTelefono.Text = string.Empty;

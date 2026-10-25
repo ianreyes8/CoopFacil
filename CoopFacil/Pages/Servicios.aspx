@@ -112,7 +112,7 @@
                                 Cuenta principal del socio con rendimiento inmediato, sin comisiones de mantenimiento y disponibilidad 24/7.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa 4.75% EA sobre saldo</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa preferencial 10% EA</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Sin cuota de manejo</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tarjeta débito incluida</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Alertas en tiempo real</li>
@@ -134,7 +134,7 @@
                                 Planifique sus metas de mediano y largo plazo con depósitos periódicos automáticos y tasas preferenciales.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa de rendimiento hasta 6.8% EA</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa escalonada hasta 8.0% EA</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Plazos flexibles de 6 a 36 meses</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Débito automático programable</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Cero costo de apertura</li>
@@ -156,9 +156,9 @@
                                 Financiamiento de libre inversión para proyectos, imprevistos o consolidación de deudas con desembolso rápido.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa competitiva desde 10.5% EA</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazos ampliados hasta 60 meses</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Respuesta de aprobación en 24h</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa competitiva del 10% EA</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazos extendidos hasta 120 meses</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Dictamen y pre-aprobación en línea</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Sin penalidad por abono a capital</li>
                             </ul>
                         </div>
@@ -167,7 +167,7 @@
                         </a>
                     </div>
 
-                    <!-- 4. CRÉDITO DE VIVIENDA -->
+                    <!-- 4. CRÉDITO HIPOTECARIO (ENLACE CORREGIDO A CreditoHipotecario.aspx) -->
                     <div class="card-servicio cat-credito bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-blue-500 transition">
                         <div>
                             <div class="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center mb-4">
@@ -175,16 +175,16 @@
                             </div>
                             <h3 class="text-xl font-bold text-white mb-2">Crédito Hipotecario</h3>
                             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                                Financiamiento hasta el 90% del valor del inmueble con las mejores tasas del mercado cooperativo y plazos largos.
+                                Financiamiento para compra o remodelación de inmueble con las mejores tasas del mercado y agendamiento de citas.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa desde 8.8% EA</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa preferencial desde 7.5% EA</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazo máximo de hasta 20 años</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Monto de financiamiento de $300,000</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Avalúo y asesoría sin costo</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Enganche / Prima desde el 10%</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Asesoría especializada personalizada</li>
                             </ul>
                         </div>
-                        <a href="CreditoVivienda.aspx" class="text-blue-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
+                        <a href="CreditoHipotecario.aspx" class="text-blue-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
                             Simular crédito <i class="fa-solid fa-arrow-right text-xs"></i>
                         </a>
                     </div>

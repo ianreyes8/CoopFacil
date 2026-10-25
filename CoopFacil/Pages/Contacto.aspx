@@ -75,8 +75,8 @@
                 <!-- COLUMNA IZQUIERDA: INFORMACIÓN DE CONTACTO -->
                 <div class="lg:col-span-5 flex flex-col justify-center">
                     
-                    <span class="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-2 mb-3">
-                        <span class="w-5 h-[2px] bg-amber-400 inline-block"></span> ESTAMOS PARA SERVIRLE
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-2 mb-3">
+                        <span class="w-5 h-[2px] bg-emerald-400 inline-block"></span> ESTAMOS PARA SERVIRLE
                     </span>
 
                     <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
@@ -87,12 +87,12 @@
                         Nuestro equipo de asesores especializados está disponible por múltiples canales para resolver sus dudas, gestionar sus solicitudes y acompañarle en sus decisiones financieras.
                     </p>
 
-                    <!-- TARJETAS DE CANALES DE ATENCIÓN -->
+                    <!-- TARJETAS DE CANALES DE ATENCIÓN CON COLORIMETRÍA UNIFICADA -->
                     <div class="flex flex-col gap-3.5">
                         
                         <!-- Canal 1: Teléfono -->
-                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-slate-600 transition">
-                            <div class="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 flex-shrink-0">
+                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-emerald-500/50 transition">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
                                 <i class="fa-solid fa-phone"></i>
                             </div>
                             <div class="flex flex-col">
@@ -106,13 +106,13 @@
                         </div>
 
                         <!-- Canal 2: WhatsApp -->
-                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-slate-600 transition">
-                            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-emerald-500/50 transition">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
                                 <i class="fa-brands fa-whatsapp text-lg"></i>
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-[11px] font-semibold text-slate-400 leading-none mb-1">
-                                    WhatsApp Business (24/7)
+                                    Contacto en linea (24/7)
                                 </span>
                                 <span class="text-sm font-bold text-white tracking-wide">
                                     +502 5555-1234
@@ -121,8 +121,8 @@
                         </div>
 
                         <!-- Canal 3: Correo Electrónico -->
-                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-slate-600 transition">
-                            <div class="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 flex-shrink-0">
+                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-emerald-500/50 transition">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <div class="flex flex-col">
@@ -136,8 +136,8 @@
                         </div>
 
                         <!-- Canal 4: Sede Central -->
-                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-slate-600 transition">
-                            <div class="w-10 h-10 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 flex-shrink-0">
+                        <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center gap-4 shadow-lg hover:border-emerald-500/50 transition">
+                            <div class="w-10 h-10 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0">
                                 <i class="fa-solid fa-location-dot"></i>
                             </div>
                             <div class="flex flex-col">
@@ -145,7 +145,7 @@
                                     Sede Central
                                 </span>
                                 <span class="text-xs sm:text-sm font-bold text-white leading-tight">
-                                    57 Avenida Norte y Av. Roosvelt, San Salvador - Lun-Vie 8am-6pm
+                                    57 Avenida Norte y Av. Roosevelt, San Salvador - Lun-Vie 8am-6pm
                                 </span>
                             </div>
                         </div>
@@ -165,8 +165,8 @@
                     </p>
 
                     <!-- ALERTA DE ÉXITO -->
-                    <asp:Panel ID="pnlMensajeExito" runat="server" Visible="false" CssClass="mb-5 p-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl flex items-center gap-3 text-emerald-300 text-xs sm:text-sm">
-                        <i class="fa-solid fa-circle-check text-lg"></i>
+                    <asp:Panel ID="pnlMensajeExito" runat="server" Visible="false" CssClass="mb-5 p-4 bg-emerald-500/20 border border-emerald-500/40 rounded-xl flex items-center gap-3 text-emerald-300 text-xs sm:text-sm font-medium">
+                        <i class="fa-solid fa-circle-check text-lg text-emerald-400"></i>
                         <span>¡Gracias por contactarnos! Su mensaje ha sido enviado correctamente. Nos comunicaremos pronto.</span>
                     </asp:Panel>
 
@@ -213,9 +213,9 @@
                             <asp:TextBox ID="txtMensaje" runat="server" TextMode="MultiLine" Rows="5" CssClass="w-full bg-[#0B1A30] border border-slate-700/90 rounded-lg p-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition resize-y" Placeholder="Describa su consulta con el mayor detalle posible..."></asp:TextBox>
                         </div>
 
-                        <!-- Botón Enviar Mensaje -->
+                        <!-- Botón Enviar Mensaje (Verde Esmeralda Corporativo) -->
                         <div class="pt-1">
-                            <asp:Button ID="btnEnviarMensaje" runat="server" Text="Enviar Mensaje →" OnClick="btnEnviarMensaje_Click" CssClass="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3.5 px-6 rounded-lg transition shadow-lg shadow-amber-500/20 cursor-pointer text-sm tracking-wide" />
+                            <asp:Button ID="btnEnviarMensaje" runat="server" Text="Enviar Mensaje →" OnClick="btnEnviarMensaje_Click" CssClass="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-lg transition shadow-lg shadow-emerald-950/50 cursor-pointer text-sm tracking-wide" />
                         </div>
 
                     </div>

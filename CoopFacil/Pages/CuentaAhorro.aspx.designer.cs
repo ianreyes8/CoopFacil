@@ -69,6 +69,24 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnCerrarSesion;
 
         /// <summary>
+        /// Control txtMontoInicial.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMontoInicial;
+
+        /// <summary>
+        /// Control txtAporteMensual.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtAporteMensual;
+
+        /// <summary>
         /// Control pnlMensaje.
         /// </summary>
         /// <remarks>
@@ -132,12 +150,12 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.DropDownList ddlAgencia;
 
         /// <summary>
-        /// Control btnSolicitarApertura.
+        /// Control btnEnviarPreApertura.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSolicitarApertura;
+        protected global::System.Web.UI.WebControls.Button btnEnviarPreApertura;
     }
 }
