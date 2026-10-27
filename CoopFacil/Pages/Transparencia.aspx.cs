@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace CoopFacil.Pages
 {
@@ -19,11 +15,9 @@ namespace CoopFacil.Pages
 
         private void EvaluarEstadoSesion()
         {
-            // Verificación del estado de sesión idéntica a las demás páginas
             bool estaAutenticado = (Session["IdUsuario"] != null);
 
             lnkIniciarSesion.Visible = !estaAutenticado;
-            btnPortalSocio.Visible = estaAutenticado;
             btnCerrarSesion.Visible = estaAutenticado;
             pnlBienvenida.Visible = estaAutenticado;
 
@@ -32,12 +26,6 @@ namespace CoopFacil.Pages
                 string nombreCompleto = Session["NombreCompleto"] != null ? Session["NombreCompleto"].ToString() : "";
                 litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreCompleto);
             }
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            // Redirige al Index principal donde se despliega el Portal Socio
-            Response.Redirect("../Index.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

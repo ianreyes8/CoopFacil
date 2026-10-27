@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace CoopFacil.Pages
 {
@@ -31,7 +26,6 @@ namespace CoopFacil.Pages
             pnlBienvenida.Visible = true;
             litBienvenida.Text = nombreUsuario;
             lnkIniciarSesion.Visible = false;
-            btnPortalSocio.Visible = true;
             btnCerrarSesion.Visible = true;
 
             if (string.IsNullOrEmpty(txtNombreInscripcion.Text))
@@ -93,11 +87,6 @@ namespace CoopFacil.Pages
 
             txtTelefonoInscripcion.Text = "";
             txtCorreoInscripcion.Text = "";
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

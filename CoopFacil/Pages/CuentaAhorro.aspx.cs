@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace CoopFacil.Pages
 {
@@ -31,11 +26,7 @@ namespace CoopFacil.Pages
             pnlBienvenida.Visible = true;
             litBienvenida.Text = nombreUsuario;
             lnkIniciarSesion.Visible = false;
-            btnPortalSocio.Visible = true;
             btnCerrarSesion.Visible = true;
-
-            // SE OMITE la asignación automática: txtNombre.Text = nombreUsuario;
-            // Los campos permanecen vacíos para obligar al llenado manual.
         }
 
         private string ObtenerNombreUsuarioSesion()
@@ -88,16 +79,10 @@ namespace CoopFacil.Pages
                               "<p class='mt-1 text-slate-200'>Estimado/a <strong>" + txtNombre.Text + "</strong>, tu pre-apertura para Cuenta de Ahorro ha sido registrada correctamente.</p>" +
                               "<p class='text-xs text-slate-300'>Puedes pasar a la <strong>" + ddlAgencia.SelectedValue + "</strong> presentando tu DUI para retirar tu tarjeta débito. Enviamos la confirmación a tu correo <strong>" + txtCorreo.Text + "</strong>.</p>";
 
-            // Limpieza de campos
             txtNombre.Text = "";
             txtDUI.Text = "";
             txtTelefono.Text = "";
             txtCorreo.Text = "";
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

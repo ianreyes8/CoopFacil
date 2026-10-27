@@ -32,7 +32,6 @@ namespace CoopFacil.Pages
             pnlBienvenida.Visible = true;
             litBienvenida.Text = nombreUsuario;
             lnkIniciarSesion.Visible = false;
-            btnPortalSocio.Visible = true;
             btnCerrarSesion.Visible = true;
 
             if (string.IsNullOrEmpty(txtNombre.Text))
@@ -74,77 +73,109 @@ namespace CoopFacil.Pages
 
         protected void btnSolicitarCredito_Click(object sender, EventArgs e)
         {
+            // Validar campos personales/financieros y de la unidad
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtDUI.Text) ||
                 string.IsNullOrWhiteSpace(txtTelefono.Text) || string.IsNullOrWhiteSpace(txtCorreo.Text) ||
-                string.IsNullOrWhiteSpace(txtPrecioComercial.Text) || string.IsNullOrWhiteSpace(txtPrimaInicial.Text) ||
+                string.IsNullOrWhiteSpace(txtIngresos.Text) || string.IsNullOrWhiteSpace(txtMontoSolicitado.Text) ||
                 string.IsNullOrWhiteSpace(txtMarcaModelo.Text) || string.IsNullOrWhiteSpace(txtConcesionario.Text) ||
-                string.IsNullOrEmpty(ddlEstadoVehiculo.SelectedValue) || string.IsNullOrEmpty(ddlPlazoMeses.SelectedValue))
+                string.IsNullOrEmpty(ddlEstadoVehiculo.SelectedValue) || string.IsNullOrEmpty(ddlPlazoSolicitado.SelectedValue))
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos requeridos para enviar tu solicitud de crédito vehicular.";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos personales, financieros y del vehículo requeridos.";
                 return;
             }
 
-            decimal precio, prima;
-            if (!decimal.TryParse(txtPrecioComercial.Text, out precio) || precio < 3000)
+            // Validar las 4 referencias obligatorias
+            if (string.IsNullOrWhiteSpace(txtRefPers1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPers1Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefPers2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPers2Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefFam1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFam1Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefFam2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFam2Tel.Text))
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> El precio comercial del vehículo debe ser mayor o igual a $3,000.00 USD.";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Debes completar las 4 referencias de recomendación (2 personales y 2 familiares) con nombre y teléfono.";
                 return;
             }
 
-            if (!decimal.TryParse(txtPrimaInicial.Text, out prima) || prima < 0)
+            decimal ingresos, montoSolicitado;
+            int plazoMeses;
+
+            if (!decimal.TryParse(txtIngresos.Text, out ingresos) || ingresos <= 0)
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Ingrese un monto de prima inicial válido.";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Ingrese un monto de ingresos mensuales válido.";
                 return;
             }
 
-            bool esNuevo = ddlEstadoVehiculo.SelectedValue == "Nuevo";
-            decimal porcentajeFinanciamientoMax = esNuevo ? 80m : 70m;
-            decimal primaMinimaRequerida = precio * ((100m - porcentajeFinanciamientoMax) / 100m);
-
-            if (prima < primaMinimaRequerida)
+            if (!decimal.TryParse(txtMontoSolicitado.Text, out montoSolicitado) || montoSolicitado < 3000)
             {
                 pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-amber-500/50 bg-amber-950/40 text-amber-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Para un vehículo <strong>" + ddlEstadoVehiculo.SelectedValue + "</strong>, la prima mínima requerida es del <strong>" + (100m - porcentajeFinanciamientoMax).ToString("N0") + "% ($" + primaMinimaRequerida.ToString("N2") + " USD)</strong> para financiar el " + porcentajeFinanciamientoMax.ToString("N0") + "% restante.";
+                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> El monto solicitado debe ser mayor o igual a $3,000.00 USD.";
                 return;
             }
 
-            decimal montoAFinanciar = precio - prima;
-            int plazo = int.Parse(ddlPlazoMeses.SelectedValue);
+            int.TryParse(ddlPlazoSolicitado.SelectedValue, out plazoMeses);
 
-            string estadoAdjunto = "No se adjuntó archivo digital";
-            if (fileProforma.HasFile)
+            // Estado de los archivos adjuntos
+            string estadoAdjuntos = "Sin comprobantes digitales (presentación física requerida)";
+            if (fileReciboDUI.HasFile || fileConstancia.HasFile || fileProforma.HasFile)
             {
-                string extension = Path.GetExtension(fileProforma.FileName).ToLower();
-                if (extension == ".pdf" || extension == ".jpg" || extension == ".png" || extension == ".jpeg")
-                {
-                    estadoAdjunto = "Documento adjunto (" + fileProforma.FileName + ")";
-                }
+                List<string> nombresAdjuntos = new List<string>();
+                if (fileReciboDUI.HasFile) nombresAdjuntos.Add(fileReciboDUI.FileName);
+                if (fileConstancia.HasFile) nombresAdjuntos.Add(fileConstancia.FileName);
+                if (fileProforma.HasFile) nombresAdjuntos.Add(fileProforma.FileName);
+                estadoAdjuntos = "Archivos cargados: " + string.Join(", ", nombresAdjuntos);
             }
+
+            // Cálculo financiero de cuota mensual a 10% ANUAL (nominal mensual = 10% / 12)
+            double tasaNominalMensual = (0.10 / 12.0);
+            double P = (double)montoSolicitado;
+            int n = plazoMeses;
+            double cuotaMensualBase = P * (tasaNominalMensual * Math.Pow(1 + tasaNominalMensual, n)) / (Math.Pow(1 + tasaNominalMensual, n) - 1);
+
+            // Estimación de seguros incluidos en cuota (0.03% vida + 0.05% daños auto)
+            double segurosMensuales = (P * 0.0003) + (P * 0.0005);
+            double cuotaTotal = cuotaMensualBase + segurosMensuales;
+
+            // Ratio de Endeudamiento
+            decimal ratioEndeudamiento = ((decimal)cuotaTotal / ingresos) * 100m;
 
             pnlMensaje.Visible = true;
-            pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 flex flex-col gap-2 text-xs font-medium";
-            litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-400'>" +
-                              "<i class='fa-solid fa-circle-check text-lg'></i> Solicitud Enviada al Departamento de Riesgos</div>" +
-                              "<p class='mt-1 text-slate-200'>Tu solicitud para un vehículo <strong>" + ddlEstadoVehiculo.SelectedValue + " (" + txtMarcaModelo.Text + ")</strong> en <strong>" + txtConcesionario.Text + "</strong> ha sido registrada con éxito.</p>" +
-                              "<p class='text-xs text-slate-300'><strong>Monto a Financiar:</strong> $" + montoAFinanciar.ToString("N2") + " USD a <strong>" + plazo + " meses</strong>. Estado de proforma: <em>" + estadoAdjunto + "</em>. Un analista de riesgos te contactará al <strong>" + txtTelefono.Text + "</strong> o vía correo a <strong>" + txtCorreo.Text + "</strong> en menos de 24 horas.</p>";
 
+            if (ratioEndeudamiento <= 40m)
+            {
+                pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 flex flex-col gap-2 text-xs font-medium";
+                litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-400'>" +
+                                  "<i class='fa-solid fa-circle-check text-lg'></i> Dictamen Preliminar: <strong>Pre-Aprobado Sujeto a Inspección Vehicular</strong></div>" +
+                                  "<p class='mt-1 text-slate-200'>Tu capacidad de pago es óptima. La cuota mensual estimada de <strong>$" + cuotaTotal.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales ($" + ingresos.ToString("N2") + " USD).</p>" +
+                                  "<p class='text-xs text-slate-300'>Se han registrado tus <strong>4 recomendaciones de localización</strong>, datos de la unidad (<em>" + txtMarcaModelo.Text + " - " + txtConcesionario.Text + "</em>) y el estado de adjuntos: <em>\"" + estadoAdjuntos + "\"</em>.</p>";
+            }
+            else
+            {
+                pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-amber-500/50 bg-amber-950/40 text-amber-300 flex flex-col gap-2 text-xs font-medium";
+                litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-amber-400'>" +
+                                  "<i class='fa-solid fa-triangle-exclamation text-lg'></i> Dictamen Preliminar: <strong>Sujeto a Análisis de Riesgo Especial</strong></div>" +
+                                  "<p class='mt-1 text-slate-200'>La cuota estimada de <strong>$" + cuotaTotal.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales, superando el límite recomendado del 40%.</p>" +
+                                  "<p class='text-xs text-slate-300'>Guardamos tus 4 contactos de respaldo y adjuntos. Te sugerimos ampliar el plazo de financiamiento para reducir la cuota mensual.</p>";
+            }
+
+            // Limpieza de campos tras procesar
             txtDUI.Text = "";
             txtTelefono.Text = "";
             txtCorreo.Text = "";
             txtMarcaModelo.Text = "";
             txtConcesionario.Text = "";
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
+            txtRefPers1Nombre.Text = "";
+            txtRefPers1Tel.Text = "";
+            txtRefPers2Nombre.Text = "";
+            txtRefPers2Tel.Text = "";
+            txtRefFam1Nombre.Text = "";
+            txtRefFam1Tel.Text = "";
+            txtRefFam2Nombre.Text = "";
+            txtRefFam2Tel.Text = "";
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

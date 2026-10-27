@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="bg-[#0B1A30] text-white font-sans antialiased min-h-screen flex flex-col justify-between">
-    <!-- DESACTIVAR AUTOCOMPLETADO GLOBALMENTE -->
     <form id="form1" runat="server" autocomplete="off" class="min-h-screen flex flex-col justify-between">
         
         <div>
@@ -55,10 +54,6 @@
                     <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
-
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" Visible="false" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
 
                     <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
@@ -113,9 +108,7 @@
                             </div>
                         </div>
 
-                        <!-- INPUTS CON FORMATO DINÁMICO DE COMAS -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- MONTO INICIAL DEPOSITAR ($) -->
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[11px] font-bold text-slate-300 uppercase">Monto Inicial Depositar ($)</label>
                                 <div class="relative flex items-center">
@@ -124,7 +117,6 @@
                                 </div>
                             </div>
 
-                            <!-- APORTE MENSUAL ESTIMADO ($) -->
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[11px] font-bold text-slate-300 uppercase">Aporte Mensual Estimado ($)</label>
                                 <div class="relative flex items-center">
@@ -134,7 +126,6 @@
                             </div>
                         </div>
 
-                        <!-- RESULTADOS PROYECTADOS (3 COLUMNAS INTERNAS) -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center items-center shadow-inner">
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TOTAL AHORRADO (1 AÑO)</span>
@@ -169,7 +160,6 @@
                             </div>
                         </div>
 
-                        <!-- TABLA DE CONDICIONES -->
                         <div class="space-y-3 text-xs">
                             <div class="flex justify-between items-center text-slate-400 font-bold pb-1 border-b border-slate-800 text-[11px] uppercase tracking-wider">
                                 <span>CARACTERÍSTICA / SERVICIO</span>
@@ -205,7 +195,7 @@
 
                 </div>
 
-                <!-- SECCIÓN INFERIOR: FORMULARIO DE PRE-APERTURA (LLENADO MANUAL OBLIGATORIO) -->
+                <!-- SECCIÓN INFERIOR: FORMULARIO DE PRE-APERTURA -->
                 <section class="bg-[#0F233D] border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-2">
                         <div>
@@ -223,12 +213,10 @@
                         Ingresa tus datos para agilizar el trámite. Te contactaremos para entregarte tu tarjeta de débito.
                     </p>
 
-                    <!-- MENSAJE DE FEEDBACK -->
                     <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="mb-6 p-4 rounded-xl border flex items-center gap-3 text-xs font-bold">
                         <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
                     </asp:Panel>
 
-                    <!-- FILA 1 DE CAMPOS CON BLOQUEO DE AUTOCOMPLETADO (LLENADO MANUAL) -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Nombre Completo <span class="text-emerald-400">*</span></label>
@@ -246,7 +234,6 @@
                         </div>
                     </div>
 
-                    <!-- FILA 2 DE CAMPOS -->
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
                         <div class="md:col-span-5 flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Correo Electrónico <span class="text-emerald-400">*</span></label>
@@ -277,21 +264,15 @@
 
     </form>
 
-    <!-- SCRIPT DE CÁLCULO Y FORMATO AUTOMÁTICO DE COMAS -->
     <script>
         function formatearYCalcularMonto(input) {
             if (!input) return;
-
-            // Obtener únicamente dígitos
             let valorLimpio = input.value.replace(/[^0-9]/g, '');
-
             if (valorLimpio !== "") {
-                // Agregar comas como separador de miles si tiene 4 o más cifras
                 input.value = parseInt(valorLimpio, 10).toLocaleString('en-US');
             } else {
                 input.value = "";
             }
-
             calcularRendimientoAhorro();
         }
 
@@ -310,13 +291,11 @@
             const montoInicial = obtenerNumeroSinComas(txtInicial.value);
             const aporteMensual = obtenerNumeroSinComas(txtAporte.value);
 
-            const tasaAnual = 0.10; // 10% EA
+            const tasaAnual = 0.10;
             const tasaMensual = tasaAnual / 12;
             const meses = 12;
 
             let balanceAcumulado = montoInicial;
-
-            // Cálculo mensual con interés compuesto + aporte mensual
             for (let m = 1; m <= meses; m++) {
                 balanceAcumulado = (balanceAcumulado * (1 + tasaMensual)) + aporteMensual;
             }
@@ -330,7 +309,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Aplicar formato inicial a los campos de entrada al cargar
             const txtInicial = document.getElementById('<%= txtMontoInicial.ClientID %>');
             const txtAporte = document.getElementById('<%= txtAporteMensual.ClientID %>');
 
@@ -339,6 +317,6 @@
 
             calcularRendimientoAhorro();
         });
-    </script>
+</script>
 </body>
 </html>

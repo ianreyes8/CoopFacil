@@ -50,17 +50,11 @@
 
             <!-- CONTROLES DE SESIÓN (DERECHA) -->
             <div class="flex items-center gap-3">
-                <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                 <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                     <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                 </asp:HyperLink>
 
-                <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                    <i class="fa-solid fa-user-check"></i> Portal Socio
-                </asp:LinkButton>
-
-                <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+                <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                     <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                 </asp:LinkButton>
             </div>
@@ -115,7 +109,7 @@
                                     Contacto en linea (24/7)
                                 </span>
                                 <span class="text-sm font-bold text-white tracking-wide">
-                                    +502 5555-1234
+                                    +503 7777-8888
                                 </span>
                             </div>
                         </div>
@@ -198,7 +192,6 @@
                                     <asp:ListItem Value="servicios">Consulta sobre servicios</asp:ListItem>
                                     <asp:ListItem Value="creditos">Solicitud de créditos o préstamos</asp:ListItem>
                                     <asp:ListItem Value="ahorros">Cuentas de ahorro e inversión</asp:ListItem>
-                                    <asp:ListItem Value="soporte">Soporte del Portal Socio</asp:ListItem>
                                     <asp:ListItem Value="otros">Otros asuntos</asp:ListItem>
                                 </asp:DropDownList>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">

@@ -51,17 +51,11 @@
 
                 <!-- CONTROLES DE SESIÓN (DERECHA) -->
                 <div class="flex items-center gap-3">
-                    <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                     <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
 
-                    <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
-
-                    <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+                    <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                     </asp:LinkButton>
                 </div>
@@ -71,7 +65,6 @@
             <!-- CONTENIDO PRINCIPAL DE SERVICIOS -->
             <main class="max-w-7xl mx-auto px-6 py-10 flex flex-col gap-10 flex-grow w-full">
                 
-                <!-- TITULAR -->
                 <div class="text-center max-w-3xl mx-auto flex flex-col gap-3">
                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">PORTAFOLIO INTEGRAL</span>
                     <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -82,7 +75,6 @@
                     </p>
                 </div>
 
-                <!-- BARRA DE NAVEGACIÓN Y FILTROS -->
                 <div class="flex flex-wrap justify-center gap-3 mb-10">
                     <button type="button" onclick="filtrarServicios('all', this)" class="btn-filtro active-filter px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition shadow-md bg-emerald-600 text-white border border-emerald-500">
                         Todos los servicios
@@ -98,7 +90,6 @@
                     </button>
                 </div>
 
-                <!-- TARJETAS DE SERVICIOS -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     <!-- 1. CUENTA DE AHORRO -->
@@ -112,10 +103,10 @@
                                 Cuenta principal del socio con rendimiento inmediato, sin comisiones de mantenimiento y disponibilidad 24/7.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa preferencial 10% EA</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Sin cuota de manejo</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tarjeta débito incluida</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Alertas en tiempo real</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa preferencial 10% ANUAL</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Sin cuotas de mantenimiento</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tarjeta débito física y digital</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Notificaciones y alertas en tiempo real</li>
                             </ul>
                         </div>
                         <a href="CuentaAhorro.aspx" class="text-emerald-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
@@ -131,13 +122,13 @@
                             </div>
                             <h3 class="text-xl font-bold text-white mb-2">Ahorro Programado</h3>
                             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                                Planifique sus metas de mediano y largo plazo con depósitos periódicos automáticos y tasas preferenciales.
+                                Planifique sus metas de mediano y largo plazo con depósitos periódicos automáticos y rendimiento garantizado.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Tasa escalonada hasta 8.0% EA</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Rendimiento hasta 8.0% ANUAL</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Plazos flexibles de 6 a 36 meses</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Débito automático programable</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Cero costo de apertura</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Cero costos de apertura y gestión</li>
                             </ul>
                         </div>
                         <a href="AhorroProgramado.aspx" class="text-emerald-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
@@ -156,10 +147,10 @@
                                 Financiamiento de libre inversión para proyectos, imprevistos o consolidación de deudas con desembolso rápido.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa competitiva del 10% EA</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa competitiva del 10% ANUAL</li>
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazos extendidos hasta 120 meses</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Dictamen y pre-aprobación en línea</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Sin penalidad por abono a capital</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Pre-evaluación con dictamen en línea</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Abonos a capital sin penalización</li>
                             </ul>
                         </div>
                         <a href="CreditoPersonal.aspx" class="text-blue-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
@@ -167,7 +158,7 @@
                         </a>
                     </div>
 
-                    <!-- 4. CRÉDITO HIPOTECARIO (ENLACE CORREGIDO A CreditoHipotecario.aspx) -->
+                    <!-- 4. CRÉDITO HIPOTECARIO -->
                     <div class="card-servicio cat-credito bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-blue-500 transition">
                         <div>
                             <div class="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/40 flex items-center justify-center mb-4">
@@ -175,13 +166,13 @@
                             </div>
                             <h3 class="text-xl font-bold text-white mb-2">Crédito Hipotecario</h3>
                             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                                Financiamiento para compra o remodelación de inmueble con las mejores tasas del mercado y agendamiento de citas.
+                                Financiamiento para compra de vivienda nueva o usada, construcción o remodelación con asesoría especializada.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa preferencial desde 7.5% EA</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazo máximo de hasta 20 años</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Enganche / Prima desde el 10%</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Asesoría especializada personalizada</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa preferencial del 10% ANUAL</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazo de financiamiento hasta 20 años</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Financiamiento del 100% del inmueble</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Agendamiento de cita con especialista</li>
                             </ul>
                         </div>
                         <a href="CreditoHipotecario.aspx" class="text-blue-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
@@ -197,13 +188,13 @@
                             </div>
                             <h3 class="text-xl font-bold text-white mb-2">Crédito Vehicular</h3>
                             <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
-                                Adquiera su vehículo nuevo o usado con una financiación de hasta el 80% del valor comercial y rápida aprobación.
+                                Adquiera su vehículo nuevo o usado con garantía prendaria, financiación completa del valor comercial y cuota fija.
                             </p>
                             <ul class="text-xs text-slate-300 space-y-2 mb-6">
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa desde 9.8% EA</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Hasta 60 meses de plazo</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Aplica para vehículo nuevo o usado</li>
-                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Opción de seguro vehicular integrado</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Tasa preferencial del 10% ANUAL</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Plazos flexibles de 12 a 72 meses</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Financiamiento del 100% comercial</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-blue-400"></i> Aplica para autos nuevos y usados</li>
                             </ul>
                         </div>
                         <a href="CreditoVehicular.aspx" class="text-blue-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
@@ -238,40 +229,34 @@
             </main>
         </div>
 
-        <!-- PIE DE PÁGINA -->
         <footer class="bg-[#0F233D] border-t-2 border-slate-700/80 text-slate-400 text-xs text-center py-6 mt-auto">
             <p>© 2026 CoopFacil. Todos los derechos reservados.</p>
         </footer>
 
     </form>
 
-    <!-- SCRIPT INTERACTIVO DE FILTRADO -->
     <script>
-        // @ts-nocheck
-        function filtrarServicios(categoria, boton) {
-            // Actualizar estado activo de los botones
-            const botones = document.querySelectorAll('.btn-filtro');
-            botones.forEach(btn => {
-                btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-500', 'font-bold');
-                btn.classList.add('bg-[#0F233D]', 'text-slate-300', 'border-slate-700/80', 'font-medium');
-            });
+function filtrarServicios(categoria, boton) {
+    const botones = document.querySelectorAll('.btn-filtro');
+    botones.forEach(btn => {
+        btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-500', 'font-bold');
+        btn.classList.add('bg-[#0F233D]', 'text-slate-300', 'border-slate-700/80', 'font-medium');
+    });
 
-            boton.classList.remove('bg-[#0F233D]', 'text-slate-300', 'border-slate-700/80', 'font-medium');
-            boton.classList.add('bg-emerald-600', 'text-white', 'border-emerald-500', 'font-bold');
+    boton.classList.remove('bg-[#0F233D]', 'text-slate-300', 'border-slate-700/80', 'font-medium');
+    boton.classList.add('bg-emerald-600', 'text-white', 'border-emerald-500', 'font-bold');
 
-            // Filtrar las tarjetas de servicios
-            const tarjetas = document.querySelectorAll('.card-servicio');
-            tarjetas.forEach(card => {
-                const element = /** @type {HTMLElement} */ (card);
-                if (categoria === 'all') {
-                    element.style.display = 'flex';
-                } else if (element.classList.contains('cat-' + categoria)) {
-                    element.style.display = 'flex';
-                } else {
-                    element.style.display = 'none';
-                }
-            });
+    const tarjetas = document.querySelectorAll('.card-servicio');
+    tarjetas.forEach(card => {
+        if (categoria === 'all') {
+            card.style.display = 'flex';
+        } else if (card.classList.contains('cat-' + categoria)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
         }
-    </script>
+    });
+}
+</script>
 </body>
 </html>

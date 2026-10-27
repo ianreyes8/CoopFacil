@@ -89,7 +89,7 @@
                             <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="w-full bg-[#071322] border border-slate-700 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-blue-500 transition" placeholder="••••••••"></asp:TextBox>
                         </div>
 
-                        <asp:Button ID="btnAcceder" runat="server" Text="Acceder al Portal →" OnClick="btnAcceder_Click" CssClass="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-sm transition cursor-pointer mt-2 shadow-lg shadow-blue-900/30" />
+                        <asp:Button ID="btnAcceder" runat="server" Text="Iniciar Sesión →" OnClick="btnAcceder_Click" CssClass="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg text-sm transition cursor-pointer mt-2 shadow-lg shadow-blue-900/30" />
 
                         <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
                             <span>¿No tienes cuenta?</span>

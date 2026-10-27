@@ -50,17 +50,11 @@
 
             <!-- CONTROLES DE SESIÓN (DERECHA) -->
             <div class="flex items-center gap-3">
-                <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                 <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                     <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                 </asp:HyperLink>
 
-                <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                    <i class="fa-solid fa-user-check"></i> Portal Socio
-                </asp:LinkButton>
-
-                <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+                <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                     <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                 </asp:LinkButton>
             </div>
@@ -137,7 +131,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-sm font-bold text-white">Innovación Digital</h4>
-                                    <p class="text-xs text-slate-400 mt-1">Portal Socio en tiempo real para consultas y gestión 24/7.</p>
+                                    <p class="text-xs text-slate-400 mt-1">Servicios en línea para consultas y solicitudes 24/7.</p>
                                 </div>
                             </div>
                         </div>

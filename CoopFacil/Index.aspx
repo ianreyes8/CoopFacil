@@ -1,199 +1,340 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="CoopFacil.Index" %>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" class="dark">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inicio - CoopFacil</title>
+    <title>Inicio - CoopFacil Cooperativa Financiera</title>
+    
+    <!-- TAILWIND CSS CDN CON MODO OSCURO ACTIVADO POR CLASE -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        coop: {
+                            darkBg: '#0B1A30',
+                            darkCard: '#0F233D',
+                            emerald: '#10B981',
+                            blue: '#3B82F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- FONT AWESOME ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- SCRIPT DE INICIALIZACIÓN DE TEMA (PREVIENE PARPADEO AL Cargar) -->
+    <script>
+    (function () {
+        const savedTheme = localStorage.getItem('coopfacil-theme');
+        if (savedTheme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    })();
+</script>
 </head>
-<body class="bg-[#0B1A30] text-white font-sans antialiased min-h-screen p-6 sm:p-10 flex flex-col justify-between relative">
-    <form id="form1" runat="server" class="max-w-7xl mx-auto w-full flex flex-col gap-8 flex-grow">
+<body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
+    <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
         
-        <!-- BIENVENIDA ESQUINA SUPERIOR IZQUIERDA -->
-        <div class="absolute top-6 left-6 z-40">
-            <asp:Panel ID="pnlBienvenida" runat="server" Visible="false" CssClass="flex items-center gap-2.5 bg-[#0F233D] border border-emerald-500/40 px-4 py-2 rounded-xl shadow-lg">
-                <i class="fa-solid fa-circle-user text-emerald-400 text-lg"></i>
-                <span class="text-sm font-bold text-white">
-                    Bienvenido <asp:Literal ID="litBienvenida" runat="server"></asp:Literal>
-                </span>
-            </asp:Panel>
-        </div>
-
-        <!-- BOTONES DE NAVEGACIÓN Y SESIÓN (ESQUINA SUPERIOR DERECHA) -->
-        <div class="absolute top-6 right-6 flex items-center gap-3 z-40">
-            <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
-                <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
-            </asp:HyperLink>
-
-            <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                <i class="fa-solid fa-user-check"></i> Portal Socio
-            </asp:LinkButton>
-
-            <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2">
-                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
-            </asp:LinkButton>
-        </div>
-
-        <!-- ENCABEZADO PRINCIPAL Y SLOGAN -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch mt-12 md:mt-6">
-            <div class="md:col-span-4 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-xl min-h-[180px]">
-                <div class="flex items-center justify-center gap-1 mb-3">
-                    <div class="relative flex items-center justify-center">
-                        <i class="fa-solid fa-user text-4xl text-blue-500"></i>
-                        <i class="fa-solid fa-user text-4xl text-emerald-500 -ml-2"></i>
-                        <i class="fa-solid fa-arrow-up-right-dots text-2xl text-emerald-400 absolute -top-3 -right-4"></i>
-                    </div>
-                </div>
-                <h2 class="text-3xl font-extrabold tracking-tight">
-                    <span class="text-blue-500">Coop</span><span class="text-emerald-500">Facil</span>
-                </h2>
-                <p class="text-sm text-slate-400 font-medium mt-1">Cooperativa Financiera</p>
-            </div>
-
-            <div class="md:col-span-8 flex flex-col gap-4 justify-between">
-                <div class="bg-[#0F233D] border-2 border-slate-700/80 rounded-xl p-6 flex items-center justify-center shadow-md min-h-[85px]">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white text-center">"Finanzas que construyen comunidad desde 1987"</h3>
-                </div>
-
-                <div class="bg-[#0F233D] border-2 border-slate-700/80 rounded-xl p-6 shadow-md flex-grow flex items-center">
-                    <p class="text-base text-slate-300 leading-relaxed text-center w-full">
-                        Somos una institución financiera comprometida con el desarrollo social y económico de nuestros socios. Brindamos servicios integrales de ahorro, crédito e inversión con total transparencia y respaldo.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- MENÚ DE MÓDULOS PÚBLICOS (REDISTRIBUIDO: 2 ARRIBA Y 2 ABAJO EQUITATIVAMENTE) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow items-stretch my-auto w-full">
-            <a href="Pages/QuienesSomos.aspx" class="bg-[#0F233D] hover:bg-[#132c4d] border-2 border-slate-700 hover:border-blue-500 rounded-2xl p-10 flex flex-col items-center justify-center text-center transition group shadow-xl min-h-[180px]">
-                <i class="fa-solid fa-users text-5xl text-blue-500 group-hover:scale-110 transition mb-4"></i>
-                <span class="text-2xl font-bold text-white transition">Quiénes somos</span>
-            </a>
-
-            <a href="Pages/Servicios.aspx" class="bg-[#0F233D] hover:bg-[#132c4d] border-2 border-slate-700 hover:border-emerald-500 rounded-2xl p-10 flex flex-col items-center justify-center text-center transition group shadow-xl min-h-[180px]">
-                <i class="fa-solid fa-hand-holding-dollar text-5xl text-emerald-500 group-hover:scale-110 transition mb-4"></i>
-                <span class="text-2xl font-bold text-white transition">Servicios</span>
-            </a>
-
-            <a href="Pages/Transparencia.aspx" class="bg-[#0F233D] hover:bg-[#132c4d] border-2 border-slate-700 hover:border-blue-500 rounded-2xl p-10 flex flex-col items-center justify-center text-center transition group shadow-xl min-h-[180px]">
-                <i class="fa-solid fa-scale-balanced text-5xl text-blue-500 group-hover:scale-110 transition mb-4"></i>
-                <span class="text-2xl font-bold text-white transition">Transparencia</span>
-            </a>
-
-            <a href="Pages/Contacto.aspx" class="bg-[#0F233D] hover:bg-[#132c4d] border-2 border-slate-700 hover:border-blue-500 rounded-2xl p-10 flex flex-col items-center justify-center text-center transition group shadow-xl min-h-[180px]">
-                <i class="fa-solid fa-envelope-open-text text-5xl text-blue-500 group-hover:scale-110 transition mb-4"></i>
-                <span class="text-2xl font-bold text-white transition">Contacto</span>
-            </a>
-        </div>
-
-        <!-- MODAL DEL PORTAL SOCIO -->
-        <div id="modalPortalSocio" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-[#0B1A30]/80 backdrop-blur-sm">
-            <div class="bg-white text-slate-800 rounded-2xl max-w-4xl w-full p-8 shadow-2xl relative max-h-[95vh] overflow-y-auto">
+        <div>
+            <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR (STICKY) -->
+            <header class="bg-white/90 dark:bg-[#0B1A30]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 w-full px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4 transition-colors duration-300">
                 
-                <!-- Botón de Cerrar Modal -->
-                <button type="button" onclick="toggleModal(false)" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700 transition text-2xl">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <!-- LOGO INSTITUCIONAL + BIENVENIDA -->
+                <div class="flex items-center gap-4">
+                    <a href="Index.aspx" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xl shadow-inner group-hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-users-gear"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xl font-extrabold tracking-tight leading-none text-slate-900 dark:text-white">
+                                Coop<span class="text-emerald-600 dark:text-emerald-400">Facil</span>
+                            </span>
+                            <span class="text-[9px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase mt-1">
+                                COOPERATIVA FINANCIERA
+                            </span>
+                        </div>
+                    </a>
 
-                <!-- Encabezado Socio -->
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="w-14 h-14 rounded-full bg-[#0B1A30] text-amber-400 font-bold flex items-center justify-center text-xl shadow-md">
-                        <asp:Literal ID="litIniciales" runat="server">--</asp:Literal>
-                    </div>
-                    <div>
-                        <p class="text-sm text-slate-500 font-medium">Bienvenido de vuelta</p>
-                        <h3 class="text-2xl font-bold text-[#0B1A30]">
-                            <asp:Literal ID="litNombreSocio" runat="server">Usuario</asp:Literal> 
-                            · <span class="font-normal text-slate-600"><asp:Literal ID="litNumeroSocio" runat="server">Socio #000000</asp:Literal></span>
-                        </h3>
-                    </div>
+                    <!-- PANEL DE BIENVENIDA (PRESERVADO) -->
+                    <asp:Panel ID="pnlBienvenida" runat="server" Visible="false" CssClass="hidden lg:flex items-center gap-2 bg-slate-100 dark:bg-[#0F233D] border border-emerald-500/40 px-3.5 py-1.5 rounded-xl shadow-sm">
+                        <i class="fa-solid fa-circle-user text-emerald-600 dark:text-emerald-400 text-base"></i>
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-200">
+                            Bienvenido <asp:Literal ID="litBienvenida" runat="server"></asp:Literal>
+                        </span>
+                    </asp:Panel>
                 </div>
 
-                <!-- Tarjetas de Saldos -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-[#0B1A30] text-white p-6 rounded-xl shadow-lg">
-                        <p class="text-sm text-slate-300">Saldo disponible</p>
-                        <p class="text-3xl font-bold text-amber-400 my-2"><asp:Literal ID="litSaldo" runat="server">$0.00</asp:Literal></p>
-                        <p class="text-xs text-slate-400">Ahorros Principal *4521</p>
-                    </div>
+                <!-- ENLACES CENTRALES DE NAVEGACIÓN (DESKTOP) -->
+                <nav class="hidden md:flex items-center gap-6 xl:gap-8 text-sm font-semibold">
+                    <a href="Index.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Inicio</a>
+                    <a href="Pages/QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Quiénes Somos</a>
+                    <a href="Pages/Servicios.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Servicios</a>
+                    <a href="Pages/Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
+                    <a href="Pages/Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
+                </nav>
 
-                    <div class="border border-slate-200 p-6 rounded-xl bg-white shadow-sm">
-                        <p class="text-sm text-slate-500">CDT Activo</p>
-                        <p class="text-3xl font-bold text-emerald-600 my-2"><asp:Literal ID="litCDT" runat="server">$0.00</asp:Literal></p>
-                        <p class="text-xs text-slate-500">Vence: 12 Feb 2026 · 7.1% EA</p>
-                    </div>
-
-                    <div class="border border-slate-200 p-6 rounded-xl bg-white shadow-sm">
-                        <p class="text-sm text-slate-500">Préstamo vigente</p>
-                        <p class="text-3xl font-bold text-red-600 my-2"><asp:Literal ID="litPrestamo" runat="server">$0.00</asp:Literal></p>
-                        <p class="text-xs text-slate-500">Próx. cuota: 30 Oct · $347</p>
-                    </div>
-                </div>
-
-                <!-- Historial de Movimientos -->
-                <h4 class="font-bold text-[#0B1A30] text-lg mb-4">Últimos movimientos</h4>
-
-                <!-- Panel Vacío para Usuarios Nuevos -->
-                <asp:Panel ID="pnlSinMovimientos" runat="server" Visible="false" CssClass="bg-slate-50 border border-dashed border-slate-300 rounded-xl p-8 text-center my-4">
-                    <i class="fa-solid fa-receipt text-3xl text-slate-400 mb-2"></i>
-                    <p class="text-slate-600 font-semibold text-base">Aún no cuentas con movimientos registrados.</p>
-                    <p class="text-xs text-slate-400 mt-1">Tus depósitos, transferencias y pagos aparecerán reflejados aquí automáticamente.</p>
-                </asp:Panel>
-
-                <!-- Tabla Dinámica con Historial -->
-                <div class="overflow-x-auto mb-8">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="text-xs text-slate-500 border-b border-slate-200 uppercase tracking-wider">
-                                <th class="py-3 font-semibold w-28">Fecha</th>
-                                <th class="py-3 font-semibold">Descripción</th>
-                                <th class="py-3 font-semibold text-right w-32">Monto</th>
-                                <th class="py-3 font-semibold text-right w-32">Saldo</th>
-                                <th class="py-3 font-semibold text-center w-32">Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-sm text-slate-700">
-                            <asp:Repeater ID="rptMovimientos" runat="server">
-                                <ItemTemplate>
-                                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition">
-                                        <td class="py-4"><%# Eval("Fecha") %></td>
-                                        <td class="py-4"><%# Eval("Descripcion") %></td>
-                                        <td class="py-4 text-right font-semibold <%# Convert.ToBoolean(Eval("EsPositivo")) ? "text-emerald-600" : "text-slate-900" %>"><%# Eval("MontoFormatted") %></td>
-                                        <td class="py-4 text-right"><%# Eval("SaldoFormatted") %></td>
-                                        <td class="py-4 text-center">
-                                            <span class="<%# Eval("Estado").ToString() == "Completado" ? "bg-emerald-50 text-emerald-600 border-emerald-200" : "bg-amber-50 text-amber-600 border-amber-200" %> text-[11px] font-bold px-3 py-1 rounded-full border flex items-center justify-center gap-1.5 w-max mx-auto">
-                                                <span class="w-1.5 h-1.5 rounded-full <%# Eval("Estado").ToString() == "Completado" ? "bg-emerald-500" : "bg-amber-500" %>"></span> <%# Eval("Estado") %>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="flex justify-start">
-                    <button type="button" class="bg-[#1A7F54] hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20">
-                        <i class="fa-solid fa-file-lines"></i> Descargar Estado de Cuenta Completo
+                <!-- CONTROLES DE INTERFAZ: BOTÓN TEMA + INICIAR / CERRAR SESIÓN -->
+                <div class="flex items-center gap-2.5">
+                    
+                    <!-- BOTÓN CONMUTADOR MODO CLARO / OSCURO -->
+                    <button type="button" onclick="toggleTheme()" id="themeToggleBtn" title="Cambiar Tema" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#0F233D] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition flex items-center justify-center text-base shadow-sm">
+                        <i id="themeIconSun" class="fa-solid fa-sun hidden"></i>
+                        <i id="themeIconMoon" class="fa-solid fa-moon"></i>
                     </button>
+
+                    <!-- CONTROLES ASP.NET PRESERVADOS -->
+                    <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-4 sm:px-5 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-blue-500/20">
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                    </asp:HyperLink>
+
+                    <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-slate-100 dark:bg-[#0F233D] hover:bg-red-500/10 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+                    </asp:LinkButton>
+
+                </div>
+
+            </header>
+
+            <!-- 2. HERO SECTION CON AMBIENTE DINÁMICO Y PROPUESTA DE VALOR -->
+            <section class="relative max-w-7xl mx-auto px-6 pt-10 pb-8 flex flex-col items-center text-center gap-6 overflow-hidden">
+                
+                <!-- BADGE DE ANIVERSARIO / SLOGAN -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-extrabold uppercase tracking-wider shadow-sm">
+                    <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400"></i> "Finanzas que construyen comunidad desde 1987"
+                </div>
+
+                <!-- TÍTULO IMPACTANTE -->
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl leading-tight">
+                    El Impulso Financiero que Tu Futuro Necesita con <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-200">Garantía Solidaria</span>
+                </h1>
+
+                <!-- DESCRIPCIÓN INSTITUCIONAL -->
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+                    Somos una institución financiera comprometida con el desarrollo social y económico de nuestros socios. Brindamos servicios integrales de ahorro, crédito e inversión con total transparencia y respaldo.
+                </p>
+
+                <!-- BOTONES DE ACCIÓN RÁPIDA -->
+                <div class="flex flex-wrap items-center justify-center gap-4 mt-2">
+                    <a href="Pages/Servicios.aspx" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm px-7 py-3.5 rounded-xl shadow-xl shadow-emerald-600/20 transition flex items-center gap-2">
+                        <i class="fa-solid fa-rocket"></i> Explorar Portafolio de Servicios
+                    </a>
+                    <a href="Pages/Contacto.aspx" class="bg-white dark:bg-[#0F233D] hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm px-6 py-3.5 rounded-xl transition flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-calendar-check text-emerald-600 dark:text-emerald-400"></i> Agendar Cita Presencial
+                    </a>
+                </div>
+
+            </section>
+
+            <!-- 3. BARRA DE MÉTRICAS E INDICADORES DE CONFIANZA -->
+            <section class="max-w-7xl mx-auto px-6 py-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-lg transition-colors duration-300">
+                    
+                    <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
+                        <span class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">+35 Años</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">De Trayectoria</span>
+                    </div>
+
+                    <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
+                        <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">10.00%</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tasa Especial Crédito</span>
+                    </div>
+
+                    <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
+                        <span class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">100%</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Transparencia</span>
+                    </div>
+
+                    <div class="flex flex-col items-center text-center gap-1">
+                        <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">+15,000</span>
+                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Socios Activos</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 4. MENÚ DE MÓDULOS PÚBLICOS (TARJETAS DINÁMICAS RESTRUCTURADAS) -->
+            <main class="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-6 flex-grow w-full">
+                
+                <div class="flex flex-col gap-1">
+                    <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Explora la Cooperativa</span>
+                    <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Acceso a Módulos Institucionales</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- MÓDULO 1: QUIÉNES SOMOS -->
+                    <a href="Pages/QuienesSomos.aspx" class="group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                        
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-500/10 dark:bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#0B1A30] px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800">
+                                Institucional
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex items-center justify-between">
+                                Quiénes Somos
+                                <i class="fa-solid fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0"></i>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Conoce nuestra historia, visión, principios cooperativos y el compromiso social con el que respaldamos tus metas financieras.
+                            </p>
+                        </div>
+                    </a>
+
+                    <!-- MÓDULO 2: SERVICIOS -->
+                    <a href="Pages/Servicios.aspx" class="group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-500/60 dark:hover:border-emerald-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                        
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-hand-holding-dollar"></i>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-[#0B1A30] px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-500/30">
+                                Portafolio
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+                                Servicios Financieros
+                                <i class="fa-solid fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0"></i>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Explora nuestros créditos a tasa preferencial del 10% (Personal, Vehicular e Hipotecario) con simuladores interactivos de cuotas.
+                            </p>
+                        </div>
+                    </a>
+
+                    <!-- MÓDULO 3: TRANSPARENCIA -->
+                    <a href="Pages/Transparencia.aspx" class="group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                        
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-blue-500/10 dark:bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-scale-balanced"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#0B1A30] px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800">
+                                Gobierno y Ética
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex items-center justify-between">
+                                Transparencia
+                                <i class="fa-solid fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0"></i>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Accede a nuestros informes financieros, estados auditados, reglamentos internos y memorias de labores correspondientes.
+                            </p>
+                        </div>
+                    </a>
+
+                    <!-- MÓDULO 4: CONTACTO -->
+                    <a href="Pages/Contacto.aspx" class="group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-500/60 dark:hover:border-emerald-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                        
+                        <div class="flex items-start justify-between gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+                            <span class="text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-[#0B1A30] px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800">
+                                Atención a Socios
+                            </span>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between">
+                                Contacto y Citas
+                                <i class="fa-solid fa-arrow-right text-xs opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0"></i>
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Ubica nuestras agencias, agenda tu asesoría personalizada presencial o en línea, o comunícate directamente con nuestros ejecutivos.
+                            </p>
+                        </div>
+                    </a>
+
+                </div>
+
+                <!-- 5. BANNER DESTACADO DE SIMULADORES RÁPIDOS -->
+                <section class="bg-gradient-to-r from-slate-900 via-[#0F233D] to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 mt-4 border border-slate-800">
+                    <div class="flex flex-col gap-2 text-center lg:text-left max-w-xl">
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400">FINANCIAMIENTO CON TASA DEL 10% ANUAL</span>
+                        <h3 class="text-xl sm:text-2xl font-black">¿Buscas calcular tus cuotas mensuales?</h3>
+                        <p class="text-xs sm:text-sm text-slate-300">
+                            Prueba nuestros simuladores en tiempo real para Crédito Personal, Vehicular e Hipotecario.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-3 w-full lg:w-auto">
+                        <a href="Pages/CreditoPersonal.aspx" class="bg-[#0B1A30] hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500 px-4 py-3 rounded-xl text-xs font-bold text-white transition flex items-center gap-2">
+                            <i class="fa-solid fa-coins text-emerald-400"></i> Personal
+                        </a>
+                        <a href="Pages/CreditoVehicular.aspx" class="bg-[#0B1A30] hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500 px-4 py-3 rounded-xl text-xs font-bold text-white transition flex items-center gap-2">
+                            <i class="fa-solid fa-car text-emerald-400"></i> Vehicular
+                        </a>
+                        <a href="Pages/CreditoHipotecario.aspx" class="bg-[#0B1A30] hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500 px-4 py-3 rounded-xl text-xs font-bold text-white transition flex items-center gap-2">
+                            <i class="fa-solid fa-house-chimney text-emerald-400"></i> Hipotecario
+                        </a>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <!-- 6. PIE DE PÁGINA (FOOTER) -->
+        <footer class="bg-white dark:bg-[#0F233D] border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs py-8 mt-auto transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-emerald-600 dark:text-emerald-400 text-lg"></i>
+                    <span class="font-extrabold text-slate-900 dark:text-white text-sm">Coop<span class="text-emerald-600 dark:text-emerald-400">Facil</span></span>
+                    <span>| © 2026 Todos los derechos reservados.</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <a href="Pages/QuienesSomos.aspx" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition">Nosotros</a>
+                    <a href="Pages/Transparencia.aspx" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
+                    <a href="Pages/Contacto.aspx" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition">Soporte</a>
                 </div>
             </div>
-        </div>
+        </footer>
 
     </form>
 
-    <script type="text/javascript">
-        function toggleModal(show) {
-            var modal = document.getElementById('modalPortalSocio');
-            if (show) {
-                modal.classList.remove('hidden');
+    <!-- SCRIPT PARA EL CAMBIO DE TEMA CLARO / OSCURO CON LOCALSTORAGE -->
+    <script>
+        function updateThemeIcons(isDark) {
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
             } else {
-                modal.classList.add('hidden');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
             }
         }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+        }
+
+        // Sincronizar ícono inicial al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateThemeIcons(isDark);
+        });
     </script>
 </body>
 </html>

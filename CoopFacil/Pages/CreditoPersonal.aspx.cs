@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -22,18 +23,15 @@ namespace CoopFacil.Pages
         {
             string nombreUsuario = ObtenerNombreUsuarioSesion();
 
-            // 1. Si no hay sesión activa, redirige a Default.aspx
             if (string.IsNullOrEmpty(nombreUsuario))
             {
                 Response.Redirect("../Default.aspx");
                 return;
             }
 
-            // 2. Si la sesión es válida, muestra el saludo y los controles de usuario
             pnlBienvenida.Visible = true;
             litBienvenida.Text = nombreUsuario;
             lnkIniciarSesion.Visible = false;
-            btnPortalSocio.Visible = true;
             btnCerrarSesion.Visible = true;
 
             if (string.IsNullOrEmpty(txtNombre.Text))
@@ -75,7 +73,7 @@ namespace CoopFacil.Pages
 
         protected void btnSolicitarCredito_Click(object sender, EventArgs e)
         {
-            // Validación de campos requeridos
+            // Validar campos personales/financieros
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtDUI.Text) ||
                 string.IsNullOrWhiteSpace(txtTelefono.Text) || string.IsNullOrWhiteSpace(txtCorreo.Text) ||
                 string.IsNullOrWhiteSpace(txtIngresos.Text) || string.IsNullOrWhiteSpace(txtMontoSolicitado.Text) ||
@@ -84,7 +82,19 @@ namespace CoopFacil.Pages
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos requeridos para evaluar tu solicitud de crédito.";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos personales y financieros requeridos.";
+                return;
+            }
+
+            // Validar las 4 referencias obligatorias
+            if (string.IsNullOrWhiteSpace(txtRefPers1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPers1Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefPers2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPers2Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefFam1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFam1Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefFam2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFam2Tel.Text))
+            {
+                pnlMensaje.Visible = true;
+                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Debes completar las 4 referencias de recomendación (2 personales y 2 familiares) con nombre y teléfono.";
                 return;
             }
 
@@ -109,13 +119,23 @@ namespace CoopFacil.Pages
 
             int.TryParse(ddlPlazoSolicitado.SelectedValue, out plazoMeses);
 
-            // Cálculo financiero en servidor: Cuota mensual estimada a 10% EA (nominal mensual = 10% / 12)
+            // Estado de los archivos adjuntos
+            string estadoAdjuntos = "Sin comprobantes digitales (presentación física requerida)";
+            if (fileReciboDUI.HasFile || fileConstancia.HasFile)
+            {
+                List<string> nombresAdjuntos = new List<string>();
+                if (fileReciboDUI.HasFile) nombresAdjuntos.Add(fileReciboDUI.FileName);
+                if (fileConstancia.HasFile) nombresAdjuntos.Add(fileConstancia.FileName);
+                estadoAdjuntos = "Archivos cargados digitalmente: " + string.Join(", ", nombresAdjuntos);
+            }
+
+            // Cálculo financiero de cuota mensual a 10% ANUAL (nominal mensual = 10% / 12)
             double tasaNominalMensual = (0.10 / 12.0);
             double P = (double)montoSolicitado;
             int n = plazoMeses;
             double cuotaMensual = P * (tasaNominalMensual * Math.Pow(1 + tasaNominalMensual, n)) / (Math.Pow(1 + tasaNominalMensual, n) - 1);
 
-            // Cálculo del Nivel de Endeudamiento (Ratio Cuota / Ingresos)
+            // Ratio de Endeudamiento
             decimal ratioEndeudamiento = ((decimal)cuotaMensual / ingresos) * 100m;
 
             pnlMensaje.Visible = true;
@@ -126,25 +146,29 @@ namespace CoopFacil.Pages
                 litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-400'>" +
                                   "<i class='fa-solid fa-circle-check text-lg'></i> Dictamen Preliminar: <strong>Pre-Aprobado Sujeto a Comprobantes</strong></div>" +
                                   "<p class='mt-1 text-slate-200'>Tu capacidad de pago es óptima. La cuota mensual estimada de <strong>$" + cuotaMensual.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales ($" + ingresos.ToString("N2") + " USD).</p>" +
-                                  "<p class='text-xs text-slate-300'>Un ejecutivo revisará los comprobantes adjuntos (DUI, constancia de sueldo y recibo de luz/agua) para la firma final del desembolso para <strong>" + ddlDestino.SelectedValue + "</strong>.</p>";
+                                  "<p class='text-xs text-slate-300'>Se han registrado tus <strong>4 recomendaciones de localización</strong> y el estado de adjuntos: <em>\"" + estadoAdjuntos + "\"</em>. Un ejecutivo procederá con la firma final para <strong>" + ddlDestino.SelectedValue + "</strong>.</p>";
             }
             else
             {
                 pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-amber-500/50 bg-amber-950/40 text-amber-300 flex flex-col gap-2 text-xs font-medium";
                 litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-amber-400'>" +
                                   "<i class='fa-solid fa-triangle-exclamation text-lg'></i> Dictamen Preliminar: <strong>Sujeto a Análisis de Riesgo Especial</strong></div>" +
-                                  "<p class='mt-1 text-slate-200'>La cuota estimada de <strong>$" + cuotaMensual.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales, superando el límite estándar del 40%.</p>" +
-                                  "<p class='text-xs text-slate-300'>Te sugerimos aumentar el plazo a <strong>" + (plazoMeses < 120 ? (plazoMeses + 12).ToString() + " meses" : "120 meses") + "</strong> o presentar un consolidador de ingresos para facilitar la aprobación.</p>";
+                                  "<p class='mt-1 text-slate-200'>La cuota estimada de <strong>$" + cuotaMensual.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales, superando el límite recomendado del 40%.</p>" +
+                                  "<p class='text-xs text-slate-300'>Guardamos tus 4 contactos de respaldo y adjuntos. Te sugerimos ampliar el plazo de financiamiento para reducir la cuota mensual.</p>";
             }
 
+            // Limpieza de campos sensibles / referencias tras procesar
             txtDUI.Text = "";
             txtTelefono.Text = "";
             txtCorreo.Text = "";
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
+            txtRefPers1Nombre.Text = "";
+            txtRefPers1Tel.Text = "";
+            txtRefPers2Nombre.Text = "";
+            txtRefPers2Tel.Text = "";
+            txtRefFam1Nombre.Text = "";
+            txtRefFam1Tel.Text = "";
+            txtRefFam2Nombre.Text = "";
+            txtRefFam2Tel.Text = "";
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

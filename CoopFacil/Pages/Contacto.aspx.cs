@@ -23,7 +23,6 @@ namespace CoopFacil.Pages
             bool estaAutenticado = !string.IsNullOrEmpty(nombreUsuario);
 
             lnkIniciarSesion.Visible = !estaAutenticado;
-            btnPortalSocio.Visible = estaAutenticado;
             btnCerrarSesion.Visible = estaAutenticado;
             pnlBienvenida.Visible = estaAutenticado;
 
@@ -55,11 +54,6 @@ namespace CoopFacil.Pages
             }
 
             return null;
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

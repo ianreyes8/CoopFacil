@@ -51,17 +51,11 @@
 
                 <!-- CONTROLES DE SESIÓN (DERECHA) -->
                 <div class="flex items-center gap-3">
-                    <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                     <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
 
-                    <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
-
-                    <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
+                    <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                     </asp:LinkButton>
                 </div>
@@ -122,7 +116,6 @@
 
                         <div class="flex flex-col gap-3">
                             
-                            <!-- Documento 1 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center justify-between gap-4 shadow-lg hover:border-emerald-500/60 transition group">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
@@ -142,7 +135,6 @@
                                 </a>
                             </div>
 
-                            <!-- Documento 2 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center justify-between gap-4 shadow-lg hover:border-emerald-500/60 transition group">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
@@ -162,7 +154,6 @@
                                 </a>
                             </div>
 
-                            <!-- Documento 3 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center justify-between gap-4 shadow-lg hover:border-emerald-500/60 transition group">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
@@ -182,7 +173,6 @@
                                 </a>
                             </div>
 
-                            <!-- Documento 4 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center justify-between gap-4 shadow-lg hover:border-emerald-500/60 transition group">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 flex-shrink-0">
@@ -202,7 +192,6 @@
                                 </a>
                             </div>
 
-                            <!-- Documento 5 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 flex items-center justify-between gap-4 shadow-lg hover:border-emerald-500/60 transition group">
                                 <div class="flex items-center gap-3.5">
                                     <div class="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 flex-shrink-0">
@@ -233,7 +222,6 @@
 
                         <div class="flex flex-col gap-3">
                             
-                            <!-- Órgano 1 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     PRESIDENTE DEL CONSEJO DE ADMINISTRACIÓN
@@ -246,7 +234,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 2 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     VICEPRESIDENTE DEL CONSEJO DE ADMINISTRACIÓN
@@ -259,7 +246,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 3 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     GERENTE GENERAL
@@ -272,7 +258,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 4 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     PRESIDENTE DE LA JUNTA DE VIGILANCIA
@@ -285,7 +270,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 5 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     PRESIDENTE DEL COMITÉ DE CRÉDITO
@@ -298,7 +282,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 6 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     PRESIDENTE DEL COMITÉ DE EDUCACIÓN
@@ -311,7 +294,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 7 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     SECRETARIO DEL CONSEJO DE ADMINISTRACIÓN
@@ -324,7 +306,6 @@
                                 </p>
                             </div>
 
-                            <!-- Órgano 8 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 rounded-xl p-4 shadow-lg hover:border-slate-600 transition">
                                 <span class="text-[11px] font-bold text-emerald-400 tracking-wider uppercase block">
                                     TESORERA DEL COMITÉ DE RIESGOS

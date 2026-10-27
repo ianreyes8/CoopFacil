@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace CoopFacil.Pages
 {
@@ -13,49 +9,62 @@ namespace CoopFacil.Pages
         {
             if (!IsPostBack)
             {
-                EvaluarEstadoSesion();
+                VerificarSesion();
             }
         }
 
-        private void EvaluarEstadoSesion()
+        private void VerificarSesion()
         {
-            // Verificación del estado de sesión idéntica a Index y QuienesSomos
-            bool estaAutenticado = (Session["IdUsuario"] != null);
+            string nombreUsuario = ObtenerNombreUsuarioSesion();
+
+            bool estaAutenticado = !string.IsNullOrEmpty(nombreUsuario);
 
             lnkIniciarSesion.Visible = !estaAutenticado;
-            btnPortalSocio.Visible = estaAutenticado;
             btnCerrarSesion.Visible = estaAutenticado;
             pnlBienvenida.Visible = estaAutenticado;
 
             if (estaAutenticado)
             {
-                string nombreCompleto = Session["NombreCompleto"] != null ? Session["NombreCompleto"].ToString() : "";
-                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreCompleto);
+                litBienvenida.Text = nombreUsuario;
             }
         }
 
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
+        private string ObtenerNombreUsuarioSesion()
         {
-            // Redirige al Index donde se despliega el modal del Portal Socio
-            Response.Redirect("../Index.aspx");
+            string[] clavesNombre = new string[] { "UsuarioNombre", "NombreUsuario", "NombreCompleto", "Usuario", "Nombre", "nombre", "usuario" };
+
+            foreach (string clave in clavesNombre)
+            {
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
+                    {
+                        return valor;
+                    }
+                }
+            }
+
+            foreach (string key in Session.Keys)
+            {
+                if (Session[key] != null)
+                {
+                    string valor = Session[key].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
+                    {
+                        return valor;
+                    }
+                }
+            }
+
+            return null;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("Servicios.aspx");
-        }
-
-        public static string ExtraerPrimerNombreYPrimerApellido(string nombreCompleto)
-        {
-            if (string.IsNullOrWhiteSpace(nombreCompleto)) return "";
-            string[] partes = nombreCompleto.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            if (partes.Length == 1) return partes[0];
-            if (partes.Length == 2) return $"{partes[0]} {partes[1]}";
-            if (partes.Length == 3) return $"{partes[0]} {partes[1]}";
-            return $"{partes[0]} {partes[2]}";
+            Response.Redirect("../Default.aspx");
         }
     }
 }

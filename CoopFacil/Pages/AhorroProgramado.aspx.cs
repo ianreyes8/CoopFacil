@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace CoopFacil.Pages
 {
@@ -31,11 +26,7 @@ namespace CoopFacil.Pages
             pnlBienvenida.Visible = true;
             litBienvenida.Text = nombreUsuario;
             lnkIniciarSesion.Visible = false;
-            btnPortalSocio.Visible = true;
             btnCerrarSesion.Visible = true;
-
-            // IMPORTANTE: Se elimina la autocompletación automática de txtNombre.Text
-            // para requerir obligatoriamente el llenado manual por parte del usuario.
         }
 
         private string ObtenerNombreUsuarioSesion()
@@ -82,7 +73,6 @@ namespace CoopFacil.Pages
                 return;
             }
 
-            // Limpiar comas del monto cuota
             string cuotaLimpia = txtCuotaMensualForm.Text.Replace(",", "").Trim();
             decimal cuota;
 
@@ -101,17 +91,11 @@ namespace CoopFacil.Pages
                               "<p class='mt-1 text-slate-200'>Estimado/a <strong>" + txtNombre.Text + "</strong>, se ha activado tu plan con meta <strong>\"" + ddlMetaForm.SelectedValue + "\"</strong>.</p>" +
                               "<p class='text-xs text-slate-300'>Se realizará un débito automático mensual de <strong>$" + cuota.ToString("N2") + " USD</strong> los días <strong>" + ddlDiaDebito.SelectedValue + " de cada mes</strong> a un plazo de <strong>" + ddlPlazoForm.SelectedValue + " meses</strong>. Confirmación enviada a <strong>" + txtCorreo.Text + "</strong>.</p>";
 
-            // Limpiar formulario tras el envío exitoso
             txtNombre.Text = "";
             txtDUI.Text = "";
             txtTelefono.Text = "";
             txtCorreo.Text = "";
             txtCuotaMensualForm.Text = "";
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

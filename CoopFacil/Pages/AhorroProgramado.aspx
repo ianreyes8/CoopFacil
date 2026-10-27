@@ -56,10 +56,6 @@
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
 
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" Visible="false" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
-
                     <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                     </asp:LinkButton>
@@ -115,7 +111,6 @@
 
                         <!-- INPUTS CON FORMATO DINÁMICO DE COMAS -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <!-- META DE AHORRO -->
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[10px] font-bold text-slate-300 uppercase">META DE AHORRO</label>
                                 <asp:DropDownList ID="ddlMetaSim" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
@@ -127,7 +122,6 @@
                                 </asp:DropDownList>
                             </div>
 
-                            <!-- CUOTA MENSUAL ($10-$500) CON SEPARADOR DE MILES -->
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[10px] font-bold text-slate-300 uppercase">CUOTA MENSUAL ($10-$500)</label>
                                 <div class="relative flex items-center">
@@ -136,7 +130,6 @@
                                 </div>
                             </div>
 
-                            <!-- PLAZO / TASA EA -->
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-[10px] font-bold text-slate-300 uppercase">PLAZO / TASA EA</label>
                                 <asp:DropDownList ID="ddlPlazoSim" runat="server" onchange="calcularSimuladorAhorroProgramado()" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
@@ -149,7 +142,6 @@
                             </div>
                         </div>
 
-                        <!-- RESULTADOS PROYECTADOS (3 COLUMNAS INTERNAS) -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center items-center shadow-inner">
                             <div class="flex flex-col">
                                 <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">TOTAL ACUMULADO</span>
@@ -188,7 +180,6 @@
                             Configura la fecha del mes en que deseas que se realice el débito automático desde tu **Cuenta de Ahorro Principal**:
                         </p>
 
-                        <!-- TARJETAS DE OPCIONES DE DÉBITO (3 OPCIONES) -->
                         <div class="grid grid-cols-3 gap-2.5 text-center">
                             <div class="bg-[#0B1A30] border border-slate-700 rounded-xl p-3 flex flex-col items-center justify-center">
                                 <span class="text-[9px] font-bold text-slate-400 uppercase">OPCIÓN 1</span>
@@ -217,13 +208,13 @@
 
                 </div>
 
-                <!-- SECCIÓN INFERIOR: FORMULARIO DE CONTRATACIÓN DE PLAN (LLENADO MANUAL OBLIGATORIO) -->
+                <!-- SECCIÓN INFERIOR: FORMULARIO DE CONTRATACIÓN DE PLAN -->
                 <section class="bg-[#0F233D] border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-2">
                         <div>
                             <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block">CONTRATACIÓN EN LÍNEA</span>
                             <h2 class="text-2xl font-extrabold text-white mt-0.5 flex items-center gap-2">
-                                <i class="fa-solid fa-[#000] fa-file-contract text-emerald-400"></i> Formulario de Contratación de Plan
+                                <i class="fa-solid fa-file-contract text-emerald-400"></i> Formulario de Contratación de Plan
                             </h2>
                         </div>
                         <div class="flex items-center gap-2 bg-[#0B1A30] border border-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-300">
@@ -235,12 +226,10 @@
                         Completa el registro formal de tu plan de ahorro ligado a tu sesión de socio activo.
                     </p>
 
-                    <!-- MENSAJE DE FEEDBACK -->
                     <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="mb-6 p-4 rounded-xl border flex items-center gap-3 text-xs font-bold">
                         <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
                     </asp:Panel>
 
-                    <!-- FILA 1 DE CAMPOS CON BLOQUEO DE AUTOCOMPLETADO (LLENADO MANUAL) -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Nombre Completo <span class="text-emerald-400">*</span></label>
@@ -263,7 +252,6 @@
                         </div>
                     </div>
 
-                    <!-- FILA 2 DE CAMPOS + BOTÓN -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-2">
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Meta Seleccionada <span class="text-emerald-400">*</span></label>
@@ -316,21 +304,15 @@
 
     </form>
 
-    <!-- SCRIPT DE CÁLCULO Y FORMATO DE COMAS EN TIEMPO REAL -->
     <script>
         function formatearYCalcularMonto(input) {
             if (!input) return;
-
-            // Conservar únicamente dígitos
             let valorLimpio = input.value.replace(/[^0-9]/g, '');
-
             if (valorLimpio !== "") {
-                // Formatear automáticamente con comas cuando la cifra tenga 4 o más dígitos
                 input.value = parseInt(valorLimpio, 10).toLocaleString('en-US');
             } else {
                 input.value = "";
             }
-
             calcularSimuladorAhorroProgramado();
         }
 
@@ -342,11 +324,11 @@
 
         function obtenerTasaPorPlazo(meses) {
             switch (parseInt(meses)) {
-                case 6: return 0.015;  // 1.5% EA
-                case 12: return 0.030; // 3.0% EA
-                case 18: return 0.050; // 5.0% EA
-                case 24: return 0.065; // 6.5% EA
-                case 36: return 0.080; // 8.0% EA
+                case 6: return 0.015;
+                case 12: return 0.030;
+                case 18: return 0.050;
+                case 24: return 0.065;
+                case 36: return 0.080;
                 default: return 0.030;
             }
         }
@@ -363,8 +345,6 @@
             const tasaMensual = tasaAnual / 12;
 
             let balanceAcumulado = 0;
-
-            // Proyección mensual acumulativa
             for (let m = 1; m <= meses; m++) {
                 balanceAcumulado = (balanceAcumulado + cuotaMensual) * (1 + tasaMensual);
             }
@@ -379,7 +359,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // Formatear al cargar si existen valores por defecto
             const txtCuotaSim = document.getElementById('<%= txtCuotaMensualSim.ClientID %>');
             const txtCuotaForm = document.getElementById('<%= txtCuotaMensualForm.ClientID %>');
 
@@ -388,6 +367,6 @@
 
             calcularSimuladorAhorroProgramado();
         });
-    </script>
+</script>
 </body>
 </html>

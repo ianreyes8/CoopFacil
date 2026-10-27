@@ -22,28 +22,24 @@ namespace CoopFacil
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text;
 
-            // 1. Validar campos requeridos
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 MostrarError("Por favor, ingresa tu correo electrónico y contraseña.");
                 return;
             }
 
-            // 2. Validar que el correo contenga '@' y '.'
             if (!email.Contains("@") || !email.Contains("."))
             {
                 MostrarError("El correo electrónico debe ser válido y contener el símbolo '@'.");
                 return;
             }
 
-            // 3. Validar mínimo 8 caracteres en la contraseña
             if (password.Length < 8)
             {
                 MostrarError("La contraseña debe tener un mínimo de 8 caracteres.");
                 return;
             }
 
-            // 4. Consulta a la Base de Datos SQL Server
             using (SqlConnection con = new SqlConnection(conexionStr))
             {
                 string query = "SELECT IdUsuario, NombreCompleto, Email, Password, NumeroSocio FROM Usuarios WHERE Email = @Email";
@@ -61,7 +57,6 @@ namespace CoopFacil
 
                         if (dbPassword == password)
                         {
-                            // Usuario autenticado exitosamente
                             Session["IdUsuario"] = Convert.ToInt32(reader["IdUsuario"]);
                             Session["NombreCompleto"] = reader["NombreCompleto"].ToString();
                             Session["NumeroSocio"] = reader["NumeroSocio"].ToString();
@@ -75,7 +70,6 @@ namespace CoopFacil
                     }
                     else
                     {
-                        // Bloquea el paso si no está en la base de datos
                         MostrarError("El correo ingresado no está registrado como socio en CoopFacil. Por favor, regístrate primero.");
                     }
                 }

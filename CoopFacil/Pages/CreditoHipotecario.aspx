@@ -1,4 +1,4 @@
-﻿ <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CreditoHipotecario.aspx.cs" Inherits="CoopFacil.Pages.CreditoHipotecario" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CreditoHipotecario.aspx.cs" Inherits="CoopFacil.Pages.CreditoHipotecario" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es">
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="bg-[#0B1A30] text-white font-sans antialiased min-h-screen flex flex-col justify-between">
-    <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
+    <form id="form1" runat="server" autocomplete="off" class="min-h-screen flex flex-col justify-between">
         
         <div>
             <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
@@ -51,15 +51,9 @@
 
                 <!-- CONTROLES DE SESIÓN (DERECHA) -->
                 <div class="flex items-center gap-3">
-                    <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                     <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
-
-                    <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" Visible="false" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
 
                     <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
@@ -71,7 +65,7 @@
             <!-- CONTENIDO PRINCIPAL -->
             <main class="max-w-7xl mx-auto px-6 py-10 flex flex-col gap-10 flex-grow w-full">
                 
-                <!-- REGRESO A SERVICIOS Y TITULAR -->
+                <!-- ÁREA DEL CRÉDITO (TITULAR Y CONDICIONES) -->
                 <div class="flex flex-col gap-3">
                     <a href="Servicios.aspx" class="text-xs font-bold text-emerald-400 hover:underline flex items-center gap-2 w-fit">
                         <i class="fa-solid fa-arrow-left"></i> Volver al Portafolio de Servicios
@@ -85,7 +79,7 @@
                         </div>
                         <div class="bg-[#0F233D] border border-emerald-500/40 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
                             <span class="text-xs text-slate-300 font-medium">Tasa Preferencial Vivienda:</span>
-                            <span class="text-lg font-black text-emerald-400">7.50% EA</span>
+                            <span class="text-lg font-black text-emerald-400">10% ANUAL</span>
                         </div>
                     </div>
                     <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl">
@@ -93,10 +87,10 @@
                     </p>
                 </div>
 
-                <!-- SECCIÓN 1: SIMULADOR HIPOTECARIO Y RESULTADOS DETALLADOS -->
+                <!-- BLOQUE SUPERIOR: SIMULADOR HIPOTECARIO (IZQ) Y DESGLOSE DE CUOTA (DER) -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    <!-- CALCULADORA HIPOTECARIA (INPUTS) -->
+                    <!-- IZQUIERDA: SIMULADOR HIPOTECARIO (SIN PRIMA + TABLA RESUMIDA) -->
                     <div class="lg:col-span-6 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-6">
                         <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
                             <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl">
@@ -104,11 +98,11 @@
                             </div>
                             <div>
                                 <h2 class="text-xl font-bold text-white">Simulador Hipotecario</h2>
-                                <p class="text-xs text-slate-400">Calcula tu cuota con financiamiento hasta 20 años (7.5% EA)</p>
+                                <p class="text-xs text-slate-400">Calcula tu cuota con financiamiento hasta 20 años (10% ANUAL)</p>
                             </div>
                         </div>
 
-                        <!-- VALOR TOTAL DE LA PROPIEDAD -->
+                        <!-- VALOR TOTAL DEL INMUEBLE -->
                         <div class="flex flex-col gap-2">
                             <label class="text-xs font-bold text-slate-300 uppercase">Valor Total del Inmueble ($ USD)</label>
                             <div class="relative">
@@ -117,39 +111,56 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            <!-- PORCENTAJE DE PRIMA / ENGANCHE (MÍNIMO 10%) -->
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-300 uppercase">Prima del valor otorgado (Mín. 10%)</label>
-                                <div class="relative">
-                                    <input type="number" id="simPrimaPct" value="10" min="10" max="80" step="1" oninput="calcularSimuladorHipotecario()" class="w-full bg-[#0B1A30] border border-slate-700 rounded-xl pl-4 pr-8 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition" />
-                                    <span class="absolute right-3.5 top-2.5 text-slate-400 font-bold">%</span>
-                                </div>
-                            </div>
-
-                            <!-- PLAZO EN AÑOS (HASTA 20 AÑOS) -->
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-300 uppercase">Plazo de Financiamiento</label>
-                                <select id="simPlazoAnios" onchange="calcularSimuladorHipotecario()" class="w-full bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
-                                    <option value="5">5 Años (60 Meses)</option>
-                                    <option value="10">10 Años (120 Meses)</option>
-                                    <option value="15">15 Años (180 Meses)</option>
-                                    <option value="20" selected="selected">20 Años (240 Meses)</option>
-                                </select>
-                            </div>
+                        <!-- PLAZO DE FINANCIAMIENTO -->
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-bold text-slate-300 uppercase">Plazo de Financiamiento</label>
+                            <select id="simPlazoAnios" onchange="calcularSimuladorHipotecario()" class="w-full bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
+                                <option value="5">5 Años (60 Meses)</option>
+                                <option value="10">10 Años (120 Meses)</option>
+                                <option value="15">15 Años (180 Meses)</option>
+                                <option value="20" selected="selected">20 Años (240 Meses)</option>
+                            </select>
                         </div>
 
+                        <!-- MONTO TOTAL A FINANCIAR (IGUAL AL VALOR DEL INMUEBLE) -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex justify-between items-center text-xs">
-                            <span class="text-slate-400 font-medium">Monto Total a Financiar:</span>
-                            <span id="lblMontoFinanciar" class="text-base font-extrabold text-emerald-400">$90,000.00</span>
+                            <span class="text-slate-400 font-bold uppercase">Monto Total a Financiar:</span>
+                            <span id="lblMontoFinanciar" class="text-lg font-black text-emerald-400">$100,000.00</span>
                         </div>
+
+                        <!-- TABLA RESUMIDA DE LOS PRIMEROS MESES -->
+                        <div class="flex flex-col gap-2">
+                            <span class="text-xs font-bold text-slate-300 uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-table-list text-emerald-400"></i> Tabla Resumida de los Primeros Meses
+                            </span>
+                            <div class="overflow-x-auto rounded-xl border border-slate-800">
+                                <table class="w-full text-left text-[11px] text-slate-300">
+                                    <thead class="bg-[#0B1A30] text-emerald-400 font-bold uppercase border-b border-slate-800">
+                                        <tr>
+                                            <th class="py-2 px-3">Mes</th>
+                                            <th class="py-2 px-3">Cuota Base</th>
+                                            <th class="py-2 px-3">Interés</th>
+                                            <th class="py-2 px-3">Capital</th>
+                                            <th class="py-2 px-3 text-right">Saldo Restante</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblAmortizacionBody" class="divide-y divide-slate-800/60 font-medium">
+                                        <!-- Generado dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <span class="text-[11px] text-slate-400 italic text-center">
+                            * Cálculo estimado sobre sistema de cuota nivelada a Tasa Efectiva Anual del 10.00%.
+                        </span>
                     </div>
 
-                    <!-- RESULTADOS DETALLADOS Y SEGUROS -->
-                    <div class="lg:col-span-6 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-5">
+                    <!-- DERECHA: DESGLOSE DE CUOTA ESTIMADA (CAPITAL, INTERESES, SEGUROS) -->
+                    <div class="lg:col-span-6 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-6">
                         <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
                             <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-xl">
-                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                                <i class="fa-solid fa-chart-pie"></i>
                             </div>
                             <div>
                                 <h2 class="text-xl font-bold text-white">Desglose de Cuota Estimada</h2>
@@ -160,25 +171,76 @@
                         <!-- CUOTA TOTAL DESTACADA -->
                         <div class="bg-[#0B1A30] border border-emerald-500/40 rounded-xl p-5 text-center flex flex-col items-center justify-center shadow-inner">
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cuota Total Mensual Estimada</span>
-                            <span id="lblCuotaTotal" class="text-3xl font-black text-emerald-400 mt-1">$772.03</span>
-                            <span class="text-[10px] text-slate-400 mt-1">* Cuota fija durante todo el plazo del crédito</span>
+                            <span id="lblCuotaTotal" class="text-3xl font-black text-emerald-400 mt-1">$1,014.82</span>
+                            <span class="text-[10px] text-slate-400 mt-1">* Cuota fija estimada durante todo el plazo</span>
                         </div>
 
-                        <!-- TABLA DE DESGLOSE -->
-                        <div class="space-y-2.5 text-xs text-slate-300">
-                            <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-coins text-emerald-400"></i> Cuota Base (Capital e Intereses):</span>
-                                <span id="lblCuotaBase" class="font-bold text-white">$725.03</span>
+                        <!-- BARRA VISUAL DE DISTRIBUCIÓN -->
+                        <div class="space-y-4">
+                            <span class="text-xs font-bold text-slate-300 uppercase block border-b border-slate-800 pb-2">Distribución de la Cuota (Mes 1):</span>
+
+                            <div class="w-full bg-[#0B1A30] h-3 rounded-full overflow-hidden flex border border-slate-800 p-0.5">
+                                <div id="barCapital" class="bg-emerald-500 h-full rounded-l-full transition-all duration-300" style="width: 13%;"></div>
+                                <div id="barInteres" class="bg-blue-500 h-full transition-all duration-300" style="width: 82%;"></div>
+                                <div id="barSegVida" class="bg-purple-500 h-full transition-all duration-300" style="width: 3%;"></div>
+                                <div id="barSegDanos" class="bg-amber-500 h-full rounded-r-full transition-all duration-300" style="width: 2%;"></div>
                             </div>
 
-                            <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-heart-pulse text-blue-400"></i> Seguro de Vida Colectivo (Est.):</span>
-                                <span id="lblSeguroVida" class="font-bold text-slate-200">$27.00</span>
-                            </div>
+                            <!-- FILAS DE DESGLOSE INDIVIDUAL -->
+                            <div class="space-y-2 text-xs">
+                                
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-building-columns"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Abono Directo a Capital:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctCapital" class="text-[10px] text-emerald-400 font-semibold">12.9%</span>
+                                        <span id="lblDesgloseCapital" class="font-extrabold text-emerald-400">$131.49</span>
+                                    </div>
+                                </div>
 
-                            <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-amber-400"></i> Seguro de Daños / Incendio (Est.):</span>
-                                <span id="lblSeguroDanos" class="font-bold text-slate-200">$20.00</span>
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-percent"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Intereses Financieros (10% ANUAL):</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctInteres" class="text-[10px] text-blue-400 font-semibold">82.1%</span>
+                                        <span id="lblDesgloseInteres" class="font-extrabold text-blue-400">$833.33</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-heart-pulse"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Seguro de Vida Colectivo:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctSegVida" class="text-[10px] text-purple-400 font-semibold">3.0%</span>
+                                        <span id="lblSeguroVida" class="font-extrabold text-purple-300">$30.00</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-shield-halved"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Seguro de Daños / Incendio:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctSegDanos" class="text-[10px] text-amber-400 font-semibold">2.0%</span>
+                                        <span id="lblSeguroDanos" class="font-extrabold text-amber-300">$20.00</span>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -189,7 +251,86 @@
 
                 </div>
 
-                <!-- SECCIÓN 2: GUÍA DE PASOS DEL PROCESO (FLUJOGRAMA VISUAL) -->
+                <!-- SECCIÓN REQUISITOS (BARRA HORIZONTAL COMPLETA UBICADA ANTES DE LA GUÍA) -->
+                <section class="bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col gap-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-xl">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-white">Requisitos para Solicitud de Crédito Hipotecario</h2>
+                                <p class="text-xs text-slate-400">Documentación y referencias obligatorias previas al avalúo y escrituración</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 bg-[#0B1A30] border border-emerald-500/30 px-3.5 py-1.5 rounded-xl">
+                            <i class="fa-solid fa-check-double"></i> Verificación Digital y Legal
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-id-card"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">1. DUI Vigente</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">Ambos lados legibles</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">2. Constancia de Sueldo</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">Emisión reciente firmada</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">3. Recibo Agua / Luz</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">Comprobante de domicilio</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">4. Recomendaciones</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">4 contactos (2 fam / 2 pers)</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="bg-blue-950/40 border border-blue-500/30 rounded-xl p-3.5 text-xs text-blue-200 flex items-center gap-3">
+                        <i class="fa-solid fa-circle-info text-blue-400 text-base"></i>
+                        <span>Las 4 recomendaciones se utilizarán para comunicación directa únicamente en caso de atrasos en el pago de cuotas o localización de respaldo.</span>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN GUÍA DE PASOS DEL PROCESO (FLUJOGRAMA VISUAL) -->
                 <section class="bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col gap-6">
                     <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
                         <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl">
@@ -203,7 +344,6 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative">
                         
-                        <!-- PASO 1 -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col gap-3 relative group hover:border-emerald-500/50 transition">
                             <div class="flex items-center justify-between">
                                 <span class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-black text-sm flex items-center justify-center border border-emerald-500/30">1</span>
@@ -211,11 +351,10 @@
                             </div>
                             <h3 class="text-sm font-bold text-white">1. Pre-Calificación</h3>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                Simula tu crédito e ingresa tu solicitud en línea para verificar tu capacidad de pago y monto máximo pre-aprobado.
+                                Simula tu crédito e ingresa tu solicitud para verificar tu capacidad de pago y el monto pre-aprobado.
                             </p>
                         </div>
 
-                        <!-- PASO 2 -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col gap-3 relative group hover:border-emerald-500/50 transition">
                             <div class="flex items-center justify-between">
                                 <span class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-black text-sm flex items-center justify-center border border-emerald-500/30">2</span>
@@ -223,11 +362,10 @@
                             </div>
                             <h3 class="text-sm font-bold text-white">2. Avalúo del Inmueble</h3>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                Un perito valuador autorizado por la cooperativa realiza la inspección física y comercial de la propiedad.
+                                Un perito valuador autorizado realiza la inspección física y comercial de la propiedad.
                             </p>
                         </div>
 
-                        <!-- PASO 3 -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col gap-3 relative group hover:border-emerald-500/50 transition">
                             <div class="flex items-center justify-between">
                                 <span class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-black text-sm flex items-center justify-center border border-emerald-500/30">3</span>
@@ -235,11 +373,10 @@
                             </div>
                             <h3 class="text-sm font-bold text-white">3. Análisis Legal y Aprobación</h3>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                Revisión de antecedentes registrales en el CNR y emisión de la carta de aprobación formal por el Comité de Crédito.
+                                Revisión de antecedentes registrales en el CNR y emisión de la carta de aprobación formal.
                             </p>
                         </div>
 
-                        <!-- PASO 4 -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col gap-3 relative group hover:border-emerald-500/50 transition">
                             <div class="flex items-center justify-between">
                                 <span class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 font-black text-sm flex items-center justify-center border border-emerald-500/30">4</span>
@@ -247,23 +384,23 @@
                             </div>
                             <h3 class="text-sm font-bold text-white">4. Escrituración y Desembolso</h3>
                             <p class="text-xs text-slate-400 leading-relaxed">
-                                Firma de escritura pública de compraventa e hipoteca ante notario y transferencia inmediata de fondos.
+                                Firma de escritura pública de compraventa e hipoteca ante notario y desembolso de fondos.
                             </p>
                         </div>
 
                     </div>
                 </section>
 
-                <!-- SECCIÓN 3: AGENDAMIENTO DE CITA CON ASESOR ESPECIALIZADO -->
-                <section class="bg-[#0F233D] border-2 border-emerald-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-6">
+                <!-- SECCIÓN AGENDAMIENTO DE CITA (DATOS PERSONALES + DATOS CITA ÚNICAMENTE) -->
+                <section class="bg-[#0F233D] border-2 border-emerald-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col gap-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
                         <div>
                             <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block">ASESORÍA PERSONALIZADA</span>
                             <h2 class="text-2xl font-extrabold text-white mt-1 flex items-center gap-2">
                                 <i class="fa-solid fa-calendar-days text-emerald-400"></i> Agendamiento de Cita con Asesor Especializado
                             </h2>
                             <p class="text-xs sm:text-sm text-slate-300 mt-1">
-                                Selecciona el día, la hora y la modalidad de tu preferencia para recibir atención exclusiva sobre tu crédito de vivienda.
+                                Selecciona el día, la hora, la modalidad e ingresa tus datos para recibir atención exclusiva sobre tu crédito de vivienda.
                             </p>
                         </div>
                         <div class="hidden sm:flex items-center gap-2 bg-[#0B1A30] border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-300">
@@ -272,33 +409,38 @@
                     </div>
 
                     <!-- MENSAJE DE FEEDBACK -->
-                    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="mb-6 p-4 rounded-xl border flex items-center gap-3 text-sm font-bold">
+                    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="p-4 rounded-xl border flex items-center gap-3 text-sm font-bold">
                         <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
                     </asp:Panel>
 
+                    <!-- FORMULARIO DE DATOS PERSONALES Y CITA -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                         
+                        <!-- NOMBRE COMPLETO (SOLO LETRAS) -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Nombre Completo <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtNombre" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Carlos Alberto Mendoza"></asp:TextBox>
+                            <asp:TextBox ID="txtNombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Carlos Alberto Mendoza"></asp:TextBox>
                         </div>
 
+                        <!-- DUI (SOLO NÚMEROS Y MÁSCARA 00000000-0) -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Documento de Identidad (DUI) <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtDUI" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
+                            <asp:TextBox ID="txtDUI" runat="server" maxlength="10" oninput="formatearDUI(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
                         </div>
 
+                        <!-- TELÉFONO (SOLO NÚMEROS Y MÁSCARA 0000-0000) -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Teléfono de Contacto <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtTelefono" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
+                            <asp:TextBox ID="txtTelefono" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
                         </div>
 
+                        <!-- CORREO ELECTRÓNICO -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Correo Electrónico <span class="text-emerald-400">*</span></label>
                             <asp:TextBox ID="txtCorreo" runat="server" TextMode="Email" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
                         </div>
 
-                        <!-- MODALIDAD -->
+                        <!-- MODALIDAD DE ATENCIÓN -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Modalidad de Atención <span class="text-emerald-400">*</span></label>
                             <asp:DropDownList ID="ddlModalidad" runat="server" onchange="toggleAgencia(this.value)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
@@ -307,7 +449,7 @@
                             </asp:DropDownList>
                         </div>
 
-                        <!-- AGENCIA (MUESTRA U OCULTA SEGÚN MODALIDAD) -->
+                        <!-- AGENCIA PREFERIDA -->
                         <div id="divAgencia" class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-300">Agencia Preferida <span class="text-emerald-400">*</span></label>
                             <asp:DropDownList ID="ddlAgencia" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
@@ -339,7 +481,7 @@
 
                     </div>
 
-                    <div class="mt-6 flex justify-end">
+                    <div class="mt-2 flex justify-end">
                         <asp:Button ID="btnAgendarCita" runat="server" Text="Confirmar y Agendar Cita" OnClick="btnAgendarCita_Click" CssClass="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-950 transition cursor-pointer" />
                     </div>
                 </section>
@@ -353,57 +495,144 @@
 
     </form>
 
+    <!-- SCRIPTS DE SIMULADOR, RESTRICCIONES Y MÁSCARAS -->
     <script>
-        function calcularSimuladorHipotecario() {
-            const valProp = parseFloat(document.getElementById('simValorPropiedad').value) || 0;
-            const pctPrima = parseFloat(document.getElementById('simPrimaPct').value) || 10;
-            const anios = parseInt(document.getElementById('simPlazoAnios').value) || 20;
+// 1. RESTRICCIÓN: Solo letras, espacios y tildes/ñ
+function filtrarSoloLetras(input) {
+    if (!input) return;
+    input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+}
 
-            if (valProp <= 0) {
-                document.getElementById('lblMontoFinanciar').innerText = '$0.00';
-                document.getElementById('lblCuotaTotal').innerText = '$0.00';
-                document.getElementById('lblCuotaBase').innerText = '$0.00';
-                document.getElementById('lblSeguroVida').innerText = '$0.00';
-                document.getElementById('lblSeguroDanos').innerText = '$0.00';
-                return;
-            }
+// 2. MÁSCARA DUI: Solo números con guion automático (00000000-0)
+function formatearDUI(input) {
+    if (!input) return;
+    let val = input.value.replace(/\D/g, '');
+    if (val.length > 9) val = val.substring(0, 9);
 
-            const montoPrima = valProp * (pctPrima / 100);
-            const montoFinanciar = valProp - montoPrima;
-            const plazoMeses = anios * 12;
-            const tasaAnual = 0.075; // Tasa del 7.5% EA
-            const tasaMensual = tasaAnual / 12;
+    if (val.length > 8) {
+        input.value = val.substring(0, 8) + '-' + val.substring(8, 9);
+    } else {
+        input.value = val;
+    }
+}
 
-            // Fórmula de cuota nivelada PMT utilizando Math.pow (JavaScript)
-            const factor = Math.pow(1 + tasaMensual, plazoMeses);
-            const cuotaBase = montoFinanciar * (tasaMensual * factor) / (factor - 1);
+// 3. MÁSCARA TELÉFONO: Solo números con guion en la mitad (0000-0000)
+function formatearTelefono(input) {
+    if (!input) return;
+    let val = input.value.replace(/\D/g, '');
+    if (val.length > 8) val = val.substring(0, 8);
 
-            // Estimaciones de seguros colectivos
-            const seguroVida = montoFinanciar * 0.0003; // 0.03% mensual
-            const seguroDanos = valProp * 0.0002;       // 0.02% mensual
-            const cuotaTotal = cuotaBase + seguroVida + seguroDanos;
+    if (val.length > 4) {
+        input.value = val.substring(0, 4) + '-' + val.substring(4, 8);
+    } else {
+        input.value = val;
+    }
+}
 
-            document.getElementById('lblMontoFinanciar').innerText = '$' + montoFinanciar.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblCuotaBase').innerText = '$' + cuotaBase.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblSeguroVida').innerText = '$' + seguroVida.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblSeguroDanos').innerText = '$' + seguroDanos.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblCuotaTotal').innerText = '$' + cuotaTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// CÁLCULO DEL SIMULADOR HIPOTECARIO A TASA 10% ANUAL + TABLA RESUMIDA
+function calcularSimuladorHipotecario() {
+    const valProp = parseFloat(document.getElementById('simValorPropiedad').value) || 0;
+    const anios = parseInt(document.getElementById('simPlazoAnios').value) || 20;
+
+    if (valProp <= 0) {
+        document.getElementById('lblMontoFinanciar').innerText = '$0.00';
+        document.getElementById('lblCuotaTotal').innerText = '$0.00';
+        document.getElementById('lblDesgloseCapital').innerText = '$0.00';
+        document.getElementById('lblDesgloseInteres').innerText = '$0.00';
+        document.getElementById('lblSeguroVida').innerText = '$0.00';
+        document.getElementById('lblSeguroDanos').innerText = '$0.00';
+        document.getElementById('tblAmortizacionBody').innerHTML = '';
+        return;
+    }
+
+    const montoFinanciar = valProp; // Valor del Inmueble = Monto a Financiar
+    const plazoMeses = anios * 12;
+    const tasaAnual = 0.10; // Tasa del 10% ANUAL
+    const tasaMensual = tasaAnual / 12;
+
+    // Fórmula de cuota nivelada PMT
+    const factor = Math.pow(1 + tasaMensual, plazoMeses);
+    const cuotaBase = montoFinanciar * (tasaMensual * factor) / (factor - 1);
+
+    // Estimaciones de seguros colectivos
+    const seguroVida = montoFinanciar * 0.0003; // 0.03% mensual
+    const seguroDanos = valProp * 0.0002;       // 0.02% mensual
+    const cuotaTotal = cuotaBase + seguroVida + seguroDanos;
+
+    // Desglose del primer mes
+    const interesMes1 = montoFinanciar * tasaMensual;
+    const capitalMes1 = cuotaBase - interesMes1;
+
+    // Porcentajes para la barra visual de desglose
+    const pctCapital = (capitalMes1 / cuotaTotal) * 100;
+    const pctInteres = (interesMes1 / cuotaTotal) * 100;
+    const pctSegVida = (seguroVida / cuotaTotal) * 100;
+    const pctSegDanos = (seguroDanos / cuotaTotal) * 100;
+
+    document.getElementById('lblMontoFinanciar').innerText = '$' + montoFinanciar.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('lblCuotaTotal').innerText = '$' + cuotaTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    document.getElementById('lblDesgloseCapital').innerText = '$' + capitalMes1.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('lblDesgloseInteres').innerText = '$' + interesMes1.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('lblSeguroVida').innerText = '$' + seguroVida.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('lblSeguroDanos').innerText = '$' + seguroDanos.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    document.getElementById('lblPctCapital').innerText = pctCapital.toFixed(1) + '%';
+    document.getElementById('lblPctInteres').innerText = pctInteres.toFixed(1) + '%';
+    document.getElementById('lblPctSegVida').innerText = pctSegVida.toFixed(1) + '%';
+    document.getElementById('lblPctSegDanos').innerText = pctSegDanos.toFixed(1) + '%';
+
+    document.getElementById('barCapital').style.width = pctCapital.toFixed(1) + '%';
+    document.getElementById('barInteres').style.width = pctInteres.toFixed(1) + '%';
+    document.getElementById('barSegVida').style.width = pctSegVida.toFixed(1) + '%';
+    document.getElementById('barSegDanos').style.width = pctSegDanos.toFixed(1) + '%';
+
+    // GENERAR TABLA RESUMIDA DE LOS PRIMEROS MESES
+    let saldo = montoFinanciar;
+    let tbodyHtml = '';
+    const mesesMostrar = Math.min(plazoMeses, 4);
+
+    for (let m = 1; m <= mesesMostrar; m++) {
+        const interesMes = saldo * tasaMensual;
+        const capitalMes = cuotaBase - interesMes;
+        saldo -= capitalMes;
+
+        tbodyHtml += `
+                    <tr>
+                        <td class="py-2 px-3 font-bold text-white">Mes ${m}</td>
+                        <td class="py-2 px-3 text-emerald-400 font-bold">$${cuotaBase.toFixed(2)}</td>
+                        <td class="py-2 px-3">$${interesMes.toFixed(2)}</td>
+                        <td class="py-2 px-3">$${capitalMes.toFixed(2)}</td>
+                        <td class="py-2 px-3 text-right text-slate-300 font-bold">$${Math.max(saldo, 0).toFixed(2)}</td>
+                    </tr>
+                `;
+    }
+
+    if (plazoMeses > 4) {
+        tbodyHtml += `
+                    <tr class="bg-[#0F233D]/60 italic text-slate-400">
+                        <td colspan="5" class="py-1.5 px-3 text-center text-[10px]">... (${plazoMeses - 4} meses restantes con la misma cuota base de $${cuotaBase.toFixed(2)}) ...</td>
+                    </tr>
+                `;
+    }
+
+    document.getElementById('tblAmortizacionBody').innerHTML = tbodyHtml;
+}
+
+function toggleAgencia(modalidad) {
+    const divAgencia = document.getElementById('divAgencia');
+    if (divAgencia) {
+        if (modalidad === 'Videollamada') {
+            divAgencia.style.display = 'none';
+        } else {
+            divAgencia.style.display = 'flex';
         }
+    }
+}
 
-        function toggleAgencia(modalidad) {
-            const divAgencia = document.getElementById('divAgencia');
-            if (divAgencia) {
-                if (modalidad === 'Videollamada') {
-                    divAgencia.style.display = 'none';
-                } else {
-                    divAgencia.style.display = 'flex';
-                }
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            calcularSimuladorHipotecario();
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function () {
+    calcularSimuladorHipotecario();
+});
+</script>
 </body>
 </html>

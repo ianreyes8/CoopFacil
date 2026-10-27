@@ -51,15 +51,9 @@
 
                 <!-- CONTROLES DE SESIÓN (DERECHA) -->
                 <div class="flex items-center gap-3">
-                    <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                     <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
-
-                    <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" Visible="false" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
 
                     <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
@@ -110,7 +104,6 @@
                         </span>
                     </div>
 
-                    <!-- PREGUNTAS DEL TEST -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         
                         <!-- P1: AHORRO -->
@@ -167,7 +160,6 @@
 
                     </div>
 
-                    <!-- PANEL DE DIAGNÓSTICO Y RECOMENDACIONES DE PRODUCTOS -->
                     <div id="pnlResultadoDiagnostico" class="bg-[#0B1A30] border border-amber-500/40 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-inner">
                         <div class="flex flex-col gap-2 text-center md:text-left">
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Diagnóstico Recomendado</span>
@@ -177,11 +169,9 @@
                             </p>
                         </div>
 
-                        <!-- PRODUCTOS RECOMENDADOS COOPFACIL -->
                         <div class="flex flex-col gap-2 min-w-[240px] w-full md:w-auto">
                             <span class="text-xs font-bold text-slate-400 uppercase text-center md:text-right">Productos CoopFacil Sugeridos:</span>
                             <div id="divSugerenciaProductos" class="flex flex-col gap-2">
-                                <!-- Se llena dinámicamente con JS -->
                             </div>
                         </div>
                     </div>
@@ -190,7 +180,6 @@
                 <!-- COMPONENTE 2: INSCRIPCIÓN A TALLERES Y WEBINARS DEL MES -->
                 <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    <!-- LISTADO DE EVENTOS (TARJETAS) -->
                     <div class="lg:col-span-7 flex flex-col gap-6">
                         <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
                             <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 text-xl">
@@ -204,7 +193,6 @@
 
                         <div class="grid grid-cols-1 gap-4">
                             
-                            <!-- EVENTO 1 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 hover:border-amber-400/80 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition">
                                 <div class="flex flex-col gap-1.5">
                                     <div class="flex items-center gap-2">
@@ -218,7 +206,6 @@
                                 </button>
                             </div>
 
-                            <!-- EVENTO 2 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 hover:border-amber-400/80 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition">
                                 <div class="flex flex-col gap-1.5">
                                     <div class="flex items-center gap-2">
@@ -232,7 +219,6 @@
                                 </button>
                             </div>
 
-                            <!-- EVENTO 3 -->
                             <div class="bg-[#0F233D] border border-slate-700/80 hover:border-amber-400/80 rounded-2xl p-5 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition">
                                 <div class="flex flex-col gap-1.5">
                                     <div class="flex items-center gap-2">
@@ -249,7 +235,6 @@
                         </div>
                     </div>
 
-                    <!-- FORMULARIO DE INSCRIPCIÓN DIRECTA -->
                     <div id="secFormularioInscripcion" class="lg:col-span-5 bg-[#0F233D] border-2 border-amber-500/40 rounded-2xl p-6 shadow-xl flex flex-col gap-5">
                         <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
                             <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 text-xl">
@@ -261,7 +246,6 @@
                             </div>
                         </div>
 
-                        <!-- MENSAJE DE FEEDBACK -->
                         <asp:Panel ID="pnlMensajeTaller" runat="server" Visible="false" CssClass="mb-2 p-4 rounded-xl border flex items-center gap-3 text-sm font-bold">
                             <asp:Literal ID="litMensajeTaller" runat="server"></asp:Literal>
                         </asp:Panel>
@@ -317,7 +301,6 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         
-                        <!-- RECURSO 1: PLANTILLA EXCEL -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col justify-between gap-4 group hover:border-emerald-500/50 transition">
                             <div class="flex flex-col gap-3">
                                 <div class="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-lg">
@@ -333,7 +316,6 @@
                             </button>
                         </div>
 
-                        <!-- RECURSO 2: GUÍA PDF AHORRO -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col justify-between gap-4 group hover:border-amber-500/50 transition">
                             <div class="flex flex-col gap-3">
                                 <div class="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 text-lg">
@@ -349,7 +331,6 @@
                             </button>
                         </div>
 
-                        <!-- RECURSO 3: GUÍA DEUDAS PDF -->
                         <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-5 flex flex-col justify-between gap-4 group hover:border-blue-500/50 transition">
                             <div class="flex flex-col gap-3">
                                 <div class="w-10 h-10 rounded-lg bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-lg">
@@ -378,72 +359,72 @@
     </form>
 
     <script>
-function evaluarSaludFinanciera() {
-    const ahorro = parseInt(document.getElementById('qAhorro').value) || 0;
-    const deudas = parseInt(document.getElementById('qDeudas').value) || 0;
-    const fondo = parseInt(document.getElementById('qFondo').value) || 0;
-    const presupuesto = parseInt(document.getElementById('qPresupuesto').value) || 0;
+        function evaluarSaludFinanciera() {
+            const ahorro = parseInt(document.getElementById('qAhorro').value) || 0;
+            const deudas = parseInt(document.getElementById('qDeudas').value) || 0;
+            const fondo = parseInt(document.getElementById('qFondo').value) || 0;
+            const presupuesto = parseInt(document.getElementById('qPresupuesto').value) || 0;
 
-    const puntajeTotal = ahorro + deudas + fondo + presupuesto;
+            const puntajeTotal = ahorro + deudas + fondo + presupuesto;
 
-    const lblTitulo = document.getElementById('lblTituloDiagnostico');
-    const lblTexto = document.getElementById('lblTextoDiagnostico');
-    const divProductos = document.getElementById('divSugerenciaProductos');
+            const lblTitulo = document.getElementById('lblTituloDiagnostico');
+            const lblTexto = document.getElementById('lblTextoDiagnostico');
+            const divProductos = document.getElementById('divSugerenciaProductos');
 
-    if (puntajeTotal >= 7) {
-        lblTitulo.innerText = "🌟 Salud Financiera Excelente";
-        lblTitulo.className = "text-2xl font-black text-emerald-400";
-        lblTexto.innerText = "¡Felicidades! Tienes hábitos financieros sólidos. Es el momento ideal para hacer crecer tu patrimonio mediante planes de inversión a plazo y proyectos de mayor envergadura.";
-        divProductos.innerHTML = `
+            if (puntajeTotal >= 7) {
+                lblTitulo.innerText = "🌟 Salud Financiera Excelente";
+                lblTitulo.className = "text-2xl font-black text-emerald-400";
+                lblTexto.innerText = "¡Felicidades! Tienes hábitos financieros sólidos. Es el momento ideal para hacer crecer tu patrimonio mediante planes de inversión a plazo y proyectos de mayor envergadura.";
+                divProductos.innerHTML = `
                     <a href="AhorroProgramado.aspx" class="bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition">
                         <span>Ahorro Programado (8.0% EA)</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </a>
                     <a href="CreditoHipotecario.aspx" class="bg-[#0F233D] border border-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition">
                         <span>Crédito Hipotecario (7.5% EA)</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </a>`;
-    } else if (puntajeTotal >= 4) {
-        lblTitulo.innerText = "⚡ Salud Financiera Estable";
-        lblTitulo.className = "text-2xl font-black text-amber-400";
-        lblTexto.innerText = "Llevas un buen manejo general, pero cuentas con margen para optimizar tus excedentes y construir un fondo de reserva más robusto que proteja tu tranquilidad.";
-        divProductos.innerHTML = `
+            } else if (puntajeTotal >= 4) {
+                lblTitulo.innerText = "⚡ Salud Financiera Estable";
+                lblTitulo.className = "text-2xl font-black text-amber-400";
+                lblTexto.innerText = "Llevas un buen manejo general, pero cuentas con margen para optimizar tus excedentes y construir un fondo de reserva más robusto que proteja tu tranquilidad.";
+                divProductos.innerHTML = `
                     <a href="AhorroProgramado.aspx" class="bg-amber-600/20 border border-amber-500/40 text-amber-300 hover:bg-amber-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition">
                         <span>Ahorro Programado</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </a>
                     <a href="CuentaAhorro.aspx" class="bg-[#0F233D] border border-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition">
                         <span>Cuenta de Ahorro Libre</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </a>`;
-    } else {
-        lblTitulo.innerText = "⚠️ Salud Financiera en Riesgo";
-        lblTitulo.className = "text-2xl font-black text-red-400";
-        lblTexto.innerText = "Tus compromisos o falta de fondo de reserva generan vulnerabilidad. Te sugerimos reestructurar o consolidar tus deudas a una menor tasa para liberar flujo de caja inmediato.";
-        divProductos.innerHTML = `
+            } else {
+                lblTitulo.innerText = "⚠️ Salud Financiera en Riesgo";
+                lblTitulo.className = "text-2xl font-black text-red-400";
+                lblTexto.innerText = "Tus compromisos o falta de fondo de reserva generan vulnerabilidad. Te sugerimos reestructurar o consolidar tus deudas a una menor tasa para liberar flujo de caja inmediato.";
+                divProductos.innerHTML = `
                     <a href="CreditoPersonal.aspx" class="bg-blue-600/20 border border-blue-500/40 text-blue-300 hover:bg-blue-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition">
                         <span>Consolidación de Deudas</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </a>
                     <a href="CuentaAhorro.aspx" class="bg-[#0F233D] border border-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center justify-between transition">
                         <span>Cuenta de Ahorro Base</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
                     </a>`;
+            }
+        }
+
+        function seleccionarTaller(idTaller) {
+    const ddl = document.getElementById('<%= ddlTallerSeleccionado.ClientID %>');
+    if (ddl) {
+        ddl.value = idTaller;
+    }
+    const secForm = document.getElementById('secFormularioInscripcion');
+    if (secForm) {
+        secForm.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
-function seleccionarTaller(idTaller) {
-    const ddl = document.getElementById('<%= ddlTallerSeleccionado.ClientID %>');
-            if (ddl) {
-                ddl.value = idTaller;
-            }
-            const secForm = document.getElementById('secFormularioInscripcion');
-            if (secForm) {
-                secForm.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+function descargarRecurso(nombreArchivo) {
+    alert('¡Gracias por hacer uso de nuestro Centro de Recursos! Se ha iniciado la descarga simulada de: ' + nombreArchivo);
+}
 
-        function descargarRecurso(nombreArchivo) {
-            alert('¡Gracias por hacer uso de nuestro Centro de Recursos! Se ha iniciado la descarga simulada de: ' + nombreArchivo);
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            evaluarSaludFinanciera();
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function () {
+    evaluarSaludFinanciera();
+});
+</script>
 </body>
 </html>

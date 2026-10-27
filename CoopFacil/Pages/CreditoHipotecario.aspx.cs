@@ -24,18 +24,15 @@ namespace CoopFacil.Pages
         {
             string nombreUsuario = ObtenerNombreUsuarioSesion();
 
-            // 1. Redirigir si no hay sesión activa
             if (string.IsNullOrEmpty(nombreUsuario))
             {
                 Response.Redirect("../Default.aspx");
                 return;
             }
 
-            // 2. Mostrar la barra de navegación personalizada si la sesión es válida
             pnlBienvenida.Visible = true;
             litBienvenida.Text = nombreUsuario;
             lnkIniciarSesion.Visible = false;
-            btnPortalSocio.Visible = true;
             btnCerrarSesion.Visible = true;
 
             if (string.IsNullOrEmpty(txtNombre.Text))
@@ -77,6 +74,7 @@ namespace CoopFacil.Pages
 
         protected void btnAgendarCita_Click(object sender, EventArgs e)
         {
+            // Validar datos personales y parámetros de la cita únicamente
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtDUI.Text) ||
                 string.IsNullOrWhiteSpace(txtTelefono.Text) || string.IsNullOrWhiteSpace(txtCorreo.Text) ||
                 string.IsNullOrWhiteSpace(txtFechaCita.Text) || string.IsNullOrEmpty(ddlHoraCita.SelectedValue) ||
@@ -84,7 +82,7 @@ namespace CoopFacil.Pages
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos para agendar tu cita con el asesor especializado.";
+                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos requeridos para agendar tu cita.";
                 return;
             }
 
@@ -108,14 +106,10 @@ namespace CoopFacil.Pages
                               "<p class='mt-1 text-slate-200'>Estimado/a <strong>" + txtNombre.Text + "</strong>, tu cita para Crédito Hipotecario ha sido programada para el <strong>" + fechaSeleccionada.ToString("dd/MM/yyyy") + "</strong> a las <strong>" + ddlHoraCita.SelectedValue + "</strong> en modalidad <strong>" + modalidadTexto + "</strong>.</p>" +
                               "<p class='text-xs text-slate-300'>Hemos enviado la confirmación y el recordatorio a tu correo <strong>" + txtCorreo.Text + "</strong> o vía SMS al <strong>" + txtTelefono.Text + "</strong>.</p>";
 
+            // Limpieza de campos tras agendar
             txtDUI.Text = "";
             txtTelefono.Text = "";
             txtCorreo.Text = "";
-        }
-
-        protected void btnPortalSocio_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("PortalSocio.aspx");
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

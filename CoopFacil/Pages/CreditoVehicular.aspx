@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body class="bg-[#0B1A30] text-white font-sans antialiased min-h-screen flex flex-col justify-between">
-    <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
+    <form id="form1" runat="server" autocomplete="off" class="min-h-screen flex flex-col justify-between">
         
         <div>
             <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
@@ -51,15 +51,9 @@
 
                 <!-- CONTROLES DE SESIÓN (DERECHA) -->
                 <div class="flex items-center gap-3">
-                    <!-- BOTÓN CUANDO NO HAY SESIÓN -->
                     <asp:HyperLink ID="lnkIniciarSesion" runat="server" NavigateUrl="../Default.aspx" CssClass="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-blue-900/40">
                         <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </asp:HyperLink>
-
-                    <!-- BOTONES CUANDO HAY SESIÓN ACTIVA -->
-                    <asp:LinkButton ID="btnPortalSocio" runat="server" OnClick="btnPortalSocio_Click" Visible="false" CssClass="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition flex items-center gap-2 shadow-lg shadow-emerald-900/40">
-                        <i class="fa-solid fa-user-check"></i> Portal Socio
-                    </asp:LinkButton>
 
                     <asp:LinkButton ID="btnCerrarSesion" runat="server" OnClick="btnCerrarSesion_Click" Visible="false" CssClass="bg-[#0F233D] hover:bg-slate-700 border border-slate-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
@@ -71,7 +65,7 @@
             <!-- CONTENIDO PRINCIPAL -->
             <main class="max-w-7xl mx-auto px-6 py-10 flex flex-col gap-10 flex-grow w-full">
                 
-                <!-- REGRESO A SERVICIOS Y TITULAR -->
+                <!-- ÁREA DEL CRÉDITO (TITULAR Y CONDICIONES) -->
                 <div class="flex flex-col gap-3">
                     <a href="Servicios.aspx" class="text-xs font-bold text-emerald-400 hover:underline flex items-center gap-2 w-fit">
                         <i class="fa-solid fa-arrow-left"></i> Volver al Portafolio de Servicios
@@ -85,44 +79,358 @@
                         </div>
                         <div class="bg-[#0F233D] border border-emerald-500/40 px-4 py-2 rounded-xl flex items-center gap-3 shadow-lg">
                             <span class="text-xs text-slate-300 font-medium">Tasa Preferencial Auto:</span>
-                            <span class="text-lg font-black text-emerald-400">Desde 9.80% EA</span>
+                            <span class="text-lg font-black text-emerald-400">10% ANUAL</span>
                         </div>
                     </div>
                     <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl">
-                        Adquiere tu vehículo nuevo o usado con garantía prendaria. Financiamos hasta el 80% para autos nuevos y el 70% para autos usados con plazos de 12 a 72 meses y cuota fija garantizada.
+                        Adquiere tu vehículo nuevo o usado con garantía prendaria. Financiamos el 100% del precio comercial con plazos de 12 a 72 meses y cuota fija garantizada.
                     </p>
                 </div>
 
-                <!-- SECCIÓN 1: COTIZADOR VEHICULAR Y RESULTADOS DE FINANCIAMIENTO -->
+                <!-- BLOQUE SUPERIOR: COTIZADOR VEHICULAR (IZQ) Y DESGLOSE DE CUOTA (DER) -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    <!-- COTIZADOR VEHICULAR (INPUTS) -->
-                    <div class="lg:col-span-7 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+                    <!-- IZQUIERDA: COTIZADOR VEHICULAR (SIN PRIMA + TABLA RESUMIDA) -->
+                    <div class="lg:col-span-6 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-6">
                         <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
                             <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 text-xl">
                                 <i class="fa-solid fa-calculator"></i>
                             </div>
                             <div>
                                 <h2 class="text-xl font-bold text-white">Cotizador Vehicular</h2>
-                                <p class="text-xs text-slate-400">Calcula tu cuota a plazos flexibles de 12 a 72 meses</p>
+                                <p class="text-xs text-slate-400">Calcula tu cuota a plazos flexibles de 12 a 72 meses (10% ANUAL)</p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                            
                             <!-- ESTADO DEL VEHÍCULO -->
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-slate-300 uppercase">Estado del Vehículo <span class="text-emerald-400">*</span></label>
-                                <asp:DropDownList ID="ddlEstadoVehiculo" runat="server" onchange="actualizarReglasEstado(); calcularCotizadorVehicular();" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
-                                    <asp:ListItem Text="✨ Vehículo Nuevo (Financia hasta 80%)" Value="Nuevo" Selected="True"></asp:ListItem>
-                                    <asp:ListItem Text="🚗 Vehículo Usado (Financia hasta 70%)" Value="Usado"></asp:ListItem>
+                                <asp:DropDownList ID="ddlEstadoVehiculo" runat="server" onchange="calcularCotizadorVehicular()" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
+                                    <asp:ListItem Text="✨ Vehículo Nuevo" Value="Nuevo" Selected="True"></asp:ListItem>
+                                    <asp:ListItem Text="🚗 Vehículo Usado" Value="Usado"></asp:ListItem>
                                 </asp:DropDownList>
                             </div>
 
-                            <!-- PLAZO DE FINANCIAMIENTO (CORREGIDO A ASP:LISTITEM) -->
+                            <!-- PLAZO EN MESES -->
                             <div class="flex flex-col gap-2">
                                 <label class="text-xs font-bold text-slate-300 uppercase">Plazo en Meses <span class="text-emerald-400">*</span></label>
-                                <asp:DropDownList ID="ddlPlazoMeses" runat="server" onchange="calcularCotizadorVehicular()" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
+                                <asp:DropDownList ID="ddlPlazoMeses" runat="server" onchange="sincronizarPlazoFormulario(this.value); calcularCotizadorVehicular();" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition">
+                                    <asp:ListItem Text="12 Meses (1 Año)" Value="12"></asp:ListItem>
+                                    <asp:ListItem Text="24 Meses (2 Años)" Value="24"></asp:ListItem>
+                                    <asp:ListItem Text="36 Meses (3 Años)" Value="36"></asp:ListItem>
+                                    <asp:ListItem Text="48 Meses (4 Años)" Value="48" Selected="True"></asp:ListItem>
+                                    <asp:ListItem Text="60 Meses (5 Años)" Value="60"></asp:ListItem>
+                                    <asp:ListItem Text="72 Meses (6 Años)" Value="72"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+
+                        <!-- PRECIO COMERCIAL DEL VEHÍCULO -->
+                        <div class="flex flex-col gap-2">
+                            <label class="text-xs font-bold text-slate-300 uppercase">Precio Comercial del Vehículo ($ USD)</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
+                                <asp:TextBox ID="txtPrecioComercial" runat="server" TextMode="Number" Text="18000" min="3000" step="any" oninput="sincronizarMontoFormulario(this.value); calcularCotizadorVehicular();" CssClass="w-full bg-[#0B1A30] border border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition" placeholder="18000"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <!-- MONTO TOTAL A FINANCIAR (IGUAL AL PRECIO COMERCIAL) -->
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex justify-between items-center text-xs">
+                            <span class="text-slate-400 font-bold uppercase">Monto Total a Financiar:</span>
+                            <span id="lblMontoFinanciar" class="text-lg font-black text-emerald-400">$18,000.00</span>
+                        </div>
+
+                        <!-- TABLA RESUMIDA DE LOS PRIMEROS MESES -->
+                        <div class="flex flex-col gap-2">
+                            <span class="text-xs font-bold text-slate-300 uppercase flex items-center gap-2">
+                                <i class="fa-solid fa-table-list text-emerald-400"></i> Tabla Resumida de los Primeros Meses
+                            </span>
+                            <div class="overflow-x-auto rounded-xl border border-slate-800">
+                                <table class="w-full text-left text-[11px] text-slate-300">
+                                    <thead class="bg-[#0B1A30] text-emerald-400 font-bold uppercase border-b border-slate-800">
+                                        <tr>
+                                            <th class="py-2 px-3">Mes</th>
+                                            <th class="py-2 px-3">Cuota Base</th>
+                                            <th class="py-2 px-3">Interés</th>
+                                            <th class="py-2 px-3">Capital</th>
+                                            <th class="py-2 px-3 text-right">Saldo Restante</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tblAmortizacionBody" class="divide-y divide-slate-800/60 font-medium">
+                                        <!-- Generado dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <span class="text-[11px] text-slate-400 italic text-center">
+                            * Cálculo estimado sobre sistema de cuota nivelada a Tasa del 10.00% ANUAL.
+                        </span>
+                    </div>
+
+                    <!-- DERECHA: DESGLOSE DE CUOTA ESTIMADA -->
+                    <div class="lg:col-span-6 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+                        <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-xl">
+                                <i class="fa-solid fa-chart-pie"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-white">Desglose de Cuota Estimada</h2>
+                                <p class="text-xs text-slate-400">Incluye capital, intereses y estimación de seguros obligatorios</p>
+                            </div>
+                        </div>
+
+                        <!-- CUOTA TOTAL DESTACADA -->
+                        <div class="bg-[#0B1A30] border border-emerald-500/40 rounded-xl p-5 text-center flex flex-col items-center justify-center shadow-inner">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cuota Mensual Estimada</span>
+                            <span id="lblCuotaTotal" class="text-3xl font-black text-emerald-400 mt-1">$471.44</span>
+                            <span id="lblTasaAplicada" class="text-[10px] text-slate-400 mt-1">* Tasa del 10.00% ANUAL garantizada</span>
+                        </div>
+
+                        <!-- BARRA VISUAL DE DISTRIBUCIÓN -->
+                        <div class="space-y-4">
+                            <span class="text-xs font-bold text-slate-300 uppercase block border-b border-slate-800 pb-2">Distribución de la Cuota (Mes 1):</span>
+
+                            <div class="w-full bg-[#0B1A30] h-3 rounded-full overflow-hidden flex border border-slate-800 p-0.5">
+                                <div id="barCapital" class="bg-emerald-500 h-full rounded-l-full transition-all duration-300" style="width: 65%;"></div>
+                                <div id="barInteres" class="bg-blue-500 h-full transition-all duration-300" style="width: 32%;"></div>
+                                <div id="barSegVida" class="bg-purple-500 h-full transition-all duration-300" style="width: 1%;"></div>
+                                <div id="barSegDanos" class="bg-amber-500 h-full rounded-r-full transition-all duration-300" style="width: 2%;"></div>
+                            </div>
+
+                            <!-- FILAS DE DESGLOSE INDIVIDUAL -->
+                            <div class="space-y-2 text-xs">
+                                
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-building-columns"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Abono Directo a Capital:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctCapital" class="text-[10px] text-emerald-400 font-semibold">65.1%</span>
+                                        <span id="lblDesgloseCapital" class="font-extrabold text-emerald-400">$307.04</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-percent"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Intereses Financieros (10% ANUAL):</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctInteres" class="text-[10px] text-blue-400 font-semibold">31.8%</span>
+                                        <span id="lblDesgloseInteres" class="font-extrabold text-blue-400">$150.00</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-chart-line"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Porcentaje de Financiamiento:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctFinanciado" class="font-extrabold text-emerald-400">100.0%</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-heart-pulse"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Seguro de Vida Colectivo:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctSegVida" class="text-[10px] text-purple-400 font-semibold">1.1%</span>
+                                        <span id="lblSeguroVida" class="font-extrabold text-purple-300">$5.40</span>
+                                    </div>
+                                </div>
+
+                                <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs">
+                                            <i class="fa-solid fa-shield-halved"></i>
+                                        </div>
+                                        <span class="font-bold text-white">Seguro de Daños / Vehicular:</span>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span id="lblPctSegDanos" class="text-[10px] text-amber-400 font-semibold">1.9%</span>
+                                        <span id="lblSeguroDanos" class="font-extrabold text-amber-300">$9.00</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <span class="text-[11px] text-slate-400 italic text-center mt-1">
+                            * Proyección orientativa sujeta a aprobación de crédito e inspección prendaria del vehículo.
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- SECCIÓN REQUISITOS (BARRA HORIZONTAL COMPLETA) -->
+                <section class="bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-xl flex flex-col gap-6">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-xl">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold text-white">Requisitos para Solicitud de Crédito Vehicular</h2>
+                                <p class="text-xs text-slate-400">Documentación y referencias obligatorias previas a la aprobación prendaria</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400 bg-[#0B1A30] border border-emerald-500/30 px-3.5 py-1.5 rounded-xl">
+                            <i class="fa-solid fa-check-double"></i> Verificación Digital y Vehicular
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-id-card"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">1. DUI Vigente</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">Ambos lados legibles</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">2. Constancia de Sueldo</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">Emisión reciente firmada</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">3. Recibo Agua / Luz</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">Comprobante de domicilio</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 hover:border-emerald-500/50 transition">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-base flex-shrink-0">
+                                    <i class="fa-solid fa-users"></i>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">4. Recomendaciones</span>
+                                    <span class="text-[11px] text-slate-400 mt-0.5">4 contactos (2 fam / 2 pers)</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-circle-check text-emerald-400 text-lg flex-shrink-0"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="bg-blue-950/40 border border-blue-500/30 rounded-xl p-3.5 text-xs text-blue-200 flex items-center gap-3">
+                        <i class="fa-solid fa-circle-info text-blue-400 text-base"></i>
+                        <span>Las 4 recomendaciones se utilizarán para comunicación directa únicamente en caso de atrasos en el pago de cuotas o localización de respaldo.</span>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN FORMULARIO DE SOLICITUD DE CRÉDITO VEHICULAR -->
+                <section class="bg-[#0F233D] border-2 border-emerald-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden flex flex-col gap-8">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block">EVALUACIÓN EN TIEMPO REAL</span>
+                            <h2 class="text-2xl font-extrabold text-white mt-1 flex items-center gap-2">
+                                <i class="fa-solid fa-file-signature text-emerald-400"></i> Formulario de Solicitud y Pre-Aprobación Vehicular
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                                Ingresa tus datos financieros, detalles de la unidad, referencias de localización y proforma para obtener tu dictamen.
+                            </p>
+                        </div>
+                        <div class="hidden sm:flex items-center gap-2 bg-[#0B1A30] border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-300">
+                            <i class="fa-solid fa-shield-halved text-emerald-400 text-sm"></i> Garantía Prendaria Registrada
+                        </div>
+                    </div>
+
+                    <!-- MENSAJE DE FEEDBACK -->
+                    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="p-4 rounded-xl border flex items-center gap-3 text-sm font-bold">
+                        <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
+                    </asp:Panel>
+
+                    <!-- BLOQUE 1: DATOS PERSONALES Y FINANCIEROS -->
+                    <div class="flex flex-col gap-4">
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                            <i class="fa-solid fa-user"></i> 1. Información Personal, Financiera y del Vehículo
+                        </span>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                            
+                            <!-- NOMBRE COMPLETO (SOLO LETRAS) -->
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Nombre Completo <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtNombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Carlos Alberto Mendoza"></asp:TextBox>
+                            </div>
+
+                            <!-- DUI (SOLO NÚMEROS Y MÁSCARA 00000000-0) -->
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Documento de Identidad (DUI) <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtDUI" runat="server" maxlength="10" oninput="formatearDUI(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
+                            </div>
+
+                            <!-- TELÉFONO (SOLO NÚMEROS Y MÁSCARA 0000-0000) -->
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Teléfono de Contacto <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtTelefono" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Correo Electrónico <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtCorreo" runat="server" TextMode="Email" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Ingresos Mensuales Netos ($) <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtIngresos" runat="server" TextMode="Number" step="any" min="1" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. 1200.00"></asp:TextBox>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Marca, Modelo y Año <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtMarcaModelo" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Toyota Corolla 2024"></asp:TextBox>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Concesionario / Vendedor <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtConcesionario" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Excel Automotriz / Particular"></asp:TextBox>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Monto del Crédito ($) <span class="text-emerald-400">*</span></label>
+                                <asp:TextBox ID="txtMontoSolicitado" runat="server" TextMode="Number" Text="18000" min="3000" step="any" oninput="sincronizarMontoSimulador(this.value); calcularCotizadorVehicular();" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition" placeholder="18000"></asp:TextBox>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="text-xs font-bold text-slate-300">Plazo Deseado <span class="text-emerald-400">*</span></label>
+                                <asp:DropDownList ID="ddlPlazoSolicitado" runat="server" onchange="sincronizarPlazoSimulador(this.value); calcularCotizadorVehicular();" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 transition">
                                     <asp:ListItem Text="12 Meses (1 Año)" Value="12"></asp:ListItem>
                                     <asp:ListItem Text="24 Meses (2 Años)" Value="24"></asp:ListItem>
                                     <asp:ListItem Text="36 Meses (3 Años)" Value="36"></asp:ListItem>
@@ -132,152 +440,123 @@
                                 </asp:DropDownList>
                             </div>
 
-                            <!-- PRECIO COMERCIAL DEL VEHÍCULO -->
+                        </div>
+                    </div>
+
+                    <!-- BLOQUE 2: RECOMENDACIONES DE LOCALIZACIÓN (2 PERSONALES Y 2 FAMILIARES) -->
+                    <div class="flex flex-col gap-4 pt-2">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-users"></i> 2. Recomendaciones de Localización (2 Personales y 2 Familiares)
+                            </span>
+                            <span class="text-[10px] text-slate-400 italic">* Para localización en caso de mora</span>
+                        </div>
+
+                        <!-- 2 PERSONALES -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 bg-[#0B1A30]/60 p-4 rounded-xl border border-slate-800">
+                            
+                            <!-- Personal 1 -->
                             <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-300 uppercase">Precio Comercial ($ USD)</label>
-                                <div class="relative">
-                                    <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
-                                    <asp:TextBox ID="txtPrecioComercial" runat="server" TextMode="Number" Text="18000" min="3000" step="any" oninput="sincronizarMontoFormulario(); calcularCotizadorVehicular();" CssClass="w-full bg-[#0B1A30] border border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition" placeholder="18000"></asp:TextBox>
+                                <span class="text-[11px] font-bold text-blue-400 uppercase">Referencia Personal 1 <span class="text-emerald-400">*</span></span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <asp:TextBox ID="txtRefPers1Nombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Nombre completo"></asp:TextBox>
+                                    <asp:TextBox ID="txtRefPers1Tel" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7000-0000"></asp:TextBox>
                                 </div>
                             </div>
 
-                            <!-- PRIMA INICIAL -->
+                            <!-- Personal 2 -->
                             <div class="flex flex-col gap-2">
-                                <div class="flex justify-between items-center">
-                                    <label class="text-xs font-bold text-slate-300 uppercase">Prima Inicial ($ USD)</label>
-                                    <span id="lblSugeridoPrima" class="text-[10px] font-bold text-emerald-400">Mín. 20% ($3,600)</span>
-                                </div>
-                                <div class="relative">
-                                    <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">$</span>
-                                    <asp:TextBox ID="txtPrimaInicial" runat="server" TextMode="Number" Text="3600" min="0" step="any" oninput="calcularCotizadorVehicular();" CssClass="w-full bg-[#0B1A30] border border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-500 transition" placeholder="3600"></asp:TextBox>
+                                <span class="text-[11px] font-bold text-blue-400 uppercase">Referencia Personal 2 <span class="text-emerald-400">*</span></span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <asp:TextBox ID="txtRefPers2Nombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Nombre completo"></asp:TextBox>
+                                    <asp:TextBox ID="txtRefPers2Tel" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7000-0000"></asp:TextBox>
                                 </div>
                             </div>
 
                         </div>
 
-                        <!-- ALERTA DE COBERTURA Y PORCENTAJE -->
-                        <div id="divAvisoPrima" class="hidden bg-amber-950/40 border border-amber-500/40 rounded-xl p-3 text-xs text-amber-200 flex items-center gap-2">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
-                            <span id="lblAvisoPrimaTexto">La prima ingresada es menor al mínimo requerido para este tipo de vehículo.</span>
-                        </div>
+                        <!-- 2 FAMILIARES -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 bg-[#0B1A30]/60 p-4 rounded-xl border border-slate-800">
+                            
+                            <!-- Familiar 1 -->
+                            <div class="flex flex-col gap-2">
+                                <span class="text-[11px] font-bold text-emerald-400 uppercase">Referencia Familiar 1 <span class="text-emerald-400">*</span></span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <asp:TextBox ID="txtRefFam1Nombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Nombre completo"></asp:TextBox>
+                                    <asp:TextBox ID="txtRefFam1Tel" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7000-0000"></asp:TextBox>
+                                </div>
+                            </div>
 
-                        <!-- RESUMEN DE MONTO A FINANCIAR -->
-                        <div class="bg-[#0B1A30] border border-slate-800 rounded-xl p-4 flex justify-between items-center text-xs">
-                            <span class="text-slate-400 font-medium">Monto Total a Financiar (Crédito):</span>
-                            <span id="lblMontoFinanciar" class="text-base font-extrabold text-emerald-400">$14,400.00</span>
+                            <!-- Familiar 2 -->
+                            <div class="flex flex-col gap-2">
+                                <span class="text-[11px] font-bold text-emerald-400 uppercase">Referencia Familiar 2 <span class="text-emerald-400">*</span></span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    <asp:TextBox ID="txtRefFam2Nombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Nombre completo"></asp:TextBox>
+                                    <asp:TextBox ID="txtRefFam2Tel" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7000-0000"></asp:TextBox>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
-                    <!-- RESULTADOS DE CUOTA Y CONDICIONES -->
-                    <div class="lg:col-span-5 bg-[#0F233D] border-2 border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col gap-5">
-                        <div class="flex items-center gap-3 border-b border-slate-800 pb-4">
-                            <div class="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-xl">
-                                <i class="fa-solid fa-file-invoice-dollar"></i>
-                            </div>
-                            <div>
-                                <h2 class="text-xl font-bold text-white">Resumen de Cuota Fija</h2>
-                                <p class="text-xs text-slate-400">Garantía prendaria sobre la unidad</p>
-                            </div>
-                        </div>
+                    <!-- BLOQUE 3: ADJUNTAR COMPROBANTES CON BOTÓN "QUITAR" -->
+                    <div class="flex flex-col gap-4 pt-2">
+                        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2 border-b border-slate-800 pb-2">
+                            <i class="fa-solid fa-file-arrow-up"></i> 3. Adjuntar Comprobantes y Proforma (Agua/Luz / Constancia / Cotización)
+                        </span>
 
-                        <!-- CUOTA MENSUAL DESTACADA -->
-                        <div class="bg-[#0B1A30] border border-emerald-500/40 rounded-xl p-5 text-center flex flex-col items-center justify-center shadow-inner">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Cuota Mensual Estimada</span>
-                            <span id="lblCuotaMensual" class="text-3xl font-black text-emerald-400 mt-1">$364.21</span>
-                            <span id="lblTasaAplicada" class="text-[10px] text-slate-400 mt-1">* Tasa del 9.80% EA para vehículo nuevo</span>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            
+                            <!-- COMPROBANTE 1 -->
+                            <div class="flex flex-col gap-2 bg-[#0B1A30]/60 p-4 rounded-xl border border-slate-800">
+                                <label class="text-xs font-bold text-slate-300">Recibo de Agua / Luz o DUI <span class="text-slate-400 font-normal">(PDF, JPG)</span></label>
+                                
+                                <div class="flex items-center gap-2">
+                                    <asp:FileUpload ID="fileReciboDUI" runat="server" onchange="actualizarEstadoArchivo(this, 'btnQuitarRecibo', 'infoRecibo')" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition cursor-pointer flex-grow" />
+                                    
+                                    <button type="button" id="btnQuitarRecibo" onclick="limpiarArchivo('<%= fileReciboDUI.ClientID %>', 'btnQuitarRecibo', 'infoRecibo')" class="hidden bg-red-600/20 hover:bg-red-600 border border-red-500 text-red-300 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                        <i class="fa-solid fa-trash-can"></i> Quitar
+                                    </button>
+                                </div>
 
-                        <div class="space-y-2.5 text-xs text-slate-300">
-                            <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-coins text-emerald-400"></i> Total de Intereses Estimados:</span>
-                                <span id="lblTotalIntereses" class="font-bold text-white">$3,082.08</span>
+                                <span id="infoRecibo" class="text-[10px] text-slate-400 italic">No se ha seleccionado archivo</span>
                             </div>
 
-                            <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-percent text-blue-400"></i> Porcentaje de Financiamiento:</span>
-                                <span id="lblPctFinanciado" class="font-bold text-emerald-400">80.0%</span>
+                            <!-- COMPROBANTE 2 -->
+                            <div class="flex flex-col gap-2 bg-[#0B1A30]/60 p-4 rounded-xl border border-slate-800">
+                                <label class="text-xs font-bold text-slate-300">Constancia de Sueldo <span class="text-slate-400 font-normal">(PDF, JPG)</span></label>
+                                
+                                <div class="flex items-center gap-2">
+                                    <asp:FileUpload ID="fileConstancia" runat="server" onchange="actualizarEstadoArchivo(this, 'btnQuitarConstancia', 'infoConstancia')" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition cursor-pointer flex-grow" />
+                                    
+                                    <button type="button" id="btnQuitarConstancia" onclick="limpiarArchivo('<%= fileConstancia.ClientID %>', 'btnQuitarConstancia', 'infoConstancia')" class="hidden bg-red-600/20 hover:bg-red-600 border border-red-500 text-red-300 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                        <i class="fa-solid fa-trash-can"></i> Quitar
+                                    </button>
+                                </div>
+
+                                <span id="infoConstancia" class="text-[10px] text-slate-400 italic">No se ha seleccionado archivo</span>
                             </div>
 
-                            <div class="flex justify-between items-center py-2 border-b border-slate-800">
-                                <span class="flex items-center gap-2"><i class="fa-solid fa-shield-cat text-amber-400"></i> Seguro Colectivo / Deuda:</span>
-                                <span class="font-bold text-slate-200">Incluido en Cuota</span>
+                            <!-- COMPROBANTE 3 -->
+                            <div class="flex flex-col gap-2 bg-[#0B1A30]/60 p-4 rounded-xl border border-slate-800">
+                                <label class="text-xs font-bold text-slate-300">Proforma / Cotización Auto <span class="text-slate-400 font-normal">(PDF, JPG)</span></label>
+                                
+                                <div class="flex items-center gap-2">
+                                    <asp:FileUpload ID="fileProforma" runat="server" onchange="actualizarEstadoArchivo(this, 'btnQuitarProforma', 'infoProforma')" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition cursor-pointer flex-grow" />
+                                    
+                                    <button type="button" id="btnQuitarProforma" onclick="limpiarArchivo('<%= fileProforma.ClientID %>', 'btnQuitarProforma', 'infoProforma')" class="hidden bg-red-600/20 hover:bg-red-600 border border-red-500 text-red-300 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                        <i class="fa-solid fa-trash-can"></i> Quitar
+                                    </button>
+                                </div>
+
+                                <span id="infoProforma" class="text-[10px] text-slate-400 italic">No se ha seleccionado archivo</span>
                             </div>
-                        </div>
 
-                        <ul class="text-xs text-slate-300 space-y-1.5 pt-1">
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Sin cobro por estudio o análisis de crédito.</li>
-                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-400"></i> Pagos anticipados a capital sin penalización.</li>
-                        </ul>
-                    </div>
-
-                </div>
-
-                <!-- SECCIÓN 2: SOLICITUD DE CRÉDITO Y ADJUNTO DE PROFORMA -->
-                <section class="bg-[#0F233D] border-2 border-emerald-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-800 pb-6 mb-6">
-                        <div>
-                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block">REGISTRO DE EVALUACIÓN</span>
-                            <h2 class="text-2xl font-extrabold text-white mt-1 flex items-center gap-2">
-                                <i class="fa-solid fa-file-signature text-emerald-400"></i> Solicitud de Crédito Vehicular
-                            </h2>
-                            <p class="text-xs sm:text-sm text-slate-300 mt-1">
-                                Envía tus datos directos al Departamento de Riesgos para la revisión e inspección de la unidad.
-                            </p>
-                        </div>
-                        <div class="hidden sm:flex items-center gap-2 bg-[#0B1A30] border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-300">
-                            <i class="fa-solid fa-shield-halved text-emerald-400 text-sm"></i> Garantía Prendaria Registrada
                         </div>
                     </div>
 
-                    <!-- MENSAJE DE FEEDBACK -->
-                    <asp:Panel ID="pnlMensaje" runat="server" Visible="false" CssClass="mb-6 p-4 rounded-xl border flex items-center gap-3 text-sm font-bold">
-                        <asp:Literal ID="litMensaje" runat="server"></asp:Literal>
-                    </asp:Panel>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                        
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-300">Nombre Completo <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtNombre" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Carlos Alberto Mendoza"></asp:TextBox>
-                        </div>
-
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-300">Documento de Identidad (DUI) <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtDUI" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
-                        </div>
-
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-300">Teléfono de Contacto <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtTelefono" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
-                        </div>
-
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-300">Correo Electrónico <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtCorreo" runat="server" TextMode="Email" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
-                        </div>
-
-                        <!-- MARCA Y MODELO DEL VEHÍCULO -->
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-300">Marca, Modelo y Año <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtMarcaModelo" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Toyota Corolla 2024"></asp:TextBox>
-                        </div>
-
-                        <!-- CONCESIONARIO / VENDEDOR -->
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-300">Concesionario / Vendedor <span class="text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtConcesionario" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Ej. Excel Automotriz / Particular"></asp:TextBox>
-                        </div>
-
-                        <!-- ADJUNTO DE PROFORMA O COTIZACIÓN (OPCIONAL) -->
-                        <div class="flex flex-col gap-1.5 lg:col-span-2">
-                            <label class="text-xs font-bold text-slate-300">Adjunto de Proforma / Cotización <span class="text-slate-400 font-normal">(Opcional: .pdf, .jpg, .png)</span></label>
-                            <asp:FileUpload ID="fileProforma" runat="server" CssClass="bg-[#0B1A30] border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 transition cursor-pointer" />
-                        </div>
-
-                    </div>
-
-                    <div class="mt-6 flex justify-end">
-                        <asp:Button ID="btnSolicitarCredito" runat="server" Text="Enviar Solicitud al Departamento de Riesgos" OnClick="btnSolicitarCredito_Click" CssClass="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-950 transition cursor-pointer" />
+                    <div class="mt-2 flex justify-end">
+                        <asp:Button ID="btnSolicitarCredito" runat="server" Text="Evaluar y Solicitar Crédito Vehicular" OnClick="btnSolicitarCredito_Click" CssClass="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-950 transition cursor-pointer" />
                     </div>
                 </section>
 
@@ -290,88 +569,192 @@
 
     </form>
 
+    <!-- SCRIPTS DE COTIZADOR, RESTRICCIONES Y CONTROL DE ARCHIVOS -->
     <script>
-        function actualizarReglasEstado() {
-            const estadoSelect = document.getElementById('<%= ddlEstadoVehiculo.ClientID %>');
-            const txtPrecio = document.getElementById('<%= txtPrecioComercial.ClientID %>');
-            const txtPrima = document.getElementById('<%= txtPrimaInicial.ClientID %>');
-            const lblSugerido = document.getElementById('lblSugeridoPrima');
+        // 1. RESTRICCIÓN: Solo letras, espacios y tildes/ñ
+        function filtrarSoloLetras(input) {
+            if (!input) return;
+            input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+        }
 
-            if (!estadoSelect || !txtPrecio || !txtPrima) return;
+        // 2. MÁSCARA DUI: Solo números con guion automático (00000000-0)
+        function formatearDUI(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 9) val = val.substring(0, 9);
 
-            const estado = estadoSelect.value;
-            const precio = parseFloat(txtPrecio.value) || 0;
-
-            if (estado === 'Nuevo') {
-                const primaMin = precio * 0.20;
-                if (lblSugerido) lblSugerido.innerText = 'Mín. 20% ($' + primaMin.toFixed(2) + ')';
+            if (val.length > 8) {
+                input.value = val.substring(0, 8) + '-' + val.substring(8, 9);
             } else {
-                const primaMin = precio * 0.30;
-                if (lblSugerido) lblSugerido.innerText = 'Mín. 30% ($' + primaMin.toFixed(2) + ')';
+                input.value = val;
             }
         }
 
-        function calcularCotizadorVehicular() {
-            const estadoSelect = document.getElementById('<%= ddlEstadoVehiculo.ClientID %>');
-            const txtPrecio = document.getElementById('<%= txtPrecioComercial.ClientID %>');
-            const txtPrima = document.getElementById('<%= txtPrimaInicial.ClientID %>');
-            const ddlPlazo = document.getElementById('<%= ddlPlazoMeses.ClientID %>');
+        // 3. MÁSCARA TELÉFONO: Solo números con guion en la mitad (0000-0000)
+        function formatearTelefono(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 8) val = val.substring(0, 8);
 
-            if (!estadoSelect || !txtPrecio || !txtPrima || !ddlPlazo) return;
+            if (val.length > 4) {
+                input.value = val.substring(0, 4) + '-' + val.substring(4, 8);
+            } else {
+                input.value = val;
+            }
+        }
 
-            const estado = estadoSelect.value;
-            const precio = parseFloat(txtPrecio.value) || 0;
-            const prima = parseFloat(txtPrima.value) || 0;
-            const plazo = parseInt(ddlPlazo.value) || 48;
+        // 4. ARCHIVOS ADJUNTOS: Estado y visibilidad del botón Quitar
+        function actualizarEstadoArchivo(input, btnId, infoId) {
+            const btnQuitar = document.getElementById(btnId);
+            const infoText = document.getElementById(infoId);
 
-            const pctMaxFinanciar = (estado === 'Nuevo') ? 0.80 : 0.70;
-            const primaMinima = precio * (1.0 - pctMaxFinanciar);
-
-            const divAviso = document.getElementById('divAvisoPrima');
-            const lblAvisoTexto = document.getElementById('lblAvisoPrimaTexto');
-
-            if (precio > 0 && prima < primaMinima) {
-                if (divAviso) divAviso.classList.remove('hidden');
-                if (lblAvisoTexto) {
-                    lblAvisoTexto.innerHTML = `Para un vehículo <strong>${estado}</strong>, la prima mínima recomendada es de <strong>$${primaMinima.toFixed(2)}</strong> (${((1 - pctMaxFinanciar) * 100).toFixed(0)}%).`;
+            if (input.files && input.files.length > 0) {
+                const nombreArchivo = input.files[0].name;
+                if (btnQuitar) btnQuitar.classList.remove('hidden');
+                if (infoText) {
+                    infoText.innerText = '✓ Archivo listo: ' + nombreArchivo;
+                    infoText.className = 'text-[10px] text-emerald-400 font-bold';
                 }
             } else {
-                if (divAviso) divAviso.classList.add('hidden');
+                limpiarArchivo(input.id, btnId, infoId);
+            }
+        }
+
+        // 5. ARCHIVOS ADJUNTOS: Limpieza de selección
+        function limpiarArchivo(fileControlId, btnId, infoId) {
+            const fileInput = document.getElementById(fileControlId);
+            const btnQuitar = document.getElementById(btnId);
+            const infoText = document.getElementById(infoId);
+
+            if (fileInput) fileInput.value = '';
+            if (btnQuitar) btnQuitar.classList.add('hidden');
+            if (infoText) {
+                infoText.innerText = 'No se ha seleccionado archivo';
+                infoText.className = 'text-[10px] text-slate-400 italic';
+            }
+        }
+
+        // CÁLCULO DEL COTIZADOR VEHICULAR A TASA 10% ANUAL (PRECIO COMERCIAL = MONTO FINANCIADO)
+        function calcularCotizadorVehicular() {
+            const txtPrecioControl = document.getElementById('<%= txtPrecioComercial.ClientID %>');
+            const ddlPlazoControl = document.getElementById('<%= ddlPlazoMeses.ClientID %>');
+            const ddlEstadoControl = document.getElementById('<%= ddlEstadoVehiculo.ClientID %>');
+
+            if (!txtPrecioControl || !ddlPlazoControl) return;
+
+            const precio = parseFloat(txtPrecioControl.value) || 0;
+            const plazoMeses = parseInt(ddlPlazoControl.value) || 48;
+            const estadoVehiculo = ddlEstadoControl ? ddlEstadoControl.value : "Nuevo";
+
+            if (precio <= 0 || plazoMeses <= 0) {
+                document.getElementById('lblMontoFinanciar').innerText = '$0.00';
+                document.getElementById('lblCuotaTotal').innerText = '$0.00';
+                document.getElementById('lblDesgloseCapital').innerText = '$0.00';
+                document.getElementById('lblDesgloseInteres').innerText = '$0.00';
+                document.getElementById('lblSeguroVida').innerText = '$0.00';
+                document.getElementById('lblSeguroDanos').innerText = '$0.00';
+                document.getElementById('tblAmortizacionBody').innerHTML = '';
+                return;
             }
 
-            const montoFinanciar = Math.max(precio - prima, 0);
-            const tasaAnual = (estado === 'Nuevo') ? 0.098 : 0.115; // 9.8% EA Nuevo / 11.5% EA Usado
+            const montoFinanciar = precio; // Precio Comercial es igual al Monto Total a Financiar
+            const tasaAnual = 0.10; // Tasa del 10% ANUAL
             const tasaMensual = tasaAnual / 12;
 
-            let cuota = 0;
-            let totalIntereses = 0;
+            // Fórmula de cuota nivelada PMT
+            const factor = Math.pow(1 + tasaMensual, plazoMeses);
+            const cuotaBase = montoFinanciar * (tasaMensual * factor) / (factor - 1);
 
-            if (montoFinanciar > 0 && plazo > 0) {
-                // Cálculo de cuota nivelada PMT con Math.pow (JavaScript)
-                const factor = Math.pow(1 + tasaMensual, plazo);
-                cuota = montoFinanciar * (tasaMensual * factor) / (factor - 1);
-                const totalPagar = cuota * plazo;
-                totalIntereses = totalPagar - montoFinanciar;
-            }
+            // Estimaciones de seguros para auto
+            const seguroVida = montoFinanciar * 0.0003; // 0.03% mensual
+            const seguroDanos = montoFinanciar * 0.0005; // 0.05% mensual
+            const cuotaTotal = cuotaBase + seguroVida + seguroDanos;
 
-            const pctFinanciado = (precio > 0) ? (montoFinanciar / precio) * 100 : 0;
+            // Desglose del primer mes
+            const interesMes1 = montoFinanciar * tasaMensual;
+            const capitalMes1 = cuotaBase - interesMes1;
+
+            // Porcentajes para la barra visual
+            const pctCapital = (capitalMes1 / cuotaTotal) * 100;
+            const pctInteres = (interesMes1 / cuotaTotal) * 100;
+            const pctSegVida = (seguroVida / cuotaTotal) * 100;
+            const pctSegDanos = (seguroDanos / cuotaTotal) * 100;
 
             document.getElementById('lblMontoFinanciar').innerText = '$' + montoFinanciar.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblCuotaMensual').innerText = '$' + cuota.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblTotalIntereses').innerText = '$' + totalIntereses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById('lblPctFinanciado').innerText = pctFinanciado.toFixed(1) + '%';
-            document.getElementById('lblTasaAplicada').innerText = `* Tasa del ${(tasaAnual * 100).toFixed(1)}% EA para vehículo ${estado.toLowerCase()}`;
+            document.getElementById('lblCuotaTotal').innerText = '$' + cuotaTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            actualizarReglasEstado();
+            document.getElementById('lblDesgloseCapital').innerText = '$' + capitalMes1.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('lblDesgloseInteres').innerText = '$' + interesMes1.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('lblSeguroVida').innerText = '$' + seguroVida.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('lblSeguroDanos').innerText = '$' + seguroDanos.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            document.getElementById('lblPctCapital').innerText = pctCapital.toFixed(1) + '%';
+            document.getElementById('lblPctInteres').innerText = pctInteres.toFixed(1) + '%';
+            document.getElementById('lblPctSegVida').innerText = pctSegVida.toFixed(1) + '%';
+            document.getElementById('lblPctSegDanos').innerText = pctSegDanos.toFixed(1) + '%';
+
+            document.getElementById('barCapital').style.width = pctCapital.toFixed(1) + '%';
+            document.getElementById('barInteres').style.width = pctInteres.toFixed(1) + '%';
+            document.getElementById('barSegVida').style.width = pctSegVida.toFixed(1) + '%';
+            document.getElementById('barSegDanos').style.width = pctSegDanos.toFixed(1) + '%';
+
+            document.getElementById('lblTasaAplicada').innerText = `* Tasa del 10.00% ANUAL para vehículo ${estadoVehiculo.toLowerCase()}`;
+
+            // TABLA RESUMIDA DE LOS PRIMEROS MESES
+            let saldo = montoFinanciar;
+            let tbodyHtml = '';
+            const mesesMostrar = Math.min(plazoMeses, 4);
+
+            for (let m = 1; m <= mesesMostrar; m++) {
+                const interesMes = saldo * tasaMensual;
+                const capitalMes = cuotaBase - interesMes;
+                saldo -= capitalMes;
+
+                tbodyHtml += `
+                    <tr>
+                        <td class="py-2 px-3 font-bold text-white">Mes ${m}</td>
+                        <td class="py-2 px-3 text-emerald-400 font-bold">$${cuotaBase.toFixed(2)}</td>
+                        <td class="py-2 px-3">$${interesMes.toFixed(2)}</td>
+                        <td class="py-2 px-3">$${capitalMes.toFixed(2)}</td>
+                        <td class="py-2 px-3 text-right text-slate-300 font-bold">$${Math.max(saldo, 0).toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+
+            if (plazoMeses > 4) {
+                tbodyHtml += `
+                    <tr class="bg-[#0F233D]/60 italic text-slate-400">
+                        <td colspan="5" class="py-1.5 px-3 text-center text-[10px]">... (${plazoMeses - 4} meses restantes con la misma cuota base de $${cuotaBase.toFixed(2)}) ...</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('tblAmortizacionBody').innerHTML = tbodyHtml;
         }
 
-        function sincronizarMontoFormulario() {
-            actualizarReglasEstado();
+        function sincronizarMontoFormulario(val) {
+            const txtMontoForm = document.getElementById('<%= txtMontoSolicitado.ClientID %>');
+            if (txtMontoForm) txtMontoForm.value = val;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            calcularCotizadorVehicular();
-        });
-    </script>
+        function sincronizarMontoSimulador(val) {
+            const txtPrecioSim = document.getElementById('<%= txtPrecioComercial.ClientID %>');
+            if (txtPrecioSim) txtPrecioSim.value = val;
+        }
+
+        function sincronizarPlazoFormulario(val) {
+            const ddlPlazoForm = document.getElementById('<%= ddlPlazoSolicitado.ClientID %>');
+            if (ddlPlazoForm) ddlPlazoForm.value = val;
+        }
+
+        function sincronizarPlazoSimulador(val) {
+    const ddlPlazoSim = document.getElementById('<%= ddlPlazoMeses.ClientID %>');
+    if (ddlPlazoSim) ddlPlazoSim.value = val;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    calcularCotizadorVehicular();
+});
+</script>
 </body>
 </html>
