@@ -101,7 +101,8 @@ namespace CoopFacil.Pages
             decimal ingresos, montoSolicitado;
             int plazoMeses;
 
-            if (!decimal.TryParse(txtIngresos.Text, out ingresos) || ingresos <= 0)
+            // Limpieza de comas antes de Parse
+            if (!decimal.TryParse(txtIngresos.Text.Replace(",", ""), out ingresos) || ingresos <= 0)
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
@@ -109,7 +110,8 @@ namespace CoopFacil.Pages
                 return;
             }
 
-            if (!decimal.TryParse(txtMontoSolicitado.Text, out montoSolicitado) || montoSolicitado < 500 || montoSolicitado > 15000)
+            // Limpieza de comas antes de Parse
+            if (!decimal.TryParse(txtMontoSolicitado.Text.Replace(",", ""), out montoSolicitado) || montoSolicitado < 500 || montoSolicitado > 15000)
             {
                 pnlMensaje.Visible = true;
                 pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";

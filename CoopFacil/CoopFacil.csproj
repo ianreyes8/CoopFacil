@@ -183,6 +183,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Downloads\Guia_Practica_Ahorro_e_Inversion.pdf" />
+    <Content Include="Downloads\Manual_Saneamiento_Gestion_Deudas.pdf" />
+    <Content Include="Downloads\Plantilla_Presupuesto_CoopFacil.xlsx" />
     <None Include="packages.config" />
     <Content Include="Pages\Documentos\Acta Asamblea General 2025.pdf" />
     <Content Include="Pages\Documentos\Estados Financieros Auditados 2024.pdf" />
