@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
+using CoopFacil.Helpers;
 
 namespace CoopFacil.Pages
 {
-    public partial class CreditoVehicular : System.Web.UI.Page
+    public partial class CreditoVehicular : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -30,13 +25,31 @@ namespace CoopFacil.Pages
             }
 
             pnlBienvenida.Visible = true;
-            litBienvenida.Text = nombreUsuario;
+            litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
             lnkIniciarSesion.Visible = false;
             btnCerrarSesion.Visible = true;
 
             if (string.IsNullOrEmpty(txtNombre.Text))
             {
                 txtNombre.Text = nombreUsuario;
+            }
+
+            string correoSesion = ObtenerCorreoUsuarioSesion();
+            if (!string.IsNullOrEmpty(correoSesion) && string.IsNullOrEmpty(txtCorreo.Text))
+            {
+                txtCorreo.Text = correoSesion;
+            }
+
+            string duiSesion = ObtenerDUIUsuarioSesion();
+            if (!string.IsNullOrEmpty(duiSesion) && string.IsNullOrEmpty(txtDUI.Text))
+            {
+                txtDUI.Text = duiSesion;
+            }
+
+            string telefonoSesion = ObtenerTelefonoUsuarioSesion();
+            if (!string.IsNullOrEmpty(telefonoSesion) && string.IsNullOrEmpty(txtTelefono.Text))
+            {
+                txtTelefono.Text = telefonoSesion;
             }
         }
 
@@ -55,127 +68,166 @@ namespace CoopFacil.Pages
                     }
                 }
             }
+            return null;
+        }
 
-            foreach (string key in Session.Keys)
+        private string ObtenerCorreoUsuarioSesion()
+        {
+            string[] clavesCorreo = new string[] { "UsuarioCorreo", "CorreoUsuario", "Correo", "Email", "email", "correo" };
+
+            foreach (string clave in clavesCorreo)
             {
-                if (Session[key] != null)
+                if (Session[clave] != null)
                 {
-                    string valor = Session[key].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor) && valor.Contains("@"))
                     {
                         return valor;
                     }
                 }
             }
-
             return null;
         }
 
-        protected void btnSolicitarCredito_Click(object sender, EventArgs e)
+        private string ObtenerDUIUsuarioSesion()
         {
-            // Validar campos personales/financieros y de la unidad
-            if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtDUI.Text) ||
-                string.IsNullOrWhiteSpace(txtTelefono.Text) || string.IsNullOrWhiteSpace(txtCorreo.Text) ||
-                string.IsNullOrWhiteSpace(txtIngresos.Text) || string.IsNullOrWhiteSpace(txtMontoSolicitado.Text) ||
-                string.IsNullOrWhiteSpace(txtMarcaModelo.Text) || string.IsNullOrWhiteSpace(txtConcesionario.Text) ||
-                string.IsNullOrEmpty(ddlEstadoVehiculo.SelectedValue) || string.IsNullOrEmpty(ddlPlazoSolicitado.SelectedValue))
+            string[] clavesDUI = new string[] { "UsuarioDUI", "DUI", "Dui", "dui" };
+
+            foreach (string clave in clavesDUI)
             {
-                pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos personales, financieros y del vehículo requeridos.";
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor))
+                    {
+                        return valor;
+                    }
+                }
+            }
+            return null;
+        }
+
+        private string ObtenerTelefonoUsuarioSesion()
+        {
+            string[] clavesTelefono = new string[] { "UsuarioTelefono", "Telefono", "telefono", "Tel" };
+
+            foreach (string clave in clavesTelefono)
+            {
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor))
+                    {
+                        return valor;
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected void btnEnviarSolicitud_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtDUI.Text) ||
+                string.IsNullOrWhiteSpace(txtTelefono.Text) ||
+                string.IsNullOrWhiteSpace(txtCorreo.Text) ||
+                string.IsNullOrWhiteSpace(txtIngresos.Text) ||
+                string.IsNullOrWhiteSpace(txtPrecioVehiculo.Text) ||
+                string.IsNullOrWhiteSpace(txtMontoFinanciar.Text) ||
+                string.IsNullOrEmpty(ddlPlazoVehicular.SelectedValue))
+            {
+                MostrarMensajeSolicitud("Por favor, completa todos los campos personales, financieros y del vehículo obligatorios (*).", false);
                 return;
             }
 
-            // Validar las 4 referencias obligatorias
-            if (string.IsNullOrWhiteSpace(txtRefPers1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPers1Tel.Text) ||
-                string.IsNullOrWhiteSpace(txtRefPers2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPers2Tel.Text) ||
-                string.IsNullOrWhiteSpace(txtRefFam1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFam1Tel.Text) ||
-                string.IsNullOrWhiteSpace(txtRefFam2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFam2Tel.Text))
+            if (string.IsNullOrWhiteSpace(txtRefPersonal1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPersonal1Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefPersonal2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPersonal2Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefFamiliar1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFamiliar1Tel.Text) ||
+                string.IsNullOrWhiteSpace(txtRefFamiliar2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFamiliar2Tel.Text))
             {
-                pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Debes completar las 4 referencias de recomendación (2 personales y 2 familiares) con nombre y teléfono.";
+                MostrarMensajeSolicitud("Por favor, completa las 4 referencias de localización (2 personales y 2 familiares).", false);
                 return;
             }
 
-            decimal ingresos, montoSolicitado;
-            int plazoMeses;
-
-            if (!decimal.TryParse(txtIngresos.Text, out ingresos) || ingresos <= 0)
+            if (!fulRecibo.HasFile || !fulConstancia.HasFile || !fulCotizacion.HasFile)
             {
-                pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Ingrese un monto de ingresos mensuales válido.";
+                MostrarMensajeSolicitud("Por favor, adjunta los 3 comprobantes requeridos (Recibo de Agua/Luz/DUI, Constancia de Sueldo y Cotización del Auto).", false);
                 return;
             }
 
-            if (!decimal.TryParse(txtMontoSolicitado.Text, out montoSolicitado) || montoSolicitado < 3000)
+            decimal precioVehiculo = 0;
+            decimal.TryParse(txtPrecioVehiculo.Text.Trim(), out precioVehiculo);
+
+            decimal montoFinanciar = precioVehiculo;
+
+            int plazo = 48;
+            int.TryParse(ddlPlazoVehicular.SelectedValue, out plazo);
+
+            double tasaMensual = 0.10 / 12.0;
+            double cuotaBase = ((double)montoFinanciar * tasaMensual) / (1 - Math.Pow(1 + tasaMensual, -plazo));
+            double seguroVida = 5.00;
+            double seguroDanos = 15.00;
+            double cuotaEstimada = cuotaBase + seguroVida + seguroDanos;
+
+            string detalle = $"Precio Auto: ${precioVehiculo:N2} | Monto Financiar (100%): ${montoFinanciar:N2} | Plazo: {plazo} meses | Cuota Estimada: ${cuotaEstimada:N2} (Vida: $5.00 / Daños: $15.00) | Ingresos Netos: ${txtIngresos.Text.Trim()}" +
+                             $" | Ref. Pers 1: {txtRefPersonal1Nombre.Text.Trim()} ({txtRefPersonal1Tel.Text.Trim()})" +
+                             $" | Ref. Pers 2: {txtRefPersonal2Nombre.Text.Trim()} ({txtRefPersonal2Tel.Text.Trim()})" +
+                             $" | Ref. Fam 1: {txtRefFamiliar1Nombre.Text.Trim()} ({txtRefFamiliar1Tel.Text.Trim()})" +
+                             $" | Ref. Fam 2: {txtRefFamiliar2Nombre.Text.Trim()} ({txtRefFamiliar2Tel.Text.Trim()})" +
+                             $" | Documentos: Recibo [{fulRecibo.FileName}] / Constancia [{fulConstancia.FileName}] / Cotización [{fulCotizacion.FileName}]";
+
+            DatosComprobante datos = new DatosComprobante
             {
-                pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> El monto solicitado debe ser mayor o igual a $3,000.00 USD.";
-                return;
-            }
+                NumeroTransaccion = "CV-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                NombreCliente = txtNombre.Text.Trim(),
+                DUI = txtDUI.Text.Trim(),
+                Telefono = txtTelefono.Text.Trim(),
+                CorreoCliente = txtCorreo.Text.Trim(),
+                NombreServicio = "Solicitud de Pre-Aprobación de Crédito Vehicular",
+                Monto = montoFinanciar,
+                DetalleAdicional = detalle,
+                FechaMovimiento = DateTime.Now
+            };
 
-            int.TryParse(ddlPlazoSolicitado.SelectedValue, out plazoMeses);
+            byte[] pdfBytes = ComprobanteServicioHelper.GenerarPdfComprobante(datos);
+            bool correoEnviado = ComprobanteServicioHelper.EnviarComprobantePorCorreo(datos, pdfBytes);
 
-            // Estado de los archivos adjuntos
-            string estadoAdjuntos = "Sin comprobantes digitales (presentación física requerida)";
-            if (fileReciboDUI.HasFile || fileConstancia.HasFile || fileProforma.HasFile)
+            if (correoEnviado)
             {
-                List<string> nombresAdjuntos = new List<string>();
-                if (fileReciboDUI.HasFile) nombresAdjuntos.Add(fileReciboDUI.FileName);
-                if (fileConstancia.HasFile) nombresAdjuntos.Add(fileConstancia.FileName);
-                if (fileProforma.HasFile) nombresAdjuntos.Add(fileProforma.FileName);
-                estadoAdjuntos = "Archivos cargados: " + string.Join(", ", nombresAdjuntos);
-            }
-
-            // Cálculo financiero de cuota mensual a 10% ANUAL (nominal mensual = 10% / 12)
-            double tasaNominalMensual = (0.10 / 12.0);
-            double P = (double)montoSolicitado;
-            int n = plazoMeses;
-            double cuotaMensualBase = P * (tasaNominalMensual * Math.Pow(1 + tasaNominalMensual, n)) / (Math.Pow(1 + tasaNominalMensual, n) - 1);
-
-            // Estimación de seguros incluidos en cuota (0.03% vida + 0.05% daños auto)
-            double segurosMensuales = (P * 0.0003) + (P * 0.0005);
-            double cuotaTotal = cuotaMensualBase + segurosMensuales;
-
-            // Ratio de Endeudamiento
-            decimal ratioEndeudamiento = ((decimal)cuotaTotal / ingresos) * 100m;
-
-            pnlMensaje.Visible = true;
-
-            if (ratioEndeudamiento <= 40m)
-            {
-                pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 flex flex-col gap-2 text-xs font-medium";
-                litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-400'>" +
-                                  "<i class='fa-solid fa-circle-check text-lg'></i> Dictamen Preliminar: <strong>Pre-Aprobado Sujeto a Inspección Vehicular</strong></div>" +
-                                  "<p class='mt-1 text-slate-200'>Tu capacidad de pago es óptima. La cuota mensual estimada de <strong>$" + cuotaTotal.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales ($" + ingresos.ToString("N2") + " USD).</p>" +
-                                  "<p class='text-xs text-slate-300'>Se han registrado tus <strong>4 recomendaciones de localización</strong>, datos de la unidad (<em>" + txtMarcaModelo.Text + " - " + txtConcesionario.Text + "</em>) y el estado de adjuntos: <em>\"" + estadoAdjuntos + "\"</em>.</p>";
+                pnlMensajeSolicitud.Visible = true;
+                pnlMensajeSolicitud.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 text-xs font-medium";
+                litMensajeSolicitud.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400'>" +
+                                           "<i class='fa-solid fa-circle-check text-lg'></i> ¡Solicitud de Crédito Vehicular Recibida y Comprobante PDF Enviado!</div>" +
+                                           "<p class='mt-2 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu solicitud para financiar <strong>$" + datos.Monto.ToString("N2") + "</strong> a <strong>" + plazo + " meses</strong> fue registrada bajo la clave N° <strong>" + datos.NumeroTransaccion + "</strong>.</p>" +
+                                           "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Enviamos la confirmación con tu comprobante PDF adjunto a <strong>" + datos.CorreoCliente + "</strong>.</p>";
             }
             else
             {
-                pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-amber-500/50 bg-amber-950/40 text-amber-300 flex flex-col gap-2 text-xs font-medium";
-                litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-amber-400'>" +
-                                  "<i class='fa-solid fa-triangle-exclamation text-lg'></i> Dictamen Preliminar: <strong>Sujeto a Análisis de Riesgo Especial</strong></div>" +
-                                  "<p class='mt-1 text-slate-200'>La cuota estimada de <strong>$" + cuotaTotal.ToString("N2") + " USD</strong> representa el <strong>" + ratioEndeudamiento.ToString("N1") + "%</strong> de tus ingresos mensuales, superando el límite recomendado del 40%.</p>" +
-                                  "<p class='text-xs text-slate-300'>Guardamos tus 4 contactos de respaldo y adjuntos. Te sugerimos ampliar el plazo de financiamiento para reducir la cuota mensual.</p>";
+                pnlMensajeSolicitud.Visible = true;
+                pnlMensajeSolicitud.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 text-xs font-medium";
+                litMensajeSolicitud.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400'>" +
+                                           "<i class='fa-solid fa-circle-check text-lg'></i> ¡Solicitud de Crédito Vehicular Pre-Aprobada!</div>" +
+                                           "<p class='mt-1 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu pre-solicitud para financiar <strong>$" + datos.Monto.ToString("N2") + "</strong> (Clave N° <strong>" + datos.NumeroTransaccion + "</strong>) fue recibida exitosamente.</p>" +
+                                           "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Un ejecutivo de crédito evaluará la cotización y documentación adjunta para dar inicio al trámite.</p>";
             }
 
-            // Limpieza de campos tras procesar
-            txtDUI.Text = "";
-            txtTelefono.Text = "";
-            txtCorreo.Text = "";
-            txtMarcaModelo.Text = "";
-            txtConcesionario.Text = "";
-            txtRefPers1Nombre.Text = "";
-            txtRefPers1Tel.Text = "";
-            txtRefPers2Nombre.Text = "";
-            txtRefPers2Tel.Text = "";
-            txtRefFam1Nombre.Text = "";
-            txtRefFam1Tel.Text = "";
-            txtRefFam2Nombre.Text = "";
-            txtRefFam2Tel.Text = "";
+            if (string.IsNullOrEmpty(ObtenerNombreUsuarioSesion()))
+            {
+                txtIngresos.Text = "";
+                txtRefPersonal1Nombre.Text = ""; txtRefPersonal1Tel.Text = "";
+                txtRefPersonal2Nombre.Text = ""; txtRefPersonal2Tel.Text = "";
+                txtRefFamiliar1Nombre.Text = ""; txtRefFamiliar1Tel.Text = "";
+                txtRefFamiliar2Nombre.Text = ""; txtRefFamiliar2Tel.Text = "";
+            }
+        }
+
+        private void MostrarMensajeSolicitud(string texto, bool esExito)
+        {
+            pnlMensajeSolicitud.Visible = true;
+            pnlMensajeSolicitud.CssClass = esExito
+                ? "mb-6 p-4 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 text-xs font-bold"
+                : "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300 text-xs font-bold";
+            litMensajeSolicitud.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> " + texto;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)
@@ -183,6 +235,17 @@ namespace CoopFacil.Pages
             Session.Clear();
             Session.Abandon();
             Response.Redirect("../Default.aspx");
+        }
+
+        public static string ExtraerPrimerNombreYPrimerApellido(string nombreCompleto)
+        {
+            if (string.IsNullOrWhiteSpace(nombreCompleto)) return "";
+            string[] partes = nombreCompleto.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (partes.Length == 1) return partes[0];
+            if (partes.Length == 2) return $"{partes[0]} {partes[1]}";
+            if (partes.Length == 3) return $"{partes[0]} {partes[1]}";
+            return $"{partes[0]} {partes[2]}";
         }
     }
 }

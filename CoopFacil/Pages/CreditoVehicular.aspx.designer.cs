@@ -60,49 +60,22 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnCerrarSesion;
 
         /// <summary>
-        /// Control ddlEstadoVehiculo.
+        /// Control pnlMensajeSolicitud.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEstadoVehiculo;
+        protected global::System.Web.UI.WebControls.Panel pnlMensajeSolicitud;
 
         /// <summary>
-        /// Control ddlPlazoMeses.
+        /// Control litMensajeSolicitud.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPlazoMeses;
-
-        /// <summary>
-        /// Control txtPrecioComercial.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrecioComercial;
-
-        /// <summary>
-        /// Control pnlMensaje.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlMensaje;
-
-        /// <summary>
-        /// Control litMensaje.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litMensaje;
+        protected global::System.Web.UI.WebControls.Literal litMensajeSolicitud;
 
         /// <summary>
         /// Control txtNombre.
@@ -150,147 +123,138 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.TextBox txtIngresos;
 
         /// <summary>
-        /// Control txtMarcaModelo.
+        /// Control txtPrecioVehiculo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMarcaModelo;
+        protected global::System.Web.UI.WebControls.TextBox txtPrecioVehiculo;
 
         /// <summary>
-        /// Control txtConcesionario.
+        /// Control txtMontoFinanciar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtConcesionario;
+        protected global::System.Web.UI.WebControls.TextBox txtMontoFinanciar;
 
         /// <summary>
-        /// Control txtMontoSolicitado.
+        /// Control ddlPlazoVehicular.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMontoSolicitado;
+        protected global::System.Web.UI.WebControls.DropDownList ddlPlazoVehicular;
 
         /// <summary>
-        /// Control ddlPlazoSolicitado.
+        /// Control txtRefPersonal1Nombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlPlazoSolicitado;
+        protected global::System.Web.UI.WebControls.TextBox txtRefPersonal1Nombre;
 
         /// <summary>
-        /// Control txtRefPers1Nombre.
+        /// Control txtRefPersonal1Tel.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefPers1Nombre;
+        protected global::System.Web.UI.WebControls.TextBox txtRefPersonal1Tel;
 
         /// <summary>
-        /// Control txtRefPers1Tel.
+        /// Control txtRefPersonal2Nombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefPers1Tel;
+        protected global::System.Web.UI.WebControls.TextBox txtRefPersonal2Nombre;
 
         /// <summary>
-        /// Control txtRefPers2Nombre.
+        /// Control txtRefPersonal2Tel.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefPers2Nombre;
+        protected global::System.Web.UI.WebControls.TextBox txtRefPersonal2Tel;
 
         /// <summary>
-        /// Control txtRefPers2Tel.
+        /// Control txtRefFamiliar1Nombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefPers2Tel;
+        protected global::System.Web.UI.WebControls.TextBox txtRefFamiliar1Nombre;
 
         /// <summary>
-        /// Control txtRefFam1Nombre.
+        /// Control txtRefFamiliar1Tel.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefFam1Nombre;
+        protected global::System.Web.UI.WebControls.TextBox txtRefFamiliar1Tel;
 
         /// <summary>
-        /// Control txtRefFam1Tel.
+        /// Control txtRefFamiliar2Nombre.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefFam1Tel;
+        protected global::System.Web.UI.WebControls.TextBox txtRefFamiliar2Nombre;
 
         /// <summary>
-        /// Control txtRefFam2Nombre.
+        /// Control txtRefFamiliar2Tel.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefFam2Nombre;
+        protected global::System.Web.UI.WebControls.TextBox txtRefFamiliar2Tel;
 
         /// <summary>
-        /// Control txtRefFam2Tel.
+        /// Control fulRecibo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRefFam2Tel;
+        protected global::System.Web.UI.WebControls.FileUpload fulRecibo;
 
         /// <summary>
-        /// Control fileReciboDUI.
+        /// Control fulConstancia.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fileReciboDUI;
+        protected global::System.Web.UI.WebControls.FileUpload fulConstancia;
 
         /// <summary>
-        /// Control fileConstancia.
+        /// Control fulCotizacion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fileConstancia;
+        protected global::System.Web.UI.WebControls.FileUpload fulCotizacion;
 
         /// <summary>
-        /// Control fileProforma.
+        /// Control btnEnviarSolicitud.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fileProforma;
-
-        /// <summary>
-        /// Control btnSolicitarCredito.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSolicitarCredito;
+        protected global::System.Web.UI.WebControls.Button btnEnviarSolicitud;
     }
 }

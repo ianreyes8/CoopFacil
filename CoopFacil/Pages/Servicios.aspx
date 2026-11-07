@@ -19,17 +19,18 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
-    (function () {
-        const savedTheme = localStorage.getItem('coopfacil-theme');
-        if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
-        else { document.documentElement.classList.add('dark'); }
-    })();
-</script>
+        (function () {
+            const savedTheme = localStorage.getItem('coopfacil-theme');
+            if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
+            else { document.documentElement.classList.add('dark'); }
+        })();
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
     <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
         
         <div>
+            <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
             <header class="bg-white/90 dark:bg-[#0B1A30]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 w-full px-6 sm:px-10 py-4 flex items-center justify-between gap-4 transition-colors duration-300">
                 
                 <div class="flex items-center gap-4">
@@ -56,10 +57,11 @@
                 </div>
 
                 <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Quiénes Somos</a>
+                    <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
+                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Quiénes Somos</a>
                     <a href="Servicios.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Servicios</a>
-                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
-                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
+                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
+                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
                 </nav>
 
                 <div class="flex items-center gap-3">
@@ -79,6 +81,7 @@
 
             </header>
 
+            <!-- CONTENIDO PRINCIPAL -->
             <main class="max-w-7xl mx-auto px-6 py-10 flex flex-col gap-10 flex-grow w-full">
                 
                 <div class="text-center max-w-3xl mx-auto flex flex-col gap-3">
@@ -252,50 +255,49 @@
     </form>
 
     <script>
-        function updateThemeIcons(isDark) {
-            const sunIcon = document.getElementById('themeIconSun');
-            const moonIcon = document.getElementById('themeIconMoon');
-            if (isDark) {
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            } else {
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-            }
+function updateThemeIcons(isDark) {
+    const sunIcon = document.getElementById('themeIconSun');
+    const moonIcon = document.getElementById('themeIconMoon');
+    if (isDark) {
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+    } else {
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+    }
+}
+
+function toggleTheme() {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
+    updateThemeIcons(isDark);
+}
+
+function filtrarServicios(categoria, boton) {
+    const botones = document.querySelectorAll('.btn-filtro');
+
+    botones.forEach(btn => {
+        btn.className = 'btn-filtro px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition bg-white dark:bg-[#0F233D] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/80';
+    });
+
+    boton.className = 'btn-filtro active-filter px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition shadow-md bg-emerald-600 text-white border border-emerald-500';
+
+    const tarjetas = document.querySelectorAll('.card-servicio');
+    tarjetas.forEach(card => {
+        if (categoria === 'all') {
+            card.style.display = 'flex';
+        } else if (card.classList.contains('cat-' + categoria)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
         }
+    });
+}
 
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
-            updateThemeIcons(isDark);
-        }
-
-        function filtrarServicios(categoria, boton) {
-            const botones = document.querySelectorAll('.btn-filtro');
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            botones.forEach(btn => {
-                btn.className = 'btn-filtro px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition bg-white dark:bg-[#0F233D] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/80';
-            });
-
-            boton.className = 'btn-filtro active-filter px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition shadow-md bg-emerald-600 text-white border border-emerald-500';
-
-            const tarjetas = document.querySelectorAll('.card-servicio');
-            tarjetas.forEach(card => {
-                if (categoria === 'all') {
-                    card.style.display = 'flex';
-                } else if (card.classList.contains('cat-' + categoria)) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const isDark = document.documentElement.classList.contains('dark');
-            updateThemeIcons(isDark);
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', function () {
+    const isDark = document.documentElement.classList.contains('dark');
+    updateThemeIcons(isDark);
+});
+</script>
 </body>
 </html>

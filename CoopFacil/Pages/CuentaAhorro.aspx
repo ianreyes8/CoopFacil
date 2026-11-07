@@ -61,11 +61,12 @@
                 </div>
 
                 <!-- ENLACES DE NAVEGACIÓN (CENTRO) -->
-                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Quiénes Somos</a>
+               <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                    <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
+                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Quiénes Somos</a>
                     <a href="Servicios.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Servicios</a>
-                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
-                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
+                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
+                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
                 </nav>
 
                 <!-- CONTROLES DE SESIÓN Y TEMA (DERECHA) -->
@@ -244,24 +245,24 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Nombre Completo <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtNombre" runat="server" autocomplete="off" attr-autocomplete="new-password" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Leonardo Vasquez"></asp:TextBox>
+                            <asp:TextBox ID="txtNombre" runat="server" autocomplete="off" oninput="filtrarSoloLetras(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="Leonardo Vasquez"></asp:TextBox>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Documento de Identidad (DUI) <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtDUI" runat="server" autocomplete="off" attr-autocomplete="new-password" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
+                            <asp:TextBox ID="txtDUI" runat="server" autocomplete="off" maxlength="10" oninput="formatearDUI(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Teléfono de Contacto <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtTelefono" runat="server" autocomplete="off" attr-autocomplete="new-password" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
+                            <asp:TextBox ID="txtTelefono" runat="server" autocomplete="off" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
                         <div class="md:col-span-5 flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Correo Electrónico <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtCorreo" runat="server" TextMode="Email" autocomplete="off" attr-autocomplete="new-password" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
+                            <asp:TextBox ID="txtCorreo" runat="server" TextMode="Email" autocomplete="off" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
                         </div>
 
                         <div class="md:col-span-4 flex flex-col gap-1.5">
@@ -305,6 +306,33 @@
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
             updateThemeIcons(isDark);
+        }
+
+        function filtrarSoloLetras(input) {
+            if (!input) return;
+            input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+        }
+
+        function formatearDUI(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 9) val = val.substring(0, 9);
+            if (val.length > 8) {
+                input.value = val.substring(0, 8) + '-' + val.substring(8, 9);
+            } else {
+                input.value = val;
+            }
+        }
+
+        function formatearTelefono(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 8) val = val.substring(0, 8);
+            if (val.length > 4) {
+                input.value = val.substring(0, 4) + '-' + val.substring(4, 8);
+            } else {
+                input.value = val;
+            }
         }
 
         function formatearYCalcularMonto(input) {

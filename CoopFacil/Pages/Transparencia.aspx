@@ -1,6 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Transparencia.aspx.cs" Inherits="CoopFacil.Pages.Transparencia" %>
 
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="es" class="dark">
 <head runat="server">
@@ -31,6 +30,7 @@
     <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
         
         <div>
+            <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
             <header class="bg-white/90 dark:bg-[#0B1A30]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 w-full px-6 sm:px-10 py-4 flex items-center justify-between gap-4 transition-colors duration-300">
                 
                 <div class="flex items-center gap-4">
@@ -56,12 +56,13 @@
                     </asp:Panel>
                 </div>
 
-                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Quiénes Somos</a>
-                    <a href="Servicios.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Servicios</a>
+               <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                    <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
+                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Quiénes Somos</a>
+                    <a href="Servicios.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Servicios</a>
                     <a href="Transparencia.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Transparencia</a>
-                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
-                </nav>
+                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
+               </nav>
 
                 <div class="flex items-center gap-3">
                     <button type="button" onclick="toggleTheme()" id="themeToggleBtn" title="Cambiar Tema" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-[#0F233D] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition flex items-center justify-center text-base shadow-sm">
@@ -80,6 +81,7 @@
 
             </header>
 
+            <!-- CONTENIDO PRINCIPAL -->
             <main class="max-w-7xl mx-auto px-6 py-10 flex flex-col gap-10 flex-grow w-full">
                 
                 <section class="flex flex-col gap-6">

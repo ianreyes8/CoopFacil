@@ -21,12 +21,12 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem('coopfacil-theme');
-            if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
-            else { document.documentElement.classList.add('dark'); }
-        })();
-    </script>
+    (function () {
+        const savedTheme = localStorage.getItem('coopfacil-theme');
+        if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
+        else { document.documentElement.classList.add('dark'); }
+    })();
+</script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 transition-colors duration-300 relative">
     
@@ -36,7 +36,7 @@
         <i id="themeIconMoon" class="fa-solid fa-moon"></i>
     </button>
 
-    <form id="form1" runat="server" class="w-full max-w-md">
+    <form id="form1" runat="server" autocomplete="off" class="w-full max-w-md">
         
         <div class="bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-700/60 rounded-2xl p-6 sm:p-8 shadow-xl dark:shadow-2xl transition-colors duration-300">
             
@@ -58,29 +58,29 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre Completo</label>
-                    <asp:TextBox ID="txtNombre" runat="server" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition" placeholder="Ej. Juan Pérez"></asp:TextBox>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre Completo <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
+                    <asp:TextBox ID="txtNombre" runat="server" oninput="filtrarSoloLetras(this)" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition" placeholder="Ej. Juan Pérez"></asp:TextBox>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Correo Electrónico</label>
-                    <asp:TextBox ID="txtEmail" runat="server" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Correo Electrónico <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
+                    <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition" placeholder="correo@ejemplo.com"></asp:TextBox>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Acceso</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Tipo de Acceso <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
                     <asp:DropDownList ID="ddlTipoAcceso" runat="server" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 transition">
                         <asp:ListItem Value="Socio Individual">Socio Individual</asp:ListItem>
                     </asp:DropDownList>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Contraseña</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Contraseña <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
                     <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition" placeholder="••••••••"></asp:TextBox>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Confirmar Contraseña</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Confirmar Contraseña <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
                     <asp:TextBox ID="txtPasswordConfirm" runat="server" TextMode="Password" CssClass="w-full bg-slate-50 dark:bg-[#071322] border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-blue-500 transition" placeholder="••••••••"></asp:TextBox>
                 </div>
 
@@ -95,28 +95,33 @@
     </form>
 
     <script>
-function updateThemeIcons(isDark) {
-    const sunIcon = document.getElementById('themeIconSun');
-    const moonIcon = document.getElementById('themeIconMoon');
-    if (isDark) {
-        sunIcon.classList.remove('hidden');
-        moonIcon.classList.add('hidden');
-    } else {
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-    }
-}
+        function updateThemeIcons(isDark) {
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
 
-function toggleTheme() {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
-    updateThemeIcons(isDark);
-}
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+        }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const isDark = document.documentElement.classList.contains('dark');
-    updateThemeIcons(isDark);
-});
-</script>
+        function filtrarSoloLetras(input) {
+            if (!input) return;
+            input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateThemeIcons(isDark);
+        });
+    </script>
 </body>
 </html>

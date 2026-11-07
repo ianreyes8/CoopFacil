@@ -62,10 +62,11 @@ tailwind.config = {
 
                 <!-- ENLACES DE NAVEGACIÓN (CENTRO) -->
                 <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Quiénes Somos</a>
+                    <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
+                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Quiénes Somos</a>
                     <a href="Servicios.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Servicios</a>
-                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
-                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
+                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
+                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
                 </nav>
 
                 <!-- CONTROLES DE SESIÓN Y TEMA (DERECHA) -->
@@ -287,7 +288,7 @@ tailwind.config = {
 
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Nombre Completo <span class="text-amber-600 dark:text-amber-400">*</span></label>
-                                <asp:TextBox ID="txtNombreInscripcion" runat="server" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" placeholder="Ej. Ana Lucía Gómez"></asp:TextBox>
+                                <asp:TextBox ID="txtNombreInscripcion" runat="server" oninput="filtrarSoloLetras(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" placeholder="Ej. Ana Lucía Gómez"></asp:TextBox>
                             </div>
 
                             <div class="flex flex-col gap-1.5">
@@ -297,7 +298,7 @@ tailwind.config = {
 
                             <div class="flex flex-col gap-1.5">
                                 <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Teléfono para Recordatorios <span class="text-amber-600 dark:text-amber-400">*</span></label>
-                                <asp:TextBox ID="txtTelefonoInscripcion" runat="server" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" placeholder="7777-8888"></asp:TextBox>
+                                <asp:TextBox ID="txtTelefonoInscripcion" runat="server" maxlength="9" oninput="formatearTelefono(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" placeholder="7777-8888"></asp:TextBox>
                             </div>
 
                             <asp:Button ID="btnInscribirseTaller" runat="server" Text="Confirmar Reservación de Cupo" OnClick="btnInscribirseTaller_Click" CssClass="mt-2 w-full bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs py-3 rounded-xl shadow-lg shadow-amber-950 transition cursor-pointer" />
@@ -349,7 +350,7 @@ tailwind.config = {
                                 </div>
                                 <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">Guía Sencilla de Ahorro</h3>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                    7 ideas fáciles para hacer rendir tu dinero, opciones de cuenta y consejos para tu fondo de reserva[cite: 43].
+                                    7 ideas fáciles para hacer rendir tu dinero, opciones de cuenta y consejos para tu fondo de reserva.
                                 </p>
                             </div>
                             <asp:LinkButton ID="btnDescargarGuiaPDF" runat="server" OnClick="btnDescargarGuiaPDF_Click" CssClass="w-full bg-white dark:bg-[#0F233D] hover:bg-amber-600 border border-amber-500/40 text-amber-600 dark:text-amber-400 hover:text-white text-xs font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm">
@@ -365,7 +366,7 @@ tailwind.config = {
                                 </div>
                                 <h3 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">Manual de Saneamiento y Deudas</h3>
                                 <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                    Pasos claros para evaluar tu nivel de endeudamiento, cuotas vs. ingresos y consolidación de deudas[cite: 41, 42].
+                                    Pasos claros para evaluar tu nivel de endeudamiento, cuotas vs. ingresos y consolidación de deudas.
                                 </p>
                             </div>
                             <asp:LinkButton ID="btnDescargarManualPDF" runat="server" OnClick="btnDescargarManualPDF_Click" CssClass="w-full bg-white dark:bg-[#0F233D] hover:bg-blue-600 border border-blue-500/40 text-blue-600 dark:text-blue-400 hover:text-white text-xs font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 shadow-sm">
@@ -402,6 +403,22 @@ tailwind.config = {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
             updateThemeIcons(isDark);
+        }
+
+        function filtrarSoloLetras(input) {
+            if (!input) return;
+            input.value = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+        }
+
+        function formatearTelefono(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 8) val = val.substring(0, 8);
+            if (val.length > 4) {
+                input.value = val.substring(0, 4) + '-' + val.substring(4, 8);
+            } else {
+                input.value = val;
+            }
         }
 
         function evaluarSaludFinanciera() {

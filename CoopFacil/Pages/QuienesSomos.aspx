@@ -8,23 +8,23 @@
     <title>Quiénes Somos - CoopFacil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-tailwind.config = {
-    darkMode: 'class',
-    theme: {
-        extend: {
-            colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
+                }
+            }
         }
-    }
-}
-</script>
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
-        (function() {
-            const savedTheme = localStorage.getItem('coopfacil-theme');
-            if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
-            else { document.documentElement.classList.add('dark'); }
-        })();
-    </script>
+    (function () {
+        const savedTheme = localStorage.getItem('coopfacil-theme');
+        if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
+        else { document.documentElement.classList.add('dark'); }
+    })();
+</script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
     <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
@@ -55,10 +55,11 @@ tailwind.config = {
             </div>
 
             <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <a href="QuienesSomos.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Quiénes Somos</a>
-                <a href="Servicios.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Servicios</a>
-                <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
-                <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
+                    <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
+                    <a href="QuienesSomos.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Quiénes Somos</a>
+                    <a href="Servicios.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Servicios</a>
+                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
+                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
             </nav>
 
             <div class="flex items-center gap-3">

@@ -16,7 +16,6 @@ namespace CoopFacil.Pages
         private void VerificarSesion()
         {
             string nombreUsuario = ObtenerNombreUsuarioSesion();
-
             bool estaAutenticado = !string.IsNullOrEmpty(nombreUsuario);
 
             lnkIniciarSesion.Visible = !estaAutenticado;
@@ -25,7 +24,7 @@ namespace CoopFacil.Pages
 
             if (estaAutenticado)
             {
-                litBienvenida.Text = nombreUsuario;
+                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
             }
         }
 
@@ -45,19 +44,23 @@ namespace CoopFacil.Pages
                 }
             }
 
-            foreach (string key in Session.Keys)
+            if (Session["IdUsuario"] != null || Session["ID_Usuario"] != null)
             {
-                if (Session[key] != null)
-                {
-                    string valor = Session[key].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
-                    {
-                        return valor;
-                    }
-                }
+                return "Socio CoopFacil";
             }
 
             return null;
+        }
+
+        public static string ExtraerPrimerNombreYPrimerApellido(string nombreCompleto)
+        {
+            if (string.IsNullOrWhiteSpace(nombreCompleto)) return "";
+            string[] partes = nombreCompleto.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (partes.Length == 1) return partes[0];
+            if (partes.Length == 2) return $"{partes[0]} {partes[1]}";
+            if (partes.Length == 3) return $"{partes[0]} {partes[1]}";
+            return $"{partes[0]} {partes[2]}";
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

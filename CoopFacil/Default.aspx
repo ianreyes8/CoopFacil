@@ -8,15 +8,15 @@
     <title>CoopFacil - Iniciar Sesión</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
-                }
-            }
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
         }
-    </script>
+    }
+}
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
         (function() {
@@ -27,7 +27,7 @@
     </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
-    <form id="form1" runat="server" class="min-h-screen flex flex-col justify-between">
+    <form id="form1" runat="server" autocomplete="off" class="min-h-screen flex flex-col justify-between">
         
         <header class="border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#0B1A30]/90 sticky top-0 z-40 backdrop-blur transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -106,12 +106,12 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Correo Electrónico</label>
-                            <asp:TextBox ID="txtEmail" runat="server" CssClass="w-full bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="ejemplo@correo.com"></asp:TextBox>
+                            <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" autocomplete="off" CssClass="w-full bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="ejemplo@correo.com"></asp:TextBox>
                         </div>
 
                         <div>
                             <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Contraseña</label>
-                            <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="w-full bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="••••••••"></asp:TextBox>
+                            <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" autocomplete="off" CssClass="w-full bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="••••••••"></asp:TextBox>
                         </div>
 
                         <asp:Button ID="btnAcceder" runat="server" Text="Iniciar Sesión →" OnClick="btnAcceder_Click" CssClass="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-sm transition cursor-pointer mt-2 shadow-lg shadow-blue-500/20" />
@@ -132,28 +132,28 @@
     </form>
 
     <script>
-function updateThemeIcons(isDark) {
-    const sunIcon = document.getElementById('themeIconSun');
-    const moonIcon = document.getElementById('themeIconMoon');
-    if (isDark) {
-        sunIcon.classList.remove('hidden');
-        moonIcon.classList.add('hidden');
-    } else {
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-    }
-}
+        function updateThemeIcons(isDark) {
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
 
-function toggleTheme() {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
-    updateThemeIcons(isDark);
-}
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+        }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const isDark = document.documentElement.classList.contains('dark');
-    updateThemeIcons(isDark);
-});
-</script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateThemeIcons(isDark);
+        });
+    </script>
 </body>
 </html>

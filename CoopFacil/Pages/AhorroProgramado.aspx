@@ -21,12 +21,12 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
-    (function () {
-        const savedTheme = localStorage.getItem('coopfacil-theme');
-        if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
-        else { document.documentElement.classList.add('dark'); }
-    })();
-</script>
+        (function () {
+            const savedTheme = localStorage.getItem('coopfacil-theme');
+            if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
+            else { document.documentElement.classList.add('dark'); }
+        })();
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
     <!-- FORMULARIO CON AUTOCOMPLETADO DESACTIVADO GLOBALMENTE -->
@@ -63,10 +63,11 @@
 
                 <!-- ENLACES DE NAVEGACIÓN (CENTRO) -->
                 <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Quiénes Somos</a>
+                    <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
+                    <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Quiénes Somos</a>
                     <a href="Servicios.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Servicios</a>
-                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Transparencia</a>
-                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition">Contacto</a>
+                    <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
+                    <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
                 </nav>
 
                 <!-- CONTROLES DE SESIÓN Y TEMA (DERECHA) -->
@@ -260,12 +261,12 @@
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Documento de Identidad (DUI) <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtDUI" runat="server" autocomplete="off" attr-autocomplete="new-password" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
+                            <asp:TextBox ID="txtDUI" runat="server" autocomplete="off" attr-autocomplete="new-password" oninput="formatearDUI(this)" maxlength="10" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="00000000-0"></asp:TextBox>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Teléfono de Contacto <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                            <asp:TextBox ID="txtTelefono" runat="server" autocomplete="off" attr-autocomplete="new-password" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
+                            <asp:TextBox ID="txtTelefono" runat="server" autocomplete="off" attr-autocomplete="new-password" oninput="formatearTelefono(this)" maxlength="9" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="7777-8888"></asp:TextBox>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
@@ -281,13 +282,12 @@
                                 <asp:ListItem Text="Fondo de Emergencia" Value="Fondo de Emergencia" Selected="True"></asp:ListItem>
                                 <asp:ListItem Text="Vacaciones / Viajes" Value="Vacaciones"></asp:ListItem>
                                 <asp:ListItem Text="Educación / Estudios" Value="Educación"></asp:ListItem>
-                                <asp:ListItem Text="Pie para Vivienda" Value="Vivienda"></asp:ListItem>
-                                <asp:ListItem Text="Compra de Vehículo" Value="Vehículo"></asp:ListItem>
+                                
                             </asp:DropDownList>
                         </div>
 
                         <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Cuota Mensual ($10 a $500) <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
+                            <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Cuota Mensual <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
                             <asp:TextBox ID="txtCuotaMensualForm" runat="server" autocomplete="off" attr-autocomplete="new-password" oninput="formatearYCalcularMonto(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition" placeholder="50"></asp:TextBox>
                         </div>
 
@@ -343,6 +343,28 @@
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
             updateThemeIcons(isDark);
+        }
+
+        function formatearDUI(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 9) val = val.substring(0, 9);
+            if (val.length > 8) {
+                input.value = val.substring(0, 8) + '-' + val.substring(8, 9);
+            } else {
+                input.value = val;
+            }
+        }
+
+        function formatearTelefono(input) {
+            if (!input) return;
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 8) val = val.substring(0, 8);
+            if (val.length > 4) {
+                input.value = val.substring(0, 4) + '-' + val.substring(4, 8);
+            } else {
+                input.value = val;
+            }
         }
 
         function formatearYCalcularMonto(input) {
@@ -410,6 +432,6 @@
 
             calcularSimuladorAhorroProgramado();
         });
-    </script>
+</script>
 </body>
 </html>

@@ -15,7 +15,8 @@ namespace CoopFacil.Pages
 
         private void EvaluarEstadoSesion()
         {
-            bool estaAutenticado = (Session["IdUsuario"] != null);
+            string nombreUsuario = ObtenerNombreUsuarioSesion();
+            bool estaAutenticado = !string.IsNullOrEmpty(nombreUsuario);
 
             lnkIniciarSesion.Visible = !estaAutenticado;
             btnCerrarSesion.Visible = estaAutenticado;
@@ -23,9 +24,32 @@ namespace CoopFacil.Pages
 
             if (estaAutenticado)
             {
-                string nombreCompleto = Session["NombreCompleto"] != null ? Session["NombreCompleto"].ToString() : "";
-                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreCompleto);
+                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
             }
+        }
+
+        private string ObtenerNombreUsuarioSesion()
+        {
+            string[] clavesNombre = new string[] { "UsuarioNombre", "NombreUsuario", "NombreCompleto", "Usuario", "Nombre", "nombre", "usuario" };
+
+            foreach (string clave in clavesNombre)
+            {
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
+                    {
+                        return valor;
+                    }
+                }
+            }
+
+            if (Session["IdUsuario"] != null || Session["ID_Usuario"] != null)
+            {
+                return "Socio CoopFacil";
+            }
+
+            return null;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

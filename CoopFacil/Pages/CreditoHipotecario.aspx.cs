@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
+using CoopFacil.Helpers;
 
 namespace CoopFacil.Pages
 {
@@ -35,9 +31,16 @@ namespace CoopFacil.Pages
             lnkIniciarSesion.Visible = false;
             btnCerrarSesion.Visible = true;
 
+            // Precargar datos si existen en la sesión activa
             if (string.IsNullOrEmpty(txtNombre.Text))
             {
                 txtNombre.Text = nombreUsuario;
+            }
+
+            string correoSesion = ObtenerCorreoUsuarioSesion();
+            if (!string.IsNullOrEmpty(correoSesion) && string.IsNullOrEmpty(txtCorreo.Text))
+            {
+                txtCorreo.Text = correoSesion;
             }
         }
 
@@ -56,60 +59,105 @@ namespace CoopFacil.Pages
                     }
                 }
             }
+            return null;
+        }
 
-            foreach (string key in Session.Keys)
+        private string ObtenerCorreoUsuarioSesion()
+        {
+            string[] clavesCorreo = new string[] { "UsuarioCorreo", "CorreoUsuario", "Correo", "Email", "email", "correo" };
+
+            foreach (string clave in clavesCorreo)
             {
-                if (Session[key] != null)
+                if (Session[clave] != null)
                 {
-                    string valor = Session[key].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor) && valor.Contains("@"))
                     {
                         return valor;
                     }
                 }
             }
-
             return null;
         }
 
         protected void btnAgendarCita_Click(object sender, EventArgs e)
         {
-            // Validar datos personales y parámetros de la cita únicamente
-            if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtDUI.Text) ||
-                string.IsNullOrWhiteSpace(txtTelefono.Text) || string.IsNullOrWhiteSpace(txtCorreo.Text) ||
-                string.IsNullOrWhiteSpace(txtFechaCita.Text) || string.IsNullOrEmpty(ddlHoraCita.SelectedValue) ||
+            // 1. VALIDACIÓN DE DATOS DEL FORMULARIO
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) ||
+                string.IsNullOrWhiteSpace(txtDUI.Text) ||
+                string.IsNullOrWhiteSpace(txtTelefono.Text) ||
+                string.IsNullOrWhiteSpace(txtCorreo.Text) ||
+                string.IsNullOrWhiteSpace(txtFechaCita.Text) ||
+                string.IsNullOrEmpty(ddlHoraCita.SelectedValue) ||
                 string.IsNullOrEmpty(ddlModalidad.SelectedValue))
             {
-                pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, completa todos los campos requeridos para agendar tu cita.";
+                MostrarMensaje("Por favor, completa todos los campos requeridos para agendar tu cita.", false);
                 return;
             }
 
             DateTime fechaSeleccionada;
             if (!DateTime.TryParse(txtFechaCita.Text, out fechaSeleccionada) || fechaSeleccionada.Date < DateTime.Now.Date)
             {
-                pnlMensaje.Visible = true;
-                pnlMensaje.CssClass = "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-950/40 text-red-300 flex items-center gap-3 text-xs font-bold";
-                litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> Por favor, selecciona una fecha válida a partir del día de hoy.";
+                MostrarMensaje("Por favor, selecciona una fecha válida a partir del día de hoy.", false);
                 return;
             }
 
             string modalidadTexto = ddlModalidad.SelectedValue == "Presencial" ?
                 "Presencial en " + ddlAgencia.SelectedValue :
-                "Videollamada en línea (Enlace enviado a su correo)";
+                "Videollamada en línea (Enlace enviado al correo)";
 
-            pnlMensaje.Visible = true;
-            pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-950/40 text-emerald-300 flex flex-col gap-2 text-xs font-medium";
-            litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-400'>" +
-                              "<i class='fa-solid fa-circle-check text-lg'></i> ¡Cita Especializada Agendada con Éxito!</div>" +
-                              "<p class='mt-1 text-slate-200'>Estimado/a <strong>" + txtNombre.Text + "</strong>, tu cita para Crédito Hipotecario ha sido programada para el <strong>" + fechaSeleccionada.ToString("dd/MM/yyyy") + "</strong> a las <strong>" + ddlHoraCita.SelectedValue + "</strong> en modalidad <strong>" + modalidadTexto + "</strong>.</p>" +
-                              "<p class='text-xs text-slate-300'>Hemos enviado la confirmación y el recordatorio a tu correo <strong>" + txtCorreo.Text + "</strong> o vía SMS al <strong>" + txtTelefono.Text + "</strong>.</p>";
+            // 2. CONSTRUCCIÓN DEL MODELO DE DATOS EN MEMORIA
+            DatosComprobante datos = new DatosComprobante
+            {
+                NumeroTransaccion = "CH-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                NombreCliente = txtNombre.Text.Trim(),
+                DUI = txtDUI.Text.Trim(),
+                Telefono = txtTelefono.Text.Trim(),
+                CorreoCliente = txtCorreo.Text.Trim(),
+                NombreServicio = "Agendamiento Cita Crédito Hipotecario",
+                Monto = 0.00m,
+                DetalleAdicional = "Fecha: " + fechaSeleccionada.ToString("dd/MM/yyyy") + " | Hora: " + ddlHoraCita.SelectedValue + " | Modalidad: " + modalidadTexto,
+                FechaMovimiento = DateTime.Now
+            };
 
-            // Limpieza de campos tras agendar
+            // 3. GENERACIÓN DEL COMPROBANTE PDF EN MEMORIA
+            byte[] pdfBytes = ComprobanteServicioHelper.GenerarPdfComprobante(datos);
+
+            // 4. ENVÍO AUTOMÁTICO AL CORREO REGISTRADO
+            bool correoEnviado = ComprobanteServicioHelper.EnviarComprobantePorCorreo(datos, pdfBytes);
+
+            // 5. RESPUESTA VISUAL EN PANTALLA
+            if (correoEnviado)
+            {
+                pnlMensaje.Visible = true;
+                pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 text-xs font-medium";
+                litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400'>" +
+                                  "<i class='fa-solid fa-circle-check text-lg'></i> ¡Cita Especializada Agendada y Comprobante PDF Enviado!</div>" +
+                                  "<p class='mt-2 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu cita para Crédito Hipotecario fue agendada exitosamente bajo la reserva N° <strong>" + datos.NumeroTransaccion + "</strong>.</p>" +
+                                  "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'><strong>Fecha:</strong> " + fechaSeleccionada.ToString("dd/MM/yyyy") + " a las " + ddlHoraCita.SelectedValue + " (" + modalidadTexto + "). Se ha enviado el comprobante oficial en PDF a <strong>" + datos.CorreoCliente + "</strong>.</p>";
+            }
+            else
+            {
+                pnlMensaje.Visible = true;
+                pnlMensaje.CssClass = "mb-6 p-5 rounded-xl border border-amber-500/50 bg-amber-100 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 text-xs font-medium";
+                litMensaje.Text = "<div class='flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-400'>" +
+                                  "<i class='fa-solid fa-circle-check text-lg'></i> ¡Cita Agendada Exitosamente!</div>" +
+                                  "<p class='mt-1 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, se registró tu reserva N° <strong>" + datos.NumeroTransaccion + "</strong> para el <strong>" + fechaSeleccionada.ToString("dd/MM/yyyy") + "</strong> a las <strong>" + ddlHoraCita.SelectedValue + "</strong> (" + modalidadTexto + ").</p>" +
+                                  "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Revisa la configuración SMTP en tu Web.config para la entrega de notificaciones por correo.</p>";
+            }
+
+            // Limpieza de campos post-agendamiento
             txtDUI.Text = "";
             txtTelefono.Text = "";
-            txtCorreo.Text = "";
+        }
+
+        private void MostrarMensaje(string texto, bool esExito)
+        {
+            pnlMensaje.Visible = true;
+            pnlMensaje.CssClass = esExito
+                ? "mb-6 p-4 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 text-xs font-bold"
+                : "mb-6 p-4 rounded-xl border border-red-500/50 bg-red-100 dark:bg-red-950/40 text-red-800 dark:text-red-300 text-xs font-bold";
+            litMensaje.Text = "<i class='fa-solid fa-triangle-exclamation text-base'></i> " + texto;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

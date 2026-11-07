@@ -15,17 +15,45 @@ namespace CoopFacil.Pages
 
         private void EvaluarEstadoSesion()
         {
-            bool estaAutenticado = (Session["IdUsuario"] != null);
+            string nombreUsuario = ObtenerNombreUsuarioSesion();
 
-            lnkIniciarSesion.Visible = !estaAutenticado;
-            btnCerrarSesion.Visible = estaAutenticado;
-            pnlBienvenida.Visible = estaAutenticado;
-
-            if (estaAutenticado)
+            if (!string.IsNullOrEmpty(nombreUsuario))
             {
-                string nombreCompleto = Session["NombreCompleto"] != null ? Session["NombreCompleto"].ToString() : "";
-                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreCompleto);
+                pnlBienvenida.Visible = true;
+                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
+                lnkIniciarSesion.Visible = false;
+                btnCerrarSesion.Visible = true;
             }
+            else
+            {
+                pnlBienvenida.Visible = false;
+                lnkIniciarSesion.Visible = true;
+                btnCerrarSesion.Visible = false;
+            }
+        }
+
+        private string ObtenerNombreUsuarioSesion()
+        {
+            string[] clavesNombre = new string[] { "UsuarioNombre", "NombreUsuario", "NombreCompleto", "Usuario", "Nombre", "nombre", "usuario" };
+
+            foreach (string clave in clavesNombre)
+            {
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
+                    {
+                        return valor;
+                    }
+                }
+            }
+
+            if (Session["IdUsuario"] != null || Session["ID_Usuario"] != null)
+            {
+                return "Socio CoopFacil";
+            }
+
+            return null;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)
