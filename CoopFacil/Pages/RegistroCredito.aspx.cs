@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.UI;
 using CoopFacil.Helpers;
 
@@ -6,11 +8,64 @@ namespace CoopFacil.Pages
 {
     public partial class RegistroCredito : Page
     {
+        private string conexionStr = ConfigurationManager.ConnectionStrings["CoopFacilDB"]?.ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                VerificarCuentaExistente();
                 CargarDatosPrevios();
+            }
+        }
+
+        private void VerificarCuentaExistente()
+        {
+            string correo = Session["UsuarioCorreo"] as string ?? Session["Correo"] as string ?? Session["Email"] as string;
+            string dui = Session["ClienteDUI"] as string ?? Session["UsuarioDUI"] as string;
+
+            bool tieneCuentaSesion = Session["TieneCuentaAhorro"] != null && (bool)Session["TieneCuentaAhorro"];
+
+            if (tieneCuentaSesion)
+            {
+                Response.Redirect("CuentaAhorro.aspx");
+                return;
+            }
+
+            // Consultar a la base de datos SQL Server por respaldo
+            if (!string.IsNullOrEmpty(conexionStr) && !string.IsNullOrEmpty(correo))
+            {
+                using (SqlConnection con = new SqlConnection(conexionStr))
+                {
+                    string query = @"SELECT TieneCuentaAhorro, NumeroCuenta, DUI FROM Usuarios WHERE Email = @Email OR (DUI = @DUI AND NULLIF(@DUI, '') IS NOT NULL)";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Email", correo ?? "");
+                    cmd.Parameters.AddWithValue("@DUI", dui ?? "");
+
+                    try
+                    {
+                        con.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                bool tieneCuentaBD = reader["TieneCuentaAhorro"] != DBNull.Value && Convert.ToBoolean(reader["TieneCuentaAhorro"]);
+                                if (tieneCuentaBD)
+                                {
+                                    string numCuenta = reader["NumeroCuenta"] != DBNull.Value ? reader["NumeroCuenta"].ToString() : "";
+                                    string duiBD = reader["DUI"] != DBNull.Value ? reader["DUI"].ToString() : "";
+
+                                    Session["TieneCuentaAhorro"] = true;
+                                    if (!string.IsNullOrEmpty(numCuenta)) Session["NumeroCuentaAhorro"] = numCuenta;
+                                    if (!string.IsNullOrEmpty(duiBD)) Session["ClienteDUI"] = duiBD;
+
+                                    Response.Redirect("CuentaAhorro.aspx");
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                }
             }
         }
 
@@ -52,16 +107,44 @@ namespace CoopFacil.Pages
 
             string nombreCompleto = $"{txtNombres.Text.Trim()} {txtApellidos.Text.Trim()}";
             string dui = txtDUI.Text.Trim();
+            string correo = Session["UsuarioCorreo"] as string ?? Session["Correo"] as string ?? Session["Email"] as string;
 
-            // 1. Generar número de cuenta único
+            // 1. Generar número de cuenta numérico de 12 dígitos
             Random random = new Random();
-            string numeroCuenta = "CTA-7788-" + random.Next(100000, 999999).ToString();
+            string numeroCuenta = "100" + random.Next(100000000, 999999999).ToString();
 
-            // 2. Registrar apertura en el Repositorio Persistente
+            // 2. Registrar en RepositorioBanco asociando DUI y correo
+            RepositorioBanco.AsociarIdentificadores(dui, correo, nombreCompleto);
             RepositorioBanco.RegistrarCuentaAhorro(dui, numeroCuenta);
             var socio = RepositorioBanco.ObtenerOcrear(dui, nombreCompleto);
+            socio.TieneCuentaAhorro = true;
+            socio.NumeroCuenta = numeroCuenta;
 
-            // 3. Sincronizar Variables de Sesión con estado activo de cuenta
+            // 3. Guardar apertura permanentemente en SQL Server
+            if (!string.IsNullOrEmpty(conexionStr))
+            {
+                using (SqlConnection con = new SqlConnection(conexionStr))
+                {
+                    string query = @"UPDATE Usuarios 
+                                     SET TieneCuentaAhorro = 1, NumeroCuenta = @NumeroCuenta, DUI = CASE WHEN NULLIF(@DUI, '') IS NOT NULL THEN @DUI ELSE DUI END 
+                                     WHERE (Email = @Email AND NULLIF(@Email, '') IS NOT NULL) 
+                                        OR (DUI = @DUI AND NULLIF(@DUI, '') IS NOT NULL)";
+
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@NumeroCuenta", numeroCuenta);
+                    cmd.Parameters.AddWithValue("@DUI", dui ?? "");
+                    cmd.Parameters.AddWithValue("@Email", correo ?? "");
+
+                    try
+                    {
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch { }
+                }
+            }
+
+            // 4. Sincronizar Sesión
             Session["ClienteNombreCompleto"] = nombreCompleto;
             Session["ClienteDUI"] = dui;
             Session["UsuarioNombre"] = nombreCompleto;
@@ -70,7 +153,6 @@ namespace CoopFacil.Pages
             Session["TieneCuentaAhorro"] = true;
             Session["ListaCreditos"] = socio.Creditos;
 
-            // 4. Redirigir a la vista de Cuenta de Ahorro
             Response.Redirect("CuentaAhorro.aspx");
         }
     }

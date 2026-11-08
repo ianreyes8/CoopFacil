@@ -16,14 +16,12 @@ namespace CoopFacil
             {
                 pnlMensaje.Visible = false;
 
-                // 1. Redireccionar si ya existe sesión activa
                 if (Session["IdUsuario"] != null || Session["NombreCompleto"] != null)
                 {
                     Response.Redirect("Index.aspx");
                     return;
                 }
 
-                // 2. Cargar el total de socios registrados en el control lblSocios
                 CargarContadorSocios();
             }
         }
@@ -59,7 +57,6 @@ namespace CoopFacil
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text;
 
-            // 1. Validaciones de formulario
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 MostrarError("Por favor, ingresa tu correo electrónico y contraseña.");
@@ -84,7 +81,6 @@ namespace CoopFacil
                 return;
             }
 
-            // 2. Validación de credenciales en SQL Server
             using (SqlConnection con = new SqlConnection(conexionStr))
             {
                 string query = @"SELECT * FROM Usuarios WHERE Email = @Email";
@@ -111,17 +107,27 @@ namespace CoopFacil
                                 decimal cdt = reader["CDT"] != DBNull.Value ? Convert.ToDecimal(reader["CDT"]) : 0.00m;
                                 decimal prestamo = reader["Prestamo"] != DBNull.Value ? Convert.ToDecimal(reader["Prestamo"]) : 0.00m;
 
-                                // Obtener DUI y Teléfono de forma segura si existen en el esquema de BD
                                 string dui = EsColumnaExistente(reader, "DUI") && reader["DUI"] != DBNull.Value ? reader["DUI"].ToString() : "";
                                 string telefono = EsColumnaExistente(reader, "Telefono") && reader["Telefono"] != DBNull.Value ? reader["Telefono"].ToString() : "";
+                                bool tieneCuentaBD = EsColumnaExistente(reader, "TieneCuentaAhorro") && reader["TieneCuentaAhorro"] != DBNull.Value && Convert.ToBoolean(reader["TieneCuentaAhorro"]);
+                                string numCuentaBD = EsColumnaExistente(reader, "NumeroCuenta") && reader["NumeroCuenta"] != DBNull.Value ? reader["NumeroCuenta"].ToString() : "";
 
-                                // Identificador principal (se usa DUI si existe y es válido, sino el correo)
                                 string identificadorSocio = !string.IsNullOrWhiteSpace(dui) && !dui.Contains("@") ? dui : correo;
 
-                                // 3. RESTAURAR CRÉDITOS PERSISTENTES Y ESTADO DE CUENTA DE AHORRO
+                                // Restaurar socio en el Repositorio de Memoria
+                                RepositorioBanco.AsociarIdentificadores(dui, correo, nombreCompleto);
                                 var socioData = RepositorioBanco.ObtenerOcrear(identificadorSocio, nombreCompleto);
 
-                                // 4. Cargar variables de sesión completas para todo el sistema
+                                if (tieneCuentaBD)
+                                {
+                                    socioData.TieneCuentaAhorro = true;
+                                    if (!string.IsNullOrEmpty(numCuentaBD))
+                                    {
+                                        socioData.NumeroCuenta = numCuentaBD;
+                                    }
+                                }
+
+                                // Cargar variables de Sesión
                                 Session["IdUsuario"] = idUsuario;
                                 Session["NombreCompleto"] = nombreCompleto;
                                 Session["ClienteNombreCompleto"] = nombreCompleto;
@@ -146,11 +152,9 @@ namespace CoopFacil
                                 Session["CDT"] = cdt;
                                 Session["Prestamo"] = prestamo;
 
-                                // Cargar Créditos y Cuenta de Ahorro a la Sesión activa
                                 Session["ListaCreditos"] = socioData.Creditos;
                                 Session["TieneCuentaAhorro"] = socioData.TieneCuentaAhorro;
-
-                                if (socioData.TieneCuentaAhorro && !string.IsNullOrEmpty(socioData.NumeroCuenta))
+                                if (!string.IsNullOrEmpty(socioData.NumeroCuenta))
                                 {
                                     Session["NumeroCuentaAhorro"] = socioData.NumeroCuenta;
                                 }

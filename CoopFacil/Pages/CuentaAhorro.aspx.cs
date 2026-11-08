@@ -32,11 +32,12 @@ namespace CoopFacil.Pages
                 btnCerrarSesion.Visible = true;
             }
 
-            // 1. Obtener o crear socio en el RepositorioBanco usando DUI o Correo de respaldo
             string identificador = !string.IsNullOrEmpty(duiSesion) ? duiSesion : correoUsuario;
             var socio = RepositorioBanco.ObtenerOcrear(identificador, nombreUsuario);
 
-            // 2. Convertir y asegurar Número de Cuenta de 12 dígitos estrictamente numéricos
+            socio.TieneCuentaAhorro = true;
+            Session["TieneCuentaAhorro"] = true;
+
             string numeroCuenta = CleanTo12Digits(socio.NumeroCuenta);
 
             if (string.IsNullOrEmpty(numeroCuenta) && Session["NumeroCuentaAhorro"] != null)
@@ -53,7 +54,6 @@ namespace CoopFacil.Pages
 
             litNumeroCuenta.Text = numeroCuenta;
 
-            // 3. Calcular saldo total desembolsado y renderizar créditos acumulados
             decimal saldoTotal = 0m;
             List<CreditoSolicitado> listaCreditos = socio.Creditos;
 
