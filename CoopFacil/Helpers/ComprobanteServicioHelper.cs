@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using iTextSharp.text;
@@ -8,6 +10,17 @@ using iTextSharp.text.pdf;
 
 namespace CoopFacil.Helpers
 {
+    [Serializable]
+    public class CreditoSolicitado
+    {
+        public string TipoCredito { get; set; }
+        public decimal Monto { get; set; }
+        public int PlazoMeses { get; set; }
+        public decimal CuotaMensual { get; set; }
+        public string NumeroTransaccion { get; set; }
+        public DateTime FechaMovimiento { get; set; }
+    }
+
     public class DatosComprobante
     {
         public string NumeroTransaccion { get; set; }
@@ -21,6 +34,110 @@ namespace CoopFacil.Helpers
         public DateTime FechaMovimiento { get; set; }
     }
 
+    // CLASE PARA PERMANENCIA DE DATOS DE SOCIO
+    public class RegistroSocioData
+    {
+        public string DUI { get; set; }
+        public string Correo { get; set; }
+        public string NombreCliente { get; set; }
+        public string NumeroCuenta { get; set; }
+        public bool TieneCuentaAhorro { get; set; }
+        public List<CreditoSolicitado> Creditos { get; set; } = new List<CreditoSolicitado>();
+    }
+
+    // REPOSITORIO DE ALMACENAMIENTO PERSISTENTE GLOBAL
+    public static class RepositorioBanco
+    {
+        private static readonly Dictionary<string, RegistroSocioData> _socios = new Dictionary<string, RegistroSocioData>(StringComparer.OrdinalIgnoreCase);
+
+        public static RegistroSocioData ObtenerOcrear(string identificador, string nombre = "")
+        {
+            if (string.IsNullOrWhiteSpace(identificador)) return new RegistroSocioData();
+
+            identificador = identificador.Trim();
+
+            // 1. Buscar si la clave directa existe (por Correo o DUI)
+            if (_socios.ContainsKey(identificador))
+            {
+                var s = _socios[identificador];
+                if (!string.IsNullOrEmpty(nombre)) s.NombreCliente = nombre;
+                return s;
+            }
+
+            // 2. Buscar si la instancia existe por coincidencia de Correo o DUI en la colección
+            var socioExistente = _socios.Values.FirstOrDefault(s =>
+                (!string.IsNullOrEmpty(s.DUI) && s.DUI.Equals(identificador, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(s.Correo) && s.Correo.Equals(identificador, StringComparison.OrdinalIgnoreCase))
+            );
+
+            if (socioExistente != null)
+            {
+                _socios[identificador] = socioExistente;
+                if (!string.IsNullOrEmpty(nombre)) socioExistente.NombreCliente = nombre;
+                return socioExistente;
+            }
+
+            // 3. Crear nuevo socio si no existía previamente
+            var nuevoSocio = new RegistroSocioData
+            {
+                DUI = identificador.Contains("@") ? "" : identificador,
+                Correo = identificador.Contains("@") ? identificador : "",
+                NombreCliente = nombre,
+                TieneCuentaAhorro = false,
+                NumeroCuenta = ""
+            };
+
+            _socios[identificador] = nuevoSocio;
+            return nuevoSocio;
+        }
+
+        public static void AsociarIdentificadores(string dui, string correo, string nombre = "")
+        {
+            if (string.IsNullOrWhiteSpace(dui) && string.IsNullOrWhiteSpace(correo)) return;
+
+            RegistroSocioData socio = null;
+
+            if (!string.IsNullOrWhiteSpace(dui) && _socios.ContainsKey(dui.Trim()))
+                socio = _socios[dui.Trim()];
+            else if (!string.IsNullOrWhiteSpace(correo) && _socios.ContainsKey(correo.Trim()))
+                socio = _socios[correo.Trim()];
+
+            if (socio == null) socio = new RegistroSocioData();
+
+            if (!string.IsNullOrWhiteSpace(dui)) socio.DUI = dui.Trim();
+            if (!string.IsNullOrWhiteSpace(correo)) socio.Correo = correo.Trim();
+            if (!string.IsNullOrWhiteSpace(nombre)) socio.NombreCliente = nombre.Trim();
+
+            if (!string.IsNullOrWhiteSpace(dui)) _socios[dui.Trim()] = socio;
+            if (!string.IsNullOrWhiteSpace(correo)) _socios[correo.Trim()] = socio;
+        }
+
+        public static void RegistrarCuentaAhorro(string identificador, string numeroCuenta, string correo = "")
+        {
+            var socio = ObtenerOcrear(identificador);
+            socio.TieneCuentaAhorro = true;
+            socio.NumeroCuenta = numeroCuenta;
+
+            if (!string.IsNullOrWhiteSpace(correo))
+            {
+                socio.Correo = correo;
+                _socios[correo.Trim()] = socio;
+            }
+        }
+
+        public static void AgregarCredito(string identificador, CreditoSolicitado credito, string correo = "")
+        {
+            var socio = ObtenerOcrear(identificador);
+            socio.Creditos.Add(credito);
+
+            if (!string.IsNullOrWhiteSpace(correo))
+            {
+                socio.Correo = correo;
+                _socios[correo.Trim()] = socio;
+            }
+        }
+    }
+
     public static class ComprobanteServicioHelper
     {
         public static byte[] GenerarPdfComprobante(DatosComprobante datos)
@@ -31,18 +148,14 @@ namespace CoopFacil.Helpers
                 PdfWriter.GetInstance(doc, ms);
                 doc.Open();
 
-                // Colores Corporativos
-                BaseColor colorVerde = new BaseColor(16, 185, 129); // Emerald-500
-                BaseColor colorOscuro = new BaseColor(15, 35, 61);   // #0F233D
+                BaseColor colorVerde = new BaseColor(16, 185, 129);
+                BaseColor colorOscuro = new BaseColor(15, 35, 61);
 
-                // Fuentes
                 Font fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, colorOscuro);
                 Font fontSubtitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, colorVerde);
                 Font fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
                 Font fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
-                Font fontHeaderTabla = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.WHITE);
 
-                // Encabezado
                 Paragraph header = new Paragraph("COOPFACIL COOPERATIVA FINANCIERA", fontTitulo);
                 header.Alignment = Element.ALIGN_CENTER;
                 doc.Add(header);
@@ -52,7 +165,6 @@ namespace CoopFacil.Helpers
                 sub.SpacingAfter = 20f;
                 doc.Add(sub);
 
-                // Tabla de Datos principales
                 PdfPTable tabla = new PdfPTable(2);
                 tabla.WidthPercentage = 100;
                 tabla.SetWidths(new float[] { 35f, 65f });
@@ -84,8 +196,7 @@ namespace CoopFacil.Helpers
 
                 doc.Add(tabla);
 
-                // Mensaje Final de Certificación
-                Paragraph nota = new Paragraph("\nEste documento es un comprobante digital generado automáticamente por la plataforma CoopFácil. Consérvalo para tus registros personales.", FontFactory.GetFont(FontFactory.HELVETICA_ITALIC, 8, BaseColor.DARK_GRAY));
+                Paragraph nota = new Paragraph("\nEste documento es un comprobante digital generado automáticamente por la plataforma CoopFácil. Consérvalo para tus registros personales.", FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 8, BaseColor.DARK_GRAY));
                 nota.Alignment = Element.ALIGN_CENTER;
                 nota.SpacingBefore = 30f;
                 doc.Add(nota);
@@ -124,12 +235,11 @@ namespace CoopFacil.Helpers
                         <p style='margin: 4px 0;'><strong>Monto:</strong> ${datos.Monto:N2} USD</p>
                         <p style='margin: 4px 0;'><strong>Fecha:</strong> {datos.FechaMovimiento:dd/MM/yyyy HH:mm:ss}</p>
                     </div>
-                    <p>Adjunto a este correo encontrarás el comprobante en formato **PDF**.</p>
+                    <p>Adjunto a este correo encontrarás el comprobante en formato PDF.</p>
                     <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
                     <p style='font-size: 11px; color: #64748b;'>CoopFácil © {DateTime.Now.Year} - Todos los derechos reservados.</p>
                 </div>";
 
-                // Adjuntar el PDF generado en memoria
                 if (pdfBytes != null && pdfBytes.Length > 0)
                 {
                     MemoryStream streamPdf = new MemoryStream(pdfBytes);

@@ -8,15 +8,15 @@
     <title>Servicios Financieros - CoopFacil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
-                }
-            }
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
         }
-    </script>
+    }
+}
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
         (function () {
@@ -111,7 +111,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
-                    <!-- 1. CUENTA DE AHORRO -->
+                    <!-- 1. CUENTA DE AHORRO (LinkButton dinámico con validación de sesión) -->
                     <div class="card-servicio cat-ahorro bg-white dark:bg-[#0F233D] border-2 border-slate-200 dark:border-slate-700/80 rounded-2xl p-6 shadow-sm dark:shadow-xl flex flex-col justify-between hover:border-emerald-500 transition">
                         <div>
                             <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center mb-4">
@@ -128,9 +128,9 @@
                                 <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600 dark:text-emerald-400"></i> Notificaciones y alertas en tiempo real</li>
                             </ul>
                         </div>
-                        <a href="CuentaAhorro.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1">
+                        <asp:LinkButton ID="btnVerCuentaAhorro" runat="server" OnClick="btnVerCuentaAhorro_Click" CssClass="text-emerald-600 dark:text-emerald-400 font-bold text-xs sm:text-sm hover:underline flex items-center gap-1 w-fit">
                             Ver condiciones <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </a>
+                        </asp:LinkButton>
                     </div>
 
                     <!-- 2. AHORRO PROGRAMADO -->
@@ -255,49 +255,49 @@
     </form>
 
     <script>
-function updateThemeIcons(isDark) {
-    const sunIcon = document.getElementById('themeIconSun');
-    const moonIcon = document.getElementById('themeIconMoon');
-    if (isDark) {
-        sunIcon.classList.remove('hidden');
-        moonIcon.classList.add('hidden');
-    } else {
-        sunIcon.classList.add('hidden');
-        moonIcon.classList.remove('hidden');
-    }
-}
-
-function toggleTheme() {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
-    updateThemeIcons(isDark);
-}
-
-function filtrarServicios(categoria, boton) {
-    const botones = document.querySelectorAll('.btn-filtro');
-
-    botones.forEach(btn => {
-        btn.className = 'btn-filtro px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition bg-white dark:bg-[#0F233D] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/80';
-    });
-
-    boton.className = 'btn-filtro active-filter px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition shadow-md bg-emerald-600 text-white border border-emerald-500';
-
-    const tarjetas = document.querySelectorAll('.card-servicio');
-    tarjetas.forEach(card => {
-        if (categoria === 'all') {
-            card.style.display = 'flex';
-        } else if (card.classList.contains('cat-' + categoria)) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
+        function updateThemeIcons(isDark) {
+            const sunIcon = document.getElementById('themeIconSun');
+            const moonIcon = document.getElementById('themeIconMoon');
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
         }
-    });
-}
 
-document.addEventListener('DOMContentLoaded', function () {
-    const isDark = document.documentElement.classList.contains('dark');
-    updateThemeIcons(isDark);
-});
-</script>
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('coopfacil-theme', isDark ? 'dark' : 'light');
+            updateThemeIcons(isDark);
+        }
+
+        function filtrarServicios(categoria, boton) {
+            const botones = document.querySelectorAll('.btn-filtro');
+
+            botones.forEach(btn => {
+                btn.className = 'btn-filtro px-5 py-2.5 rounded-full text-xs sm:text-sm font-medium transition bg-white dark:bg-[#0F233D] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-300 dark:border-slate-700/80';
+            });
+
+            boton.className = 'btn-filtro active-filter px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold transition shadow-md bg-emerald-600 text-white border border-emerald-500';
+
+            const tarjetas = document.querySelectorAll('.card-servicio');
+            tarjetas.forEach(card => {
+                if (categoria === 'all') {
+                    card.style.display = 'flex';
+                } else if (card.classList.contains('cat-' + categoria)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDark = document.documentElement.classList.contains('dark');
+            updateThemeIcons(isDark);
+        });
+    </script>
 </body>
 </html>

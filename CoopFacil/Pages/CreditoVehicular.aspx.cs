@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.UI;
 using CoopFacil.Helpers;
 
@@ -17,110 +18,73 @@ namespace CoopFacil.Pages
         private void VerificarSesion()
         {
             string nombreUsuario = ObtenerNombreUsuarioSesion();
+            string duiSesion = ObtenerDUIUsuarioSesion();
 
-            if (string.IsNullOrEmpty(nombreUsuario))
+            if (!string.IsNullOrEmpty(nombreUsuario))
             {
-                Response.Redirect("../Default.aspx");
-                return;
-            }
+                pnlBienvenida.Visible = true;
+                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
+                lnkIniciarSesion.Visible = false;
+                btnCerrarSesion.Visible = true;
 
-            pnlBienvenida.Visible = true;
-            litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
-            lnkIniciarSesion.Visible = false;
-            btnCerrarSesion.Visible = true;
-
-            if (string.IsNullOrEmpty(txtNombre.Text))
-            {
-                txtNombre.Text = nombreUsuario;
+                if (string.IsNullOrEmpty(txtNombre.Text)) txtNombre.Text = nombreUsuario;
             }
 
             string correoSesion = ObtenerCorreoUsuarioSesion();
-            if (!string.IsNullOrEmpty(correoSesion) && string.IsNullOrEmpty(txtCorreo.Text))
-            {
-                txtCorreo.Text = correoSesion;
-            }
-
-            string duiSesion = ObtenerDUIUsuarioSesion();
-            if (!string.IsNullOrEmpty(duiSesion) && string.IsNullOrEmpty(txtDUI.Text))
-            {
-                txtDUI.Text = duiSesion;
-            }
+            if (!string.IsNullOrEmpty(correoSesion) && string.IsNullOrEmpty(txtCorreo.Text)) txtCorreo.Text = correoSesion;
+            if (!string.IsNullOrEmpty(duiSesion) && string.IsNullOrEmpty(txtDUI.Text)) txtDUI.Text = duiSesion;
 
             string telefonoSesion = ObtenerTelefonoUsuarioSesion();
-            if (!string.IsNullOrEmpty(telefonoSesion) && string.IsNullOrEmpty(txtTelefono.Text))
+            if (!string.IsNullOrEmpty(telefonoSesion) && string.IsNullOrEmpty(txtTelefono.Text)) txtTelefono.Text = telefonoSesion;
+
+            // Sincronizar estado desde el Repositorio Persistente
+            if (!string.IsNullOrEmpty(duiSesion))
             {
-                txtTelefono.Text = telefonoSesion;
+                var socio = RepositorioBanco.ObtenerOcrear(duiSesion, nombreUsuario);
+                Session["ListaCreditos"] = socio.Creditos;
+                Session["TieneCuentaAhorro"] = socio.TieneCuentaAhorro;
+                if (socio.TieneCuentaAhorro) Session["NumeroCuentaAhorro"] = socio.NumeroCuenta;
             }
         }
 
         private string ObtenerNombreUsuarioSesion()
         {
-            string[] clavesNombre = new string[] { "UsuarioNombre", "NombreUsuario", "NombreCompleto", "Usuario", "Nombre", "nombre", "usuario" };
-
+            string[] clavesNombre = new string[] { "ClienteNombreCompleto", "UsuarioNombre", "NombreUsuario", "NombreCompleto", "Usuario" };
             foreach (string clave in clavesNombre)
             {
-                if (Session[clave] != null)
-                {
-                    string valor = Session[clave].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor) && !int.TryParse(valor, out _))
-                    {
-                        return valor;
-                    }
-                }
+                if (Session[clave] != null && !string.IsNullOrWhiteSpace(Session[clave].ToString()))
+                    return Session[clave].ToString().Trim();
             }
             return null;
         }
 
         private string ObtenerCorreoUsuarioSesion()
         {
-            string[] clavesCorreo = new string[] { "UsuarioCorreo", "CorreoUsuario", "Correo", "Email", "email", "correo" };
-
+            string[] clavesCorreo = new string[] { "UsuarioCorreo", "CorreoUsuario", "Correo", "Email" };
             foreach (string clave in clavesCorreo)
             {
-                if (Session[clave] != null)
-                {
-                    string valor = Session[clave].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor) && valor.Contains("@"))
-                    {
-                        return valor;
-                    }
-                }
+                if (Session[clave] != null && Session[clave].ToString().Contains("@"))
+                    return Session[clave].ToString().Trim();
             }
             return null;
         }
 
         private string ObtenerDUIUsuarioSesion()
         {
-            string[] clavesDUI = new string[] { "UsuarioDUI", "DUI", "Dui", "dui" };
-
+            string[] clavesDUI = new string[] { "ClienteDUI", "UsuarioDUI", "DUI" };
             foreach (string clave in clavesDUI)
             {
-                if (Session[clave] != null)
-                {
-                    string valor = Session[clave].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor))
-                    {
-                        return valor;
-                    }
-                }
+                if (Session[clave] != null) return Session[clave].ToString().Trim();
             }
             return null;
         }
 
         private string ObtenerTelefonoUsuarioSesion()
         {
-            string[] clavesTelefono = new string[] { "UsuarioTelefono", "Telefono", "telefono", "Tel" };
-
+            string[] clavesTelefono = new string[] { "UsuarioTelefono", "Telefono" };
             foreach (string clave in clavesTelefono)
             {
-                if (Session[clave] != null)
-                {
-                    string valor = Session[clave].ToString().Trim();
-                    if (!string.IsNullOrWhiteSpace(valor))
-                    {
-                        return valor;
-                    }
-                }
+                if (Session[clave] != null) return Session[clave].ToString().Trim();
             }
             return null;
         }
@@ -157,7 +121,6 @@ namespace CoopFacil.Pages
 
             decimal precioVehiculo = 0;
             decimal.TryParse(txtPrecioVehiculo.Text.Trim(), out precioVehiculo);
-
             decimal montoFinanciar = precioVehiculo;
 
             int plazo = 48;
@@ -169,12 +132,7 @@ namespace CoopFacil.Pages
             double seguroDanos = 15.00;
             double cuotaEstimada = cuotaBase + seguroVida + seguroDanos;
 
-            string detalle = $"Precio Auto: ${precioVehiculo:N2} | Monto Financiar (100%): ${montoFinanciar:N2} | Plazo: {plazo} meses | Cuota Estimada: ${cuotaEstimada:N2} (Vida: $5.00 / Daños: $15.00) | Ingresos Netos: ${txtIngresos.Text.Trim()}" +
-                             $" | Ref. Pers 1: {txtRefPersonal1Nombre.Text.Trim()} ({txtRefPersonal1Tel.Text.Trim()})" +
-                             $" | Ref. Pers 2: {txtRefPersonal2Nombre.Text.Trim()} ({txtRefPersonal2Tel.Text.Trim()})" +
-                             $" | Ref. Fam 1: {txtRefFamiliar1Nombre.Text.Trim()} ({txtRefFamiliar1Tel.Text.Trim()})" +
-                             $" | Ref. Fam 2: {txtRefFamiliar2Nombre.Text.Trim()} ({txtRefFamiliar2Tel.Text.Trim()})" +
-                             $" | Documentos: Recibo [{fulRecibo.FileName}] / Constancia [{fulConstancia.FileName}] / Cotización [{fulCotizacion.FileName}]";
+            string detalle = $"Precio Auto: ${precioVehiculo:N2} | Monto Financiar (100%): ${montoFinanciar:N2} | Plazo: {plazo} meses | Cuota Estimada: ${cuotaEstimada:N2}";
 
             DatosComprobante datos = new DatosComprobante
             {
@@ -189,26 +147,78 @@ namespace CoopFacil.Pages
                 FechaMovimiento = DateTime.Now
             };
 
+            CreditoSolicitado nuevoCredito = new CreditoSolicitado
+            {
+                TipoCredito = "Crédito Vehicular",
+                Monto = montoFinanciar,
+                PlazoMeses = plazo,
+                CuotaMensual = (decimal)cuotaEstimada,
+                NumeroTransaccion = datos.NumeroTransaccion,
+                FechaMovimiento = DateTime.Now
+            };
+
+            // 1. Registrar crédito en el Repositorio Persistente del Socio
+            RepositorioBanco.AgregarCredito(datos.DUI, nuevoCredito);
+            var socio = RepositorioBanco.ObtenerOcrear(datos.DUI, datos.NombreCliente);
+
+            Session["ListaCreditos"] = socio.Creditos;
+            Session["ClienteNombreCompleto"] = datos.NombreCliente;
+            Session["ClienteDUI"] = datos.DUI;
+
+            // 2. Generar y Enviar PDF Comprobante por Correo
             byte[] pdfBytes = ComprobanteServicioHelper.GenerarPdfComprobante(datos);
             bool correoEnviado = ComprobanteServicioHelper.EnviarComprobantePorCorreo(datos, pdfBytes);
 
-            if (correoEnviado)
+            // 3. Evaluar si YA aperturó cuenta de ahorro previamente
+            bool tieneCuenta = socio.TieneCuentaAhorro || (Session["TieneCuentaAhorro"] != null && (bool)Session["TieneCuentaAhorro"]);
+            string htmlBotonAccion = "";
+
+            if (tieneCuenta)
             {
-                pnlMensajeSolicitud.Visible = true;
-                pnlMensajeSolicitud.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 text-xs font-medium";
-                litMensajeSolicitud.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400'>" +
-                                           "<i class='fa-solid fa-circle-check text-lg'></i> ¡Solicitud de Crédito Vehicular Recibida y Comprobante PDF Enviado!</div>" +
-                                           "<p class='mt-2 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu solicitud para financiar <strong>$" + datos.Monto.ToString("N2") + "</strong> a <strong>" + plazo + " meses</strong> fue registrada bajo la clave N° <strong>" + datos.NumeroTransaccion + "</strong>.</p>" +
-                                           "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Enviamos la confirmación con tu comprobante PDF adjunto a <strong>" + datos.CorreoCliente + "</strong>.</p>";
+                // YA TIENE CUENTA -> Botón a CuentaAhorro.aspx
+                htmlBotonAccion =
+                    "<div class='mt-4 pt-4 border-t border-emerald-200 dark:border-emerald-800/60 flex flex-col sm:flex-row items-center justify-between gap-4'>" +
+                    "  <div class='flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-100'>" +
+                    "    <i class='fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base'></i>" +
+                    "    <span>Su crédito vehicular ha sido procesado. El monto fue acumulado en su cuenta de ahorro.</span>" +
+                    "  </div>" +
+                    "  <a href='CuentaAhorro.aspx' class='bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs px-5 py-3 rounded-xl transition flex items-center gap-2 shadow-lg shadow-blue-600/20 whitespace-nowrap'>" +
+                    "    <i class='fa-solid fa-wallet'></i> Ver mi Cuenta de Ahorro" +
+                    "  </a>" +
+                    "</div>";
             }
             else
             {
-                pnlMensajeSolicitud.Visible = true;
-                pnlMensajeSolicitud.CssClass = "mb-6 p-5 rounded-xl border border-emerald-500/50 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 text-xs font-medium";
+                // NO TIENE CUENTA -> Botón a RegistroCredito.aspx
+                htmlBotonAccion =
+                    "<div class='mt-4 pt-4 border-t border-emerald-200 dark:border-emerald-800/60 flex flex-col sm:flex-row items-center justify-between gap-4'>" +
+                    "  <div class='flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-100'>" +
+                    "    <i class='fa-solid fa-circle-info text-emerald-600 dark:text-emerald-400 text-base'></i>" +
+                    "    <span>Para el desembolso del dinero de su crédito aperture su cuenta de ahorro.</span>" +
+                    "  </div>" +
+                    "  <a href='RegistroCredito.aspx' class='bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs px-5 py-3 rounded-xl transition flex items-center gap-2 shadow-lg shadow-emerald-600/20 whitespace-nowrap'>" +
+                    "    <i class='fa-solid fa-wallet'></i> Aperturar mi Cuenta de Ahorro" +
+                    "  </a>" +
+                    "</div>";
+            }
+
+            pnlMensajeSolicitud.Visible = true;
+            pnlMensajeSolicitud.CssClass = "mb-6 p-5 rounded-2xl border border-emerald-500/50 bg-emerald-100 dark:bg-[#0F233D] text-emerald-900 dark:text-emerald-300 text-xs font-medium shadow-md";
+
+            if (correoEnviado)
+            {
+                litMensajeSolicitud.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400'>" +
+                                           "<i class='fa-solid fa-circle-check text-lg'></i> ¡Solicitud de Crédito Vehicular Recibida y Comprobante PDF Enviado!</div>" +
+                                           "<p class='mt-2 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu solicitud para financiar <strong>$" + datos.Monto.ToString("N2") + "</strong> a <strong>" + plazo + " meses</strong> fue registrada bajo la clave N° <strong>" + datos.NumeroTransaccion + "</strong>.</p>" +
+                                           "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Enviamos la confirmación con tu comprobante PDF adjunto a <strong>" + datos.CorreoCliente + "</strong>.</p>" +
+                                           htmlBotonAccion;
+            }
+            else
+            {
                 litMensajeSolicitud.Text = "<div class='flex items-center gap-2 text-sm font-bold text-emerald-600 dark:text-emerald-400'>" +
                                            "<i class='fa-solid fa-circle-check text-lg'></i> ¡Solicitud de Crédito Vehicular Pre-Aprobada!</div>" +
                                            "<p class='mt-1 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu pre-solicitud para financiar <strong>$" + datos.Monto.ToString("N2") + "</strong> (Clave N° <strong>" + datos.NumeroTransaccion + "</strong>) fue recibida exitosamente.</p>" +
-                                           "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Un ejecutivo de crédito evaluará la cotización y documentación adjunta para dar inicio al trámite.</p>";
+                                           htmlBotonAccion;
             }
 
             if (string.IsNullOrEmpty(ObtenerNombreUsuarioSesion()))
@@ -241,11 +251,8 @@ namespace CoopFacil.Pages
         {
             if (string.IsNullOrWhiteSpace(nombreCompleto)) return "";
             string[] partes = nombreCompleto.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
             if (partes.Length == 1) return partes[0];
-            if (partes.Length == 2) return $"{partes[0]} {partes[1]}";
-            if (partes.Length == 3) return $"{partes[0]} {partes[1]}";
-            return $"{partes[0]} {partes[2]}";
+            return $"{partes[0]} {partes[partes.Length - 1]}";
         }
     }
 }

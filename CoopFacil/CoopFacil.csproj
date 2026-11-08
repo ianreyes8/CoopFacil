@@ -90,6 +90,7 @@
     <Content Include="Pages\EducacionFinanciera.aspx" />
     <Content Include="Pages\QuienesSomos.aspx" />
     <Content Include="Pages\Registro.aspx" />
+    <Content Include="Pages\RegistroCredito.aspx" />
     <Content Include="Pages\Servicios.aspx" />
     <Content Include="Pages\Transparencia.aspx" />
     <Content Include="Web.config" />
@@ -172,6 +173,13 @@
     </Compile>
     <Compile Include="Pages\Registro.aspx.designer.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\RegistroCredito.aspx.cs">
+      <DependentUpon>RegistroCredito.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\RegistroCredito.aspx.designer.cs">
+      <DependentUpon>RegistroCredito.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Servicios.aspx.cs">
       <DependentUpon>Servicios.aspx</DependentUpon>
