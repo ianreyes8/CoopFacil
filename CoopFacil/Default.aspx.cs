@@ -115,10 +115,13 @@ namespace CoopFacil
                                 string dui = EsColumnaExistente(reader, "DUI") && reader["DUI"] != DBNull.Value ? reader["DUI"].ToString() : "";
                                 string telefono = EsColumnaExistente(reader, "Telefono") && reader["Telefono"] != DBNull.Value ? reader["Telefono"].ToString() : "";
 
-                                // Identificador principal (se usa DUI o en su defecto el correo)
-                                string identificadorSocio = !string.IsNullOrWhiteSpace(dui) ? dui : correo;
+                                // Identificador principal (se usa DUI si existe y es válido, sino el correo)
+                                string identificadorSocio = !string.IsNullOrWhiteSpace(dui) && !dui.Contains("@") ? dui : correo;
 
-                                // 3. Cargar variables de sesión completas para todo el sistema
+                                // 3. RESTAURAR CRÉDITOS PERSISTENTES Y ESTADO DE CUENTA DE AHORRO
+                                var socioData = RepositorioBanco.ObtenerOcrear(identificadorSocio, nombreCompleto);
+
+                                // 4. Cargar variables de sesión completas para todo el sistema
                                 Session["IdUsuario"] = idUsuario;
                                 Session["NombreCompleto"] = nombreCompleto;
                                 Session["ClienteNombreCompleto"] = nombreCompleto;
@@ -129,19 +132,21 @@ namespace CoopFacil
                                 Session["Email"] = correo;
                                 Session["Correo"] = correo;
                                 Session["NumeroSocio"] = numeroSocio;
-                                Session["ClienteDUI"] = identificadorSocio;
-                                Session["UsuarioDUI"] = identificadorSocio;
-                                Session["DUI"] = identificadorSocio;
+
+                                if (!identificadorSocio.Contains("@"))
+                                {
+                                    Session["ClienteDUI"] = identificadorSocio;
+                                    Session["UsuarioDUI"] = identificadorSocio;
+                                    Session["DUI"] = identificadorSocio;
+                                }
+
                                 Session["UsuarioTelefono"] = telefono;
                                 Session["Telefono"] = telefono;
                                 Session["Saldo"] = saldo;
                                 Session["CDT"] = cdt;
                                 Session["Prestamo"] = prestamo;
 
-                                // 4. RESTAURAR CRÉDITOS PERSISTENTES Y ESTADO DE CUENTA DE AHORRO VINCULANDO CORREO Y DUI
-                                RepositorioBanco.AsociarIdentificadores(dui, correo, nombreCompleto);
-                                var socioData = RepositorioBanco.ObtenerOcrear(identificadorSocio, nombreCompleto);
-
+                                // Cargar Créditos y Cuenta de Ahorro a la Sesión activa
                                 Session["ListaCreditos"] = socioData.Creditos;
                                 Session["TieneCuentaAhorro"] = socioData.TieneCuentaAhorro;
 

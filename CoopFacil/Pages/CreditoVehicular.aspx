@@ -8,17 +8,17 @@
     <title>Crédito Vehicular - CoopFacil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' }
-                    }
-                }
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: {
+                coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' }
             }
         }
-    </script>
+    }
+}
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script>
     (function () {
@@ -26,7 +26,7 @@
         if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); }
         else { document.documentElement.classList.add('dark'); }
     })();
-</script>
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
     <form id="form1" runat="server" enctype="multipart/form-data" autocomplete="off" class="min-h-screen flex flex-col justify-between">
@@ -129,10 +129,10 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             
                             <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-700 dark:text-slate-300">PRECIO DEL VEHÍCULO ($)</label>
+                                <label class="text-xs font-bold text-slate-700 dark:text-slate-300">PRECIO DEL VEHÍCULO ($ USD)</label>
                                 <div class="relative">
                                     <span class="absolute left-3 top-3 text-slate-400 font-bold">$</span>
-                                    <input type="number" id="simPrecioAuto" value="18000" min="3000" max="100000" step="500" autocomplete="off" oninput="calcularCreditoVehicular()" class="w-full bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition" />
+                                    <input type="text" id="simPrecioAuto" value="18,000" autocomplete="off" oninput="formatearMontoInput(this); calcularCreditoVehicular();" class="w-full bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-2.5 text-xs font-bold text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500 transition" />
                                 </div>
                             </div>
 
@@ -206,7 +206,6 @@
                             <div class="flex flex-col gap-3">
                                 <span class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">DISTRIBUCIÓN DE LA CUOTA (MES 1):</span>
                                 
-                                <!-- BARRA DE DISTRIBUCIÓN MULTICOLOR -->
                                 <div class="h-2 rounded-full overflow-hidden flex bg-slate-200 dark:bg-slate-800">
                                     <div id="barCapital" class="bg-emerald-500 transition-all duration-300" style="width: 64.3%;"></div>
                                     <div id="barInteres" class="bg-blue-500 transition-all duration-300" style="width: 31.5%;"></div>
@@ -378,7 +377,6 @@
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         
-                        <!-- PASO 1 -->
                         <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col gap-2">
                             <div class="flex items-center justify-between">
                                 <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center justify-center">1</div>
@@ -390,7 +388,6 @@
                             </p>
                         </div>
 
-                        <!-- PASO 2 -->
                         <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col gap-2">
                             <div class="flex items-center justify-between">
                                 <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center justify-center">2</div>
@@ -402,7 +399,6 @@
                             </p>
                         </div>
 
-                        <!-- PASO 3 -->
                         <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col gap-2">
                             <div class="flex items-center justify-between">
                                 <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center justify-center">3</div>
@@ -414,7 +410,6 @@
                             </p>
                         </div>
 
-                        <!-- PASO 4 -->
                         <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col gap-2">
                             <div class="flex items-center justify-between">
                                 <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center justify-center">4</div>
@@ -483,7 +478,7 @@
                                 
                                 <div class="flex flex-col gap-1.5">
                                     <label class="text-xs font-bold text-slate-700 dark:text-slate-300">Ingresos Netos ($) <span class="text-emerald-600 dark:text-emerald-400">*</span></label>
-                                    <asp:TextBox ID="txtIngresos" runat="server" TextMode="Number" step="0.01" autocomplete="off" AutoCompleteType="Disabled" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition font-medium" placeholder="Ej. 1200.00"></asp:TextBox>
+                                    <asp:TextBox ID="txtIngresos" runat="server" TextMode="Number" step="0.01" min="408.80" autocomplete="off" AutoCompleteType="Disabled" onkeydown="if(event.key==='-') event.preventDefault();" onblur="validarMinimoIngreso(this)" CssClass="bg-slate-50 dark:bg-[#0B1A30] border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition font-medium" placeholder="Ej. 1200.00"></asp:TextBox>
                                 </div>
 
                                 <div class="flex flex-col gap-1.5">
@@ -522,7 +517,6 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 
-                                <!-- REFERENCIA PERSONAL 1 -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col gap-3">
                                     <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">REFERENCIA PERSONAL 1 *</span>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -531,7 +525,6 @@
                                     </div>
                                 </div>
 
-                                <!-- REFERENCIA PERSONAL 2 -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col gap-3">
                                     <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">REFERENCIA PERSONAL 2 *</span>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -540,7 +533,6 @@
                                     </div>
                                 </div>
 
-                                <!-- REFERENCIA FAMILIAR 1 -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col gap-3">
                                     <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">REFERENCIA FAMILIAR 1 *</span>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -549,7 +541,6 @@
                                     </div>
                                 </div>
 
-                                <!-- REFERENCIA FAMILIAR 2 -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex flex-col gap-3">
                                     <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">REFERENCIA FAMILIAR 2 *</span>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -571,7 +562,6 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 
-                                <!-- DOCUMENTO 1: RECIBO DE AGUA / LUZ O DUI -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col justify-between gap-3">
                                     <div class="flex flex-col gap-2">
                                         <label class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -586,7 +576,6 @@
                                     <span class="text-[10px] text-slate-400 dark:text-slate-500">Formatos recomendados: .pdf, .jpg, .png (Máx. 5MB)</span>
                                 </div>
 
-                                <!-- DOCUMENTO 2: CONSTANCIA DE SUELDO -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col justify-between gap-3">
                                     <div class="flex flex-col gap-2">
                                         <label class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -601,7 +590,6 @@
                                     <span class="text-[10px] text-slate-400 dark:text-slate-500">Formatos recomendados: .pdf, .jpg, .png (Máx. 5MB)</span>
                                 </div>
 
-                                <!-- DOCUMENTO 3: PROFORMA / COTIZACIÓN AUTO -->
                                 <div class="bg-slate-50 dark:bg-[#0B1A30] border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col justify-between gap-3">
                                     <div class="flex flex-col gap-2">
                                         <label class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -681,6 +669,26 @@
             }
         }
 
+        function formatearMontoInput(input) {
+            if (!input) return;
+            let valorLimpio = input.value.replace(/[^0-9]/g, '');
+            if (valorLimpio === '') {
+                input.value = '';
+                return;
+            }
+            let numero = parseInt(valorLimpio, 10);
+            input.value = numero.toLocaleString('en-US');
+        }
+
+        function validarMinimoIngreso(input) {
+            if (!input || input.value === '') return;
+            let val = parseFloat(input.value);
+            if (isNaN(val) || val < 408.80) {
+                alert('El ingreso mensual neto no puede ser negativo ni menor al salario mínimo vigente de El Salvador ($408.80 USD).');
+                input.value = '408.80';
+            }
+        }
+
         function verificarArchivo(input, idBtnQuitar, idStatus) {
             const btn = document.getElementById(idBtnQuitar);
             const lbl = document.getElementById(idStatus);
@@ -713,7 +721,8 @@
         }
 
         function calcularCreditoVehicular() {
-            const precioAuto = parseFloat(document.getElementById('simPrecioAuto').value) || 18000;
+            const rawVal = document.getElementById('simPrecioAuto').value.replace(/,/g, '');
+            const precioAuto = parseFloat(rawVal) || 18000;
             const plazo = parseInt(document.getElementById('simPlazoVehicular').value) || 48;
 
             const montoFinanciar = precioAuto;

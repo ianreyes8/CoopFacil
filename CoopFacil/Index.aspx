@@ -9,22 +9,22 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        coop: {
-                            darkBg: '#0B1A30',
-                            darkCard: '#0F233D',
-                            emerald: '#10B981',
-                            blue: '#3B82F6'
-                        }
-                    }
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: {
+                coop: {
+                    darkBg: '#0B1A30',
+                    darkCard: '#0F233D',
+                    emerald: '#10B981',
+                    blue: '#3B82F6'
                 }
             }
         }
-    </script>
+    }
+}
+</script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -37,7 +37,7 @@
             document.documentElement.classList.add('dark');
         }
     })();
-</script>
+    </script>
 </head>
 <body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between transition-colors duration-300">
     <form id="form1" runat="server" autocomplete="off" class="min-h-screen flex flex-col justify-between">
@@ -96,87 +96,7 @@
 
             </header>
 
-            <!-- 2. DASHBOARD / RESUMEN FINANCIERO DEL SOCIO (ADAPTABLE A TEMA Y CON TARJETAS INTERACTIVAS) -->
-            <asp:Panel ID="pnlResumenSocio" runat="server" Visible="false" CssClass="max-w-7xl mx-auto px-6 pt-8 pb-4">
-                <div class="bg-slate-100 dark:bg-[#0F233D] border border-slate-200 dark:border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-sm dark:shadow-2xl relative overflow-hidden transition-colors duration-300">
-                    
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-700/60 pb-6 mb-6">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl shadow-inner">
-                                <i class="fa-solid fa-id-card"></i>
-                            </div>
-                            <div>
-                                <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block">BANCA EN LÍNEA · RESUMEN DE CUENTAS</span>
-                                <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
-                                    <asp:Literal ID="litNombreSocio" runat="server"></asp:Literal>
-                                </h2>
-                            </div>
-                        </div>
-                        <div class="bg-white dark:bg-[#071322] border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 w-fit shadow-sm">
-                            <i class="fa-solid fa-hashtag text-emerald-600 dark:text-emerald-400 text-xs"></i>
-                            <span class="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-                                <asp:Literal ID="litNumeroSocio" runat="server"></asp:Literal>
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- TARJETAS DE SALDOS REALES INTERACTIVAS -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        
-                        <!-- CUENTA DE AHORROS -->
-                        <a href="Pages/CuentaAhorro.aspx" class="group bg-white dark:bg-[#071322]/80 border border-slate-200 dark:border-slate-700/80 hover:border-emerald-500 dark:hover:border-emerald-400 rounded-2xl p-5 flex flex-col justify-between gap-3 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">Cuenta Ahorro Libre</span>
-                                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base group-hover:scale-110 transition">
-                                    <i class="fa-solid fa-wallet"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight block">
-                                    <asp:Literal ID="litSaldo" runat="server" Text="$0.00"></asp:Literal>
-                                </span>
-                                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 block mt-1 font-semibold">✓ Saldo disponible acumulado</span>
-                            </div>
-                        </a>
-
-                        <!-- DEPÓSITO A PLAZO / CDT -->
-                        <a href="Pages/AhorroProgramado.aspx" class="group bg-white dark:bg-[#071322]/80 border border-slate-200 dark:border-slate-700/80 hover:border-blue-500 dark:hover:border-blue-400 rounded-2xl p-5 flex flex-col justify-between gap-3 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">Inversión a Plazo (CDT)</span>
-                                <div class="w-9 h-9 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base group-hover:scale-110 transition">
-                                    <i class="fa-solid fa-piggy-bank"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight block">
-                                    <asp:Literal ID="litCDT" runat="server" Text="$0.00"></asp:Literal>
-                                </span>
-                                <span class="text-[10px] text-blue-600 dark:text-blue-400 block mt-1 font-semibold">★ Rentabilidad preferencial activada</span>
-                            </div>
-                        </a>
-
-                        <!-- PRÉSTAMOS ACTIVOS -->
-                        <a href="Pages/CreditoPersonal.aspx" class="group bg-white dark:bg-[#071322]/80 border border-slate-200 dark:border-slate-700/80 hover:border-amber-500 dark:hover:border-amber-400 rounded-2xl p-5 flex flex-col justify-between gap-3 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">Saldo Préstamo Activo</span>
-                                <div class="w-9 h-9 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base group-hover:scale-110 transition">
-                                    <i class="fa-solid fa-file-invoice-dollar"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <span class="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 tracking-tight block">
-                                    <asp:Literal ID="litPrestamo" runat="server" Text="$0.00"></asp:Literal>
-                                </span>
-                                <span class="text-[10px] text-slate-500 dark:text-slate-400 block mt-1 font-semibold">Tasa del 10% Anual fija</span>
-                            </div>
-                        </a>
-
-                    </div>
-
-                </div>
-            </asp:Panel>
-
-            <!-- 3. HERO SECTION (VISUAL INSTITUCIONAL) -->
+            <!-- 2. HERO SECTION (VISUAL INSTITUCIONAL) -->
             <section class="relative max-w-7xl mx-auto px-6 pt-6 pb-8 flex flex-col items-center text-center gap-6 overflow-hidden">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-extrabold uppercase tracking-wider shadow-sm">
                     <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400"></i> "Finanzas que construyen comunidad desde 1987"
@@ -200,7 +120,7 @@
                 </div>
             </section>
 
-            <!-- 4. BARRA DE MÉTRICAS -->
+            <!-- 3. BARRA DE MÉTRICAS -->
             <section class="max-w-7xl mx-auto px-6 py-4">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-lg transition-colors duration-300">
                     <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
@@ -222,7 +142,7 @@
                 </div>
             </section>
 
-            <!-- 5. MENÚ DE MÓDULOS PÚBLICOS -->
+            <!-- 4. MENÚ DE MÓDULOS PÚBLICOS -->
             <main class="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-6 flex-grow w-full">
                 <div class="flex flex-col gap-1">
                     <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Explora la Cooperativa</span>
@@ -295,7 +215,7 @@
                     </a>
                 </div>
 
-                <!-- 6. SIMULADORES RÁPIDOS (ADAPTABLES Y BOTONES INTERACTIVOS) -->
+                <!-- 5. SIMULADORES RÁPIDOS (ADAPTABLES Y BOTONES INTERACTIVOS) -->
                 <section class="bg-slate-100 dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm dark:shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 mt-4 transition-colors duration-300">
                     <div class="flex flex-col gap-2 text-center lg:text-left max-w-xl">
                         <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">FINANCIAMIENTO CON TASA DEL 10% ANUAL</span>

@@ -60,13 +60,13 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnCerrarSesion;
 
         /// <summary>
-        /// Control litNombreCliente.
+        /// Control litTitularCuenta.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNombreCliente;
+        protected global::System.Web.UI.WebControls.Literal litTitularCuenta;
 
         /// <summary>
         /// Control litNumeroCuenta.
@@ -78,13 +78,13 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.Literal litNumeroCuenta;
 
         /// <summary>
-        /// Control litTotalDesembolsado.
+        /// Control litSaldoDisponible.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTotalDesembolsado;
+        protected global::System.Web.UI.WebControls.Literal litSaldoDisponible;
 
         /// <summary>
         /// Control litCantidadCreditos.
@@ -96,21 +96,12 @@ namespace CoopFacil.Pages
         protected global::System.Web.UI.WebControls.Literal litCantidadCreditos;
 
         /// <summary>
-        /// Control rptCreditos.
+        /// Control tblCreditos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptCreditos;
-
-        /// <summary>
-        /// Control pnlSinCreditos.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlSinCreditos;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tblCreditos;
     }
 }

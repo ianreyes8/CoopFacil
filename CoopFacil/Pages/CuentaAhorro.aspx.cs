@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using CoopFacil.Helpers;
 
 namespace CoopFacil.Pages
@@ -12,70 +13,154 @@ namespace CoopFacil.Pages
         {
             if (!IsPostBack)
             {
-                ValidarAccesoYCuenta();
+                VerificarSesionYCargarDatos();
             }
         }
 
-        private void ValidarAccesoYCuenta()
+        private void VerificarSesionYCargarDatos()
         {
-            string nombreUsuario = Session["UsuarioNombre"] as string ?? Session["ClienteNombreCompleto"] as string;
-            string correoUsuario = Session["UsuarioCorreo"] as string ?? Session["CorreoUsuario"] as string ?? Session["Correo"] as string;
-            string duiCliente = Session["ClienteDUI"] as string ?? Session["UsuarioDUI"] as string;
+            string nombreUsuario = ObtenerNombreUsuarioSesion();
+            string correoUsuario = ObtenerCorreoUsuarioSesion();
+            string duiSesion = ObtenerDUIUsuarioSesion();
 
-            // 1. Validación de sesión activa en la cooperativa
-            if (string.IsNullOrEmpty(nombreUsuario) && string.IsNullOrEmpty(correoUsuario) && string.IsNullOrEmpty(duiCliente))
+            if (!string.IsNullOrEmpty(nombreUsuario))
             {
-                Response.Redirect("../Default.aspx");
-                return;
+                pnlBienvenida.Visible = true;
+                litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(nombreUsuario);
+                litTitularCuenta.Text = nombreUsuario;
+                lnkIniciarSesion.Visible = false;
+                btnCerrarSesion.Visible = true;
             }
 
-            // 2. Vincular identificadores y consultar socio en el Repositorio Persistente
-            RepositorioBanco.AsociarIdentificadores(duiCliente, correoUsuario, nombreUsuario);
+            // 1. Obtener o crear socio en el RepositorioBanco usando DUI o Correo de respaldo
+            string identificador = !string.IsNullOrEmpty(duiSesion) ? duiSesion : correoUsuario;
+            var socio = RepositorioBanco.ObtenerOcrear(identificador, nombreUsuario);
 
-            string claveBusqueda = !string.IsNullOrEmpty(correoUsuario) ? correoUsuario : duiCliente;
-            var socio = RepositorioBanco.ObtenerOcrear(claveBusqueda, nombreUsuario);
+            // 2. Convertir y asegurar Número de Cuenta de 12 dígitos estrictamente numéricos
+            string numeroCuenta = CleanTo12Digits(socio.NumeroCuenta);
 
-            bool tieneCuenta = socio.TieneCuentaAhorro || (Session["TieneCuentaAhorro"] != null && (bool)Session["TieneCuentaAhorro"]);
-
-            // 3. Si no ha aperturado cuenta -> Redirigir a RegistroCredito.aspx
-            if (!tieneCuenta)
+            if (string.IsNullOrEmpty(numeroCuenta) && Session["NumeroCuentaAhorro"] != null)
             {
-                Response.Redirect("RegistroCredito.aspx");
-                return;
+                numeroCuenta = CleanTo12Digits(Session["NumeroCuentaAhorro"].ToString());
             }
 
-            // 4. Cargar la vista de Cuenta de Ahorro con desembolsos acumulados
-            CargarDatosCuentaYCreditos(socio);
-        }
+            if (string.IsNullOrEmpty(numeroCuenta) || numeroCuenta.Length != 12)
+            {
+                numeroCuenta = GenerarNumeroCuenta12Digitos(duiSesion);
+                socio.NumeroCuenta = numeroCuenta;
+                Session["NumeroCuentaAhorro"] = numeroCuenta;
+            }
 
-        private void CargarDatosCuentaYCreditos(RegistroSocioData socio)
-        {
-            litNombreCliente.Text = socio.NombreCliente;
-            litNumeroCuenta.Text = !string.IsNullOrEmpty(socio.NumeroCuenta) ? socio.NumeroCuenta : "CTA-7788-904128";
+            litNumeroCuenta.Text = numeroCuenta;
 
-            pnlBienvenida.Visible = true;
-            litBienvenida.Text = ExtraerPrimerNombreYPrimerApellido(socio.NombreCliente);
-            lnkIniciarSesion.Visible = false;
-            btnCerrarSesion.Visible = true;
-
+            // 3. Calcular saldo total desembolsado y renderizar créditos acumulados
+            decimal saldoTotal = 0m;
             List<CreditoSolicitado> listaCreditos = socio.Creditos;
 
             if (listaCreditos != null && listaCreditos.Count > 0)
             {
-                decimal totalDesembolsado = listaCreditos.Sum(c => c.Monto);
-                litTotalDesembolsado.Text = "$" + totalDesembolsado.ToString("N2") + " USD";
-                litCantidadCreditos.Text = listaCreditos.Count + " Crédito(s) Adquirido(s)";
+                litCantidadCreditos.Text = $"{listaCreditos.Count} Crédito(s)";
+                tblCreditos.Controls.Clear();
 
-                rptCreditos.DataSource = listaCreditos;
-                rptCreditos.DataBind();
-                pnlSinCreditos.Visible = false;
+                foreach (var cred in listaCreditos)
+                {
+                    saldoTotal += cred.Monto;
+
+                    HtmlTableRow row = new HtmlTableRow();
+
+                    HtmlTableCell cellTx = new HtmlTableCell { InnerText = cred.NumeroTransaccion };
+                    cellTx.Attributes["class"] = "p-4 font-bold text-blue-600 dark:text-blue-400";
+
+                    HtmlTableCell cellTipo = new HtmlTableCell { InnerText = cred.TipoCredito };
+                    cellTipo.Attributes["class"] = "p-4 font-semibold";
+
+                    HtmlTableCell cellMonto = new HtmlTableCell { InnerText = $"${cred.Monto:N2}" };
+                    cellMonto.Attributes["class"] = "p-4 font-extrabold text-emerald-600 dark:text-emerald-400";
+
+                    HtmlTableCell cellPlazo = new HtmlTableCell { InnerText = $"{cred.PlazoMeses} meses" };
+                    cellPlazo.Attributes["class"] = "p-4";
+
+                    HtmlTableCell cellCuota = new HtmlTableCell { InnerText = $"${cred.CuotaMensual:N2}" };
+                    cellCuota.Attributes["class"] = "p-4 font-bold";
+
+                    HtmlTableCell cellFecha = new HtmlTableCell { InnerText = cred.FechaMovimiento.ToString("dd/MM/yyyy HH:mm") };
+                    cellFecha.Attributes["class"] = "p-4 text-slate-500 dark:text-slate-400";
+
+                    row.Controls.Add(cellTx);
+                    row.Controls.Add(cellTipo);
+                    row.Controls.Add(cellMonto);
+                    row.Controls.Add(cellPlazo);
+                    row.Controls.Add(cellCuota);
+                    row.Controls.Add(cellFecha);
+
+                    tblCreditos.Controls.Add(row);
+                }
             }
             else
             {
-                litTotalDesembolsado.Text = "$0.00 USD";
                 litCantidadCreditos.Text = "0 Créditos";
-                pnlSinCreditos.Visible = true;
+                tblCreditos.InnerHtml = "<tr><td colspan='6' class='p-6 text-center text-slate-400 italic'>No posee créditos registrados ni desembolsos acumulados aún.</td></tr>";
             }
+
+            litSaldoDisponible.Text = saldoTotal.ToString("N2");
+        }
+
+        private string CleanTo12Digits(string raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return "";
+            string soloNumeros = Regex.Replace(raw, @"\D", "");
+            if (soloNumeros.Length >= 12)
+            {
+                return soloNumeros.Substring(soloNumeros.Length - 12);
+            }
+            return soloNumeros.PadLeft(12, '0');
+        }
+
+        private string GenerarNumeroCuenta12Digitos(string dui)
+        {
+            if (!string.IsNullOrEmpty(dui))
+            {
+                string duiLimpio = Regex.Replace(dui, @"\D", "");
+                if (duiLimpio.Length > 0)
+                {
+                    return ("100" + duiLimpio).PadRight(12, '0').Substring(0, 12);
+                }
+            }
+            Random rnd = new Random();
+            return "100" + rnd.Next(100000000, 999999999).ToString();
+        }
+
+        private string ObtenerNombreUsuarioSesion()
+        {
+            string[] claves = new string[] { "ClienteNombreCompleto", "UsuarioNombre", "NombreUsuario", "NombreCompleto", "Usuario" };
+            foreach (string clave in claves)
+            {
+                if (Session[clave] != null && !string.IsNullOrWhiteSpace(Session[clave].ToString()))
+                    return Session[clave].ToString().Trim();
+            }
+            return null;
+        }
+
+        private string ObtenerCorreoUsuarioSesion()
+        {
+            string[] clavesCorreo = new string[] { "UsuarioCorreo", "CorreoUsuario", "Correo", "Email" };
+            foreach (string clave in clavesCorreo)
+            {
+                if (Session[clave] != null && Session[clave].ToString().Contains("@"))
+                    return Session[clave].ToString().Trim();
+            }
+            return null;
+        }
+
+        private string ObtenerDUIUsuarioSesion()
+        {
+            string[] claves = new string[] { "ClienteDUI", "UsuarioDUI", "DUI" };
+            foreach (string clave in claves)
+            {
+                if (Session[clave] != null && !Session[clave].ToString().Contains("@"))
+                    return Session[clave].ToString().Trim();
+            }
+            return null;
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)

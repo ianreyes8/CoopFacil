@@ -32,7 +32,12 @@ namespace CoopFacil.Pages
 
             string correoSesion = ObtenerCorreoUsuarioSesion();
             if (!string.IsNullOrEmpty(correoSesion) && string.IsNullOrEmpty(txtCorreo.Text)) txtCorreo.Text = correoSesion;
-            if (!string.IsNullOrEmpty(duiSesion) && string.IsNullOrEmpty(txtDUI.Text)) txtDUI.Text = duiSesion;
+
+            // Asignar el DUI solo si existe un DUI válido registrado (sin arroba de correo)
+            if (!string.IsNullOrEmpty(duiSesion) && string.IsNullOrEmpty(txtDUI.Text))
+            {
+                txtDUI.Text = duiSesion;
+            }
 
             string telefonoSesion = ObtenerTelefonoUsuarioSesion();
             if (!string.IsNullOrEmpty(telefonoSesion) && string.IsNullOrEmpty(txtTelefono.Text)) txtTelefono.Text = telefonoSesion;
@@ -74,7 +79,15 @@ namespace CoopFacil.Pages
             string[] clavesDUI = new string[] { "ClienteDUI", "UsuarioDUI", "DUI" };
             foreach (string clave in clavesDUI)
             {
-                if (Session[clave] != null) return Session[clave].ToString().Trim();
+                if (Session[clave] != null)
+                {
+                    string valor = Session[clave].ToString().Trim();
+                    // Ignorar si se trata de un correo guardado temporalmente como identificador
+                    if (!valor.Contains("@"))
+                    {
+                        return valor;
+                    }
+                }
             }
             return null;
         }
@@ -103,6 +116,15 @@ namespace CoopFacil.Pages
                 return;
             }
 
+            // Validar restricción de Ingresos Mensuales Netos (no negativos y mínimo $408.80 USD)
+            decimal ingresos = 0;
+            string ingresosTexto = txtIngresos.Text.Trim().Replace(",", "");
+            if (!decimal.TryParse(ingresosTexto, out ingresos) || ingresos < 408.80m)
+            {
+                MostrarMensajeSolicitud("El ingreso mensual neto no puede ser negativo ni menor al salario mínimo vigente de El Salvador ($408.80 USD).", false);
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(txtRefPersonal1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPersonal1Tel.Text) ||
                 string.IsNullOrWhiteSpace(txtRefPersonal2Nombre.Text) || string.IsNullOrWhiteSpace(txtRefPersonal2Tel.Text) ||
                 string.IsNullOrWhiteSpace(txtRefFamiliar1Nombre.Text) || string.IsNullOrWhiteSpace(txtRefFamiliar1Tel.Text) ||
@@ -118,8 +140,9 @@ namespace CoopFacil.Pages
                 return;
             }
 
+            string montoLimpio = txtMontoSolicitado.Text.Trim().Replace(",", "");
             decimal monto = 0;
-            decimal.TryParse(txtMontoSolicitado.Text.Trim(), out monto);
+            decimal.TryParse(montoLimpio, out monto);
 
             int plazo = 36;
             int.TryParse(ddlPlazo.SelectedValue, out plazo);
@@ -127,7 +150,7 @@ namespace CoopFacil.Pages
             double tasaMensual = 0.10 / 12.0;
             double cuotaEstimada = ((double)monto * tasaMensual) / (1 - Math.Pow(1 + tasaMensual, -plazo));
 
-            string detalle = $"Monto Solicitado: ${monto:N2} | Plazo: {plazo} meses | Cuota Estimada: ${cuotaEstimada:N2} | Ingresos Netos: ${txtIngresos.Text.Trim()}";
+            string detalle = $"Monto Solicitado: ${monto:N2} | Plazo: {plazo} meses | Cuota Estimada: ${cuotaEstimada:N2} | Ingresos Netos: ${ingresos:N2}";
 
             DatosComprobante datos = new DatosComprobante
             {
@@ -152,13 +175,16 @@ namespace CoopFacil.Pages
                 FechaMovimiento = DateTime.Now
             };
 
-            // 1. Registrar crédito en el Repositorio Persistente del Socio
-            RepositorioBanco.AgregarCredito(datos.DUI, nuevoCredito);
+            // 1. Registrar crédito en el Repositorio Persistente asociando DUI y Correo
+            RepositorioBanco.AsociarIdentificadores(datos.DUI, datos.CorreoCliente, datos.NombreCliente);
+            RepositorioBanco.AgregarCredito(datos.DUI, nuevoCredito, datos.CorreoCliente);
+
             var socio = RepositorioBanco.ObtenerOcrear(datos.DUI, datos.NombreCliente);
 
             Session["ListaCreditos"] = socio.Creditos;
             Session["ClienteNombreCompleto"] = datos.NombreCliente;
             Session["ClienteDUI"] = datos.DUI;
+            Session["UsuarioDUI"] = datos.DUI;
 
             // 2. Generar y Enviar PDF Comprobante por Correo
             byte[] pdfBytes = ComprobanteServicioHelper.GenerarPdfComprobante(datos);
@@ -170,7 +196,6 @@ namespace CoopFacil.Pages
 
             if (tieneCuenta)
             {
-                // YA TIENE CUENTA -> Botón direct a CuentaAhorro.aspx
                 htmlBotonAccion =
                     "<div class='mt-4 pt-4 border-t border-blue-200 dark:border-blue-800/60 flex flex-col sm:flex-row items-center justify-between gap-4'>" +
                     "  <div class='flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-100'>" +
@@ -184,7 +209,6 @@ namespace CoopFacil.Pages
             }
             else
             {
-                // NO TIENE CUENTA -> Botón a RegistroCredito.aspx
                 htmlBotonAccion =
                     "<div class='mt-4 pt-4 border-t border-blue-200 dark:border-blue-800/60 flex flex-col sm:flex-row items-center justify-between gap-4'>" +
                     "  <div class='flex items-center gap-2 text-xs font-bold text-slate-800 dark:text-slate-100'>" +
