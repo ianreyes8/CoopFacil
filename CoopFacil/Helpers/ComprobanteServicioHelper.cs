@@ -153,8 +153,8 @@ namespace CoopFacil.Helpers
 
                 Font fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, colorOscuro);
                 Font fontSubtitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, colorVerde);
-                Font fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
-                Font fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                Font fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10, new BaseColor(0, 0, 0));
+                Font fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, new BaseColor(0, 0, 0));
 
                 Paragraph header = new Paragraph("COOPFACIL COOPERATIVA FINANCIERA", fontTitulo);
                 header.Alignment = Element.ALIGN_CENTER;
@@ -196,7 +196,7 @@ namespace CoopFacil.Helpers
 
                 doc.Add(tabla);
 
-                Paragraph nota = new Paragraph("\nEste documento es un comprobante digital generado automáticamente por la plataforma CoopFácil. Consérvalo para tus registros personales.", FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 8, BaseColor.DARK_GRAY));
+                Paragraph nota = new Paragraph("\nEste documento es un comprobante digital generado automáticamente por la plataforma CoopFácil. Consérvalo para tus registros personales.", FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 8, new BaseColor(64, 64, 64)));
                 nota.Alignment = Element.ALIGN_CENTER;
                 nota.SpacingBefore = 30f;
                 doc.Add(nota);
