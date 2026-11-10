@@ -52,12 +52,7 @@ tailwind.config = {
                         </div>
                     </a>
 
-                    @if (Model.pnlBienvenida.Visible) { <div id="pnlBienvenida" class="@Model.pnlBienvenida.CssClass">
-                        <i class="fa-solid fa-circle-user text-emerald-600 dark:text-emerald-400 text-base"></i>
-                        <span class="text-xs font-bold text-slate-700 dark:text-white">
-                            Bienvenido @Model.Lit(Model.litBienvenida)
-                        </span>
-                    </div> }
+                    @if (Model.pnlBienvenida.Visible) { <partial name="_MenuPerfil" model="Model" /> }
                 </div>
 
                 <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
@@ -66,6 +61,7 @@ tailwind.config = {
                     <a href="Servicios.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Servicios</a>
                     <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
                     <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
+                    <a href="@Url.Content("~/Pages/Transferencias.aspx")" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transferencias</a>
                 </nav>
 
                 <div class="flex items-center gap-3">

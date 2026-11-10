@@ -93,3 +93,10 @@ CoopFacil/
 └── wwwroot/                 css, Js, Downloads y Pages/Documentos
 sql/coopfacil_mariadb.sql    Estructura de la base de datos (mismas tablas y columnas del original)
 ```
+
+## Cuentas, transferencias y movimientos (simulación)
+
+- Cada socio recibe al registrarse un número de cuenta de 12 dígitos y $100.00 de bienvenida.
+- **Transferencias** (último enlace del menú): tarjeta virtual, transferir a otra cuenta por número de cuenta o correo, depósito de simulación (máximo $5,000 por depósito) y lista de movimientos (rojo = enviado, verde = recibido o depositado).
+- Los créditos aprobados se guardan en la base de datos y se desembolsan en la cuenta del socio.
+- Las contraseñas se guardan con hash PBKDF2-SHA256. Al actualizar desde una versión anterior hay que volver a importar `sql/coopfacil_mariadb.sql` (la base se recrea).

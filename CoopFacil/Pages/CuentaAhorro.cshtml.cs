@@ -103,6 +103,16 @@ namespace CoopFacil.Pages
                 tblCreditos.InnerHtml = "<tr><td colspan='6' class='p-6 text-center text-slate-400 italic'>No posee créditos registrados ni desembolsos acumulados aún.</td></tr>";
             }
 
+            // El saldo real de la cuenta vive en la base de datos (incluye bono, depósitos, transferencias y desembolsos).
+            try
+            {
+                if (Session["IdUsuario"] != null)
+                {
+                    var perfil = BancoDatos.ObtenerPerfil(Convert.ToInt32(Session["IdUsuario"]));
+                    if (perfil != null) saldoTotal = perfil.Saldo;
+                }
+            }
+            catch { }
             litSaldoDisponible.Text = saldoTotal.ToString("N2");
         }
 
