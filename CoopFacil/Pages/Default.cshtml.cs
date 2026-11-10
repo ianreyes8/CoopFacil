@@ -182,7 +182,8 @@ namespace CoopFacil
                 }
                 catch (Exception ex)
                 {
-                    MostrarError("Error de conexión a la base de datos: " + ex.Message);
+                    Console.Error.WriteLine("[Login] " + ex);
+                    MostrarError("No pudimos iniciar sesión en este momento. Inténtalo de nuevo en unos minutos.");
                 }
             }
         }

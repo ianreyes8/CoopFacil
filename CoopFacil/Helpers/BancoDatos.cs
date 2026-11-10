@@ -27,6 +27,20 @@ namespace CoopFacil.Helpers
             throw new InvalidOperationException("No se pudo generar un número de cuenta único.");
         }
 
+        /// <summary>Genera un número de socio ("Socio #123456") que no exista todavía.</summary>
+        public static string GenerarNumeroSocioUnico(MySqlConnection con, MySqlTransaction tx)
+        {
+            var rnd = new Random();
+            for (int intento = 0; intento < 30; intento++)
+            {
+                string numero = $"Socio #{rnd.Next(100000, 999999)}";
+                using var cmd = new MySqlCommand("SELECT COUNT(*) FROM Usuarios WHERE NumeroSocio = @n", con, tx);
+                cmd.Parameters.AddWithValue("@n", numero);
+                if (Convert.ToInt32(cmd.ExecuteScalar()) == 0) return numero;
+            }
+            throw new InvalidOperationException("No se pudo generar un número de socio único.");
+        }
+
         // ------------------------------------------------------------------ créditos
 
         public static void GuardarCredito(string correo, CreditoSolicitado c)

@@ -62,6 +62,7 @@ en `RepositorioBanco`, etc.) queda **igual que en el original**, para atacarlo d
 |---|---|---|
 | Base de datos | `ConnectionStrings:CoopFacilDB` en `appsettings.json` (XAMPP: root sin clave) | Variable `MYSQL_URL` |
 | Correo (`SmtpCorreoEmisor`, `SmtpPassword`, `SmtpHost`, `SmtpPort`, `SmtpUser`, `SmtpPass`) | `appsettings.Local.json` | Variables `AppSettings__SmtpCorreoEmisor`, `AppSettings__SmtpPassword`, ... |
+| Correo con Resend (`ResendApiKey`, `ResendRemitente`) | `appsettings.Local.json` | Variables `AppSettings__ResendApiKey`, `AppSettings__ResendRemitente` |
 
 **Importante:** la contraseña de Gmail que estaba en el `Web.config` original quedó expuesta en el historial
 de GitHub. Revócala en tu cuenta de Google y crea una nueva contraseña de aplicación.
@@ -100,3 +101,12 @@ sql/coopfacil_mariadb.sql    Estructura de la base de datos (mismas tablas y col
 - **Transferencias** (último enlace del menú): tarjeta virtual, transferir a otra cuenta por número de cuenta o correo, depósito de simulación (máximo $5,000 por depósito) y lista de movimientos (rojo = enviado, verde = recibido o depositado).
 - Los créditos aprobados se guardan en la base de datos y se desembolsan en la cuenta del socio.
 - Las contraseñas se guardan con hash PBKDF2-SHA256. Al actualizar desde una versión anterior hay que volver a importar `sql/coopfacil_mariadb.sql` (la base se recrea).
+
+### Correo en Railway
+
+Railway bloquea el SMTP saliente en los planes Free, Trial y Hobby, así que en línea el comprobante se envía con la API de Resend:
+
+1. Crea una cuenta en resend.com y una API key.
+2. Para enviar a cualquier usuario, agrega y verifica tu dominio en Resend (registros DNS) y usa un remitente de ese dominio, por ejemplo `AppSettings__ResendRemitente = CoopFácil <comprobantes@tudominio.com>`.
+3. Sin dominio verificado, Resend solo permite enviar desde `onboarding@resend.dev` al correo de tu propia cuenta de Resend (sirve para pruebas).
+4. Si `ResendApiKey` está vacía, se usa SMTP (útil en local con Gmail).
