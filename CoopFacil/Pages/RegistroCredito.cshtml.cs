@@ -114,6 +114,26 @@ namespace CoopFacil.Pages
             Random random = new Random();
             string numeroCuenta = "100" + random.Next(100000000, 999999999).ToString();
 
+            // Si el usuario ya tiene número de cuenta (se asigna al registrarse), se conserva el mismo.
+            if (!string.IsNullOrEmpty(conexionStr) && !string.IsNullOrEmpty(correo))
+            {
+                try
+                {
+                    using (MySqlConnection conCuenta = new MySqlConnection(conexionStr))
+                    {
+                        conCuenta.Open();
+                        using (MySqlCommand cmdCuenta = new MySqlCommand("SELECT NumeroCuenta FROM Usuarios WHERE Email = @Email", conCuenta))
+                        {
+                            cmdCuenta.Parameters.AddWithValue("@Email", correo);
+                            object existente = cmdCuenta.ExecuteScalar();
+                            if (existente != null && existente != DBNull.Value && !string.IsNullOrWhiteSpace(existente.ToString()))
+                                numeroCuenta = existente.ToString();
+                        }
+                    }
+                }
+                catch { }
+            }
+
             // 2. Registrar en RepositorioBanco asociando DUI y correo
             RepositorioBanco.AsociarIdentificadores(dui, correo, nombreCompleto);
             RepositorioBanco.RegistrarCuentaAhorro(dui, numeroCuenta);

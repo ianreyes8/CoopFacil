@@ -64,46 +64,70 @@ namespace CoopFacil.Pages
                 string numeroSocio = $"Socio #{rnd.Next(100000, 999999)}";
                 int idUsuarioCreado = 0;
 
-                // 2. INSERCIÓN EN BASE DE DATOS SQL SERVER
-                if (!string.IsNullOrEmpty(conexionStr))
+                // 2. INSERCIÓN EN BASE DE DATOS (usuario + cuenta + saldo de bienvenida, todo en una transacción)
+                if (string.IsNullOrEmpty(conexionStr))
                 {
-                    using (MySqlConnection con = new MySqlConnection(conexionStr))
+                    MostrarError("No hay conexión configurada con la base de datos.");
+                    return;
+                }
+
+                string numeroCuenta;
+                using (MySqlConnection con = new MySqlConnection(conexionStr))
+                {
+                    con.Open();
+
+                    string checkQuery = "SELECT COUNT(*) FROM Usuarios WHERE Email = @Email";
+                    using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, con))
                     {
-                        con.Open();
+                        checkCmd.Parameters.AddWithValue("@Email", email);
+                        int existe = Convert.ToInt32(checkCmd.ExecuteScalar());
 
-                        string checkQuery = "SELECT COUNT(*) FROM Usuarios WHERE Email = @Email";
-                        using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, con))
+                        if (existe > 0)
                         {
-                            checkCmd.Parameters.AddWithValue("@Email", email);
-                            int existe = Convert.ToInt32(checkCmd.ExecuteScalar());
-
-                            if (existe > 0)
-                            {
-                                MostrarError("Este correo electrónico ya se encuentra registrado en CoopFacil.");
-                                return;
-                            }
+                            MostrarError("Este correo electrónico ya se encuentra registrado en CoopFacil.");
+                            return;
                         }
+                    }
+
+                    using (MySqlTransaction tx = con.BeginTransaction())
+                    {
+                        numeroCuenta = BancoDatos.GenerarNumeroCuentaUnico(con, tx);
 
                         string insertUserQuery = @"
-                            INSERT INTO Usuarios (NombreCompleto, Email, Password, TipoAcceso, NumeroSocio, Saldo, CDT, Prestamo)
-                            VALUES (@Nombre, @Email, @Password, @TipoAcceso, @NumeroSocio, 0.00, 0.00, 0.00)";
+                            INSERT INTO Usuarios (NombreCompleto, Email, Password, TipoAcceso, NumeroSocio, Saldo, CDT, Prestamo, NumeroCuenta)
+                            VALUES (@Nombre, @Email, @Password, @TipoAcceso, @NumeroSocio, @Saldo, 0.00, 0.00, @NumeroCuenta)";
 
-                        using (MySqlCommand insertCmd = new MySqlCommand(insertUserQuery, con))
+                        using (MySqlCommand insertCmd = new MySqlCommand(insertUserQuery, con, tx))
                         {
                             insertCmd.Parameters.AddWithValue("@Nombre", nombre);
                             insertCmd.Parameters.AddWithValue("@Email", email);
-                            insertCmd.Parameters.AddWithValue("@Password", password);
+                            insertCmd.Parameters.AddWithValue("@Password", PasswordHasher.Hashear(password));
                             insertCmd.Parameters.AddWithValue("@TipoAcceso", tipoAcceso);
                             insertCmd.Parameters.AddWithValue("@NumeroSocio", numeroSocio);
+                            insertCmd.Parameters.AddWithValue("@Saldo", BancoDatos.SaldoBienvenida);
+                            insertCmd.Parameters.AddWithValue("@NumeroCuenta", numeroCuenta);
 
                             insertCmd.ExecuteNonQuery();
                             idUsuarioCreado = Convert.ToInt32(insertCmd.LastInsertedId);
                         }
+
+                        using (MySqlCommand movCmd = new MySqlCommand(@"
+                            INSERT INTO Movimientos (IdUsuario, Descripcion, Monto, SaldoResultante, Estado, EsPositivo, Tipo)
+                            VALUES (@Id, 'Bono de bienvenida CoopFacil', @Monto, @Monto, 'Completado', 1, 'Bono')", con, tx))
+                        {
+                            movCmd.Parameters.AddWithValue("@Id", idUsuarioCreado);
+                            movCmd.Parameters.AddWithValue("@Monto", BancoDatos.SaldoBienvenida);
+                            movCmd.ExecuteNonQuery();
+                        }
+
+                        tx.Commit();
                     }
                 }
 
                 // 3. ESTABLECER VARIABLES DE SESIÓN ACTIVA ESTANDARIZADAS
-                Session["IdUsuario"] = idUsuarioCreado > 0 ? idUsuarioCreado : 1;
+                Session["IdUsuario"] = idUsuarioCreado;
+                Session["Saldo"] = BancoDatos.SaldoBienvenida;
+                Session["NumeroCuentaAhorro"] = numeroCuenta;
                 Session["NombreCompleto"] = nombre;
                 Session["UsuarioNombre"] = nombre;
                 Session["NombreUsuario"] = nombre;

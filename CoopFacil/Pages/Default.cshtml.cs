@@ -98,7 +98,7 @@ namespace CoopFacil
                         {
                             string dbPassword = reader["Password"].ToString();
 
-                            if (dbPassword == password)
+                            if (PasswordHasher.Verificar(password, dbPassword))
                             {
                                 int idUsuario = Convert.ToInt32(reader["IdUsuario"]);
                                 string nombreCompleto = reader["NombreCompleto"].ToString();
@@ -152,6 +152,13 @@ namespace CoopFacil
                                 Session["Saldo"] = saldo;
                                 Session["CDT"] = cdt;
                                 Session["Prestamo"] = prestamo;
+
+                                // Los créditos viven en la base de datos: se recuperan si el servidor se reinició.
+                                if (socioData.Creditos.Count == 0)
+                                {
+                                    socioData.Creditos.AddRange(BancoDatos.CargarCreditos(idUsuario));
+                                }
+                                if (!string.IsNullOrEmpty(numCuentaBD)) socioData.NumeroCuenta = numCuentaBD;
 
                                 Session["ListaCreditos"] = socioData.Creditos;
                                 Session["TieneCuentaAhorro"] = socioData.TieneCuentaAhorro;

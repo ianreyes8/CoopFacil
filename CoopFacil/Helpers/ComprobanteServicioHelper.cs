@@ -129,6 +129,7 @@ namespace CoopFacil.Helpers
         {
             var socio = ObtenerOcrear(identificador);
             socio.Creditos.Add(credito);
+            BancoDatos.GuardarCredito(correo, credito);
 
             if (!string.IsNullOrWhiteSpace(correo))
             {
