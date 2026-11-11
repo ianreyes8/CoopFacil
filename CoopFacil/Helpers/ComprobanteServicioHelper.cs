@@ -1,10 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mail;
+using System.Text;
+using System.Text.Json;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -129,6 +133,7 @@ namespace CoopFacil.Helpers
         {
             var socio = ObtenerOcrear(identificador);
             socio.Creditos.Add(credito);
+            BancoDatos.GuardarCredito(correo, credito);
 
             if (!string.IsNullOrWhiteSpace(correo))
             {
@@ -153,8 +158,8 @@ namespace CoopFacil.Helpers
 
                 Font fontTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18, colorOscuro);
                 Font fontSubtitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, colorVerde);
-                Font fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10, BaseColor.BLACK);
-                Font fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.BLACK);
+                Font fontNormal = FontFactory.GetFont(FontFactory.HELVETICA, 10, new BaseColor(0, 0, 0));
+                Font fontBold = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, new BaseColor(0, 0, 0));
 
                 Paragraph header = new Paragraph("COOPFACIL COOPERATIVA FINANCIERA", fontTitulo);
                 header.Alignment = Element.ALIGN_CENTER;
@@ -196,7 +201,7 @@ namespace CoopFacil.Helpers
 
                 doc.Add(tabla);
 
-                Paragraph nota = new Paragraph("\nEste documento es un comprobante digital generado automáticamente por la plataforma CoopFácil. Consérvalo para tus registros personales.", FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 8, BaseColor.DARK_GRAY));
+                Paragraph nota = new Paragraph("\nEste documento es un comprobante digital generado automáticamente por la plataforma CoopFácil. Consérvalo para tus registros personales.", FontFactory.GetFont(FontFactory.HELVETICA_OBLIQUE, 8, new BaseColor(64, 64, 64)));
                 nota.Alignment = Element.ALIGN_CENTER;
                 nota.SpacingBefore = 30f;
                 doc.Add(nota);
@@ -206,32 +211,17 @@ namespace CoopFacil.Helpers
             }
         }
 
-        public static bool EnviarComprobantePorCorreo(DatosComprobante datos, byte[] pdfBytes)
+        private static string ConstruirCuerpoCorreo(DatosComprobante datos)
         {
-            try
-            {
-                string emisor = ConfigurationManager.AppSettings["SmtpCorreoEmisor"];
-                string password = ConfigurationManager.AppSettings["SmtpPassword"];
-                string host = ConfigurationManager.AppSettings["SmtpHost"] ?? "smtp.gmail.com";
-                int port = int.Parse(ConfigurationManager.AppSettings["SmtpPort"] ?? "587");
-
-                if (string.IsNullOrEmpty(emisor) || string.IsNullOrEmpty(password))
-                {
-                    return false;
-                }
-
-                MailMessage mail = new MailMessage();
-                mail.From = new MailAddress(emisor, "CoopFácil Cooperativa Financiera");
-                mail.To.Add(datos.CorreoCliente);
-                mail.Subject = "Comprobante de " + datos.NombreServicio + " - N° " + datos.NumeroTransaccion;
-                mail.IsBodyHtml = true;
-
-                mail.Body = $@"
+            string nombre = WebUtility.HtmlEncode(datos.NombreCliente ?? "");
+            string servicio = WebUtility.HtmlEncode(datos.NombreServicio ?? "");
+            string transaccion = WebUtility.HtmlEncode(datos.NumeroTransaccion ?? "");
+            return $@"
                 <div style='font-family: Arial, sans-serif; color: #0F233D; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px;'>
-                    <h2 style='color: #10B981; margin-top: 0;'>¡Hola {datos.NombreCliente}!</h2>
-                    <p>Confirmamos que tu solicitud o movimiento para <strong>{datos.NombreServicio}</strong> ha sido procesado con éxito.</p>
+                    <h2 style='color: #10B981; margin-top: 0;'>¡Hola {nombre}!</h2>
+                    <p>Confirmamos que tu solicitud o movimiento para <strong>{servicio}</strong> ha sido procesado con éxito.</p>
                     <div style='background-color: #f8fafc; padding: 16px; border-radius: 8px; margin: 20px 0;'>
-                        <p style='margin: 4px 0;'><strong>N° Transacción:</strong> {datos.NumeroTransaccion}</p>
+                        <p style='margin: 4px 0;'><strong>N° Transacción:</strong> {transaccion}</p>
                         <p style='margin: 4px 0;'><strong>Monto:</strong> ${datos.Monto:N2} USD</p>
                         <p style='margin: 4px 0;'><strong>Fecha:</strong> {datos.FechaMovimiento:dd/MM/yyyy HH:mm:ss}</p>
                     </div>
@@ -239,27 +229,97 @@ namespace CoopFacil.Helpers
                     <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;' />
                     <p style='font-size: 11px; color: #64748b;'>CoopFácil © {DateTime.Now.Year} - Todos los derechos reservados.</p>
                 </div>";
+        }
 
-                if (pdfBytes != null && pdfBytes.Length > 0)
-                {
-                    MemoryStream streamPdf = new MemoryStream(pdfBytes);
-                    Attachment adjunto = new Attachment(streamPdf, "Comprobante_" + datos.NumeroTransaccion + ".pdf", "application/pdf");
-                    mail.Attachments.Add(adjunto);
-                }
+        private static readonly HttpClient ClienteHttp = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
 
-                SmtpClient smtp = new SmtpClient(host, port)
-                {
-                    Credentials = new NetworkCredential(emisor, password),
-                    EnableSsl = true
-                };
-
-                smtp.Send(mail);
-                return true;
-            }
-            catch (Exception)
+        /// <summary>
+        /// Envía el comprobante. Si hay ResendApiKey configurada usa la API HTTPS de Resend (funciona en Railway Hobby,
+        /// donde el SMTP saliente está bloqueado); si no, usa SMTP (útil en local con Gmail).
+        /// </summary>
+        public static bool EnviarComprobantePorCorreo(DatosComprobante datos, byte[] pdfBytes)
+        {
+            try
             {
+                if (string.IsNullOrWhiteSpace(datos.CorreoCliente)) return false;
+
+                string apiKey = ConfigurationManager.AppSettings["ResendApiKey"];
+                if (!string.IsNullOrEmpty(apiKey)) return EnviarPorResend(apiKey, datos, pdfBytes);
+                return EnviarPorSmtp(datos, pdfBytes);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("[Correo] Error al enviar el comprobante: " + ex.GetType().Name);
                 return false;
             }
+        }
+
+        private static bool EnviarPorResend(string apiKey, DatosComprobante datos, byte[] pdfBytes)
+        {
+            string remitente = ConfigurationManager.AppSettings["ResendRemitente"] ?? "CoopFácil <onboarding@resend.dev>";
+
+            var cuerpo = new Dictionary<string, object>
+            {
+                ["from"] = remitente,
+                ["to"] = new[] { datos.CorreoCliente.Trim() },
+                ["subject"] = "Comprobante de " + datos.NombreServicio + " - N° " + datos.NumeroTransaccion,
+                ["html"] = ConstruirCuerpoCorreo(datos)
+            };
+            if (pdfBytes != null && pdfBytes.Length > 0)
+            {
+                cuerpo["attachments"] = new[]
+                {
+                    new Dictionary<string, string>
+                    {
+                        ["filename"] = "Comprobante_" + datos.NumeroTransaccion + ".pdf",
+                        ["content"] = Convert.ToBase64String(pdfBytes)
+                    }
+                };
+            }
+
+            using var solicitud = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails")
+            {
+                Content = new StringContent(JsonSerializer.Serialize(cuerpo), Encoding.UTF8, "application/json")
+            };
+            solicitud.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+            using var respuesta = ClienteHttp.Send(solicitud);
+            if (respuesta.IsSuccessStatusCode) return true;
+
+            // Se deja el motivo en el registro del servidor (sin la clave), por ejemplo 403 si el dominio no está verificado.
+            string detalle = new StreamReader(respuesta.Content.ReadAsStream()).ReadToEnd();
+            Console.Error.WriteLine($"[Correo] Resend respondió {(int)respuesta.StatusCode}: {detalle}");
+            return false;
+        }
+
+        private static bool EnviarPorSmtp(DatosComprobante datos, byte[] pdfBytes)
+        {
+            string emisor = ConfigurationManager.AppSettings["SmtpCorreoEmisor"];
+            string password = ConfigurationManager.AppSettings["SmtpPassword"];
+            string host = ConfigurationManager.AppSettings["SmtpHost"] ?? "smtp.gmail.com";
+            int port = int.Parse(ConfigurationManager.AppSettings["SmtpPort"] ?? "587");
+
+            if (string.IsNullOrEmpty(emisor) || string.IsNullOrEmpty(password)) return false;
+
+            using MailMessage mail = new MailMessage();
+            mail.From = new MailAddress(emisor, "CoopFácil Cooperativa Financiera");
+            mail.To.Add(datos.CorreoCliente);
+            mail.Subject = "Comprobante de " + datos.NombreServicio + " - N° " + datos.NumeroTransaccion;
+            mail.IsBodyHtml = true;
+            mail.Body = ConstruirCuerpoCorreo(datos);
+
+            if (pdfBytes != null && pdfBytes.Length > 0)
+            {
+                mail.Attachments.Add(new Attachment(new MemoryStream(pdfBytes), "Comprobante_" + datos.NumeroTransaccion + ".pdf", "application/pdf"));
+            }
+
+            using SmtpClient smtp = new SmtpClient(host, port)
+            {
+                Credentials = new NetworkCredential(emisor, password),
+                EnableSsl = true
+            };
+            smtp.Send(mail);
+            return true;
         }
     }
 }

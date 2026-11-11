@@ -1,0 +1,53 @@
+@model CoopFacil.Compat.PaginaWeb
+@{
+    // Nombre corto para la barra (primer nombre + primer apellido) y datos de la cuenta desde la sesión.
+    string completo = "";
+    foreach (var clave in new[] { "ClienteNombreCompleto", "UsuarioNombre", "NombreUsuario", "NombreCompleto" })
+    {
+        var v = Model.Session[clave]?.ToString();
+        if (!string.IsNullOrWhiteSpace(v)) { completo = v.Trim(); break; }
+    }
+    var partes = completo.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    string corto = partes.Length >= 4 ? partes[0] + " " + partes[2] : partes.Length >= 2 ? partes[0] + " " + partes[1] : completo;
+    string socio = Model.Session["NumeroSocio"]?.ToString() ?? "";
+    string cuenta = CoopFacil.Helpers.BancoDatos.FormatearCuenta(Model.Session["NumeroCuentaAhorro"]?.ToString() ?? "");
+    string tile = "flex flex-col items-center justify-center gap-2 text-center p-3 rounded-xl bg-slate-100 dark:bg-[#0B1A30] hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/40 text-slate-700 dark:text-slate-200 transition text-xs font-semibold";
+}
+<div id="menuPerfil" class="relative">
+    <button type="button" onclick="togglePerfil(event)" class="flex items-center gap-2 bg-slate-100 dark:bg-[#0F233D] border border-emerald-500/40 px-3 py-1.5 rounded-xl shadow-sm hover:bg-emerald-500/10 transition cursor-pointer" aria-haspopup="true" aria-expanded="false" id="btnPerfil">
+        <i class="fa-solid fa-circle-user text-emerald-600 dark:text-emerald-400 text-base"></i>
+        <span class="text-xs font-bold text-slate-700 dark:text-white max-w-[9rem] sm:max-w-[14rem] truncate">Bienvenido @corto</span>
+        <i class="fa-solid fa-chevron-down text-[10px] text-slate-500 dark:text-slate-400"></i>
+    </button>
+
+    <div id="panelPerfil" class="hidden absolute left-0 top-full mt-2 w-[19rem] sm:w-[22rem] z-[60] bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl p-5">
+        <p class="text-center text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Perfil</p>
+        <div class="flex flex-col items-center text-center gap-1 mt-3">
+            <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-3xl"><i class="fa-solid fa-user"></i></div>
+            <p class="text-sm font-extrabold text-slate-900 dark:text-white mt-2">@completo</p>
+            @if (socio != "") { <p class="text-xs text-slate-500 dark:text-slate-400">@socio</p> }
+            @if (cuenta != "") { <p class="text-xs text-slate-500 dark:text-slate-400">Cuenta: <span class="font-mono font-semibold text-slate-700 dark:text-slate-200">@cuenta</span></p> }
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-4">
+            <a href="@Url.Content("~/Pages/Transferencias.aspx")" class="@tile"><i class="fa-solid fa-credit-card text-lg text-emerald-600 dark:text-emerald-400"></i>Mi tarjeta</a>
+            <a href="@Url.Content("~/Pages/Transferencias.aspx#transferir")" class="@tile"><i class="fa-solid fa-money-bill-transfer text-lg text-blue-600 dark:text-blue-400"></i>Transferir</a>
+            <a href="@Url.Content("~/Pages/Transferencias.aspx#movimientos")" class="@tile"><i class="fa-solid fa-list-ul text-lg text-slate-600 dark:text-slate-300"></i>Movimientos</a>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+            <a href="@Url.Content("~/Pages/CuentaAhorro.aspx")" class="@tile"><i class="fa-solid fa-piggy-bank text-lg text-emerald-600 dark:text-emerald-400"></i>Cuenta de ahorro</a>
+            <a href="javascript:__doPostBack('btnCerrarSesion','')" class="@tile"><i class="fa-solid fa-right-from-bracket text-lg text-red-600 dark:text-red-400"></i>Cerrar sesión</a>
+        </div>
+    </div>
+</div>
+<script>
+    function togglePerfil(ev) {
+        ev.stopPropagation();
+        var panel = document.getElementById('panelPerfil');
+        var abierto = panel.classList.toggle('hidden') === false;
+        document.getElementById('btnPerfil').setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    }
+    document.addEventListener('click', function (ev) {
+        var menu = document.getElementById('menuPerfil');
+        if (menu && !menu.contains(ev.target)) document.getElementById('panelPerfil').classList.add('hidden');
+    });
+</script>

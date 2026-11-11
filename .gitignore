@@ -1,6 +1,19 @@
-.vs/
+## .NET
 bin/
 obj/
-packages/
 *.user
 *.suo
+.vs/
+
+## VS Code
+.vscode/*
+!.vscode/extensions.json
+
+## Secretos y archivos locales (NUNCA subir contraseñas ni claves)
+.env
+appsettings.Local.json
+
+## Bases de datos locales y binarios
+*.mdf
+*.ldf
+*.sqlite

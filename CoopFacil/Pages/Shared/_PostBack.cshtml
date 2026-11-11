@@ -1,0 +1,9 @@
+<script>
+    // Equivalente al __doPostBack de Web Forms: lo usan los LinkButton para enviar el formulario.
+    function __doPostBack(destino, argumento) {
+        var formulario = document.getElementById('form1');
+        formulario.elements['__EVENTTARGET'].value = destino;
+        formulario.elements['__EVENTARGUMENT'].value = argumento || '';
+        formulario.submit();
+    }
+</script>

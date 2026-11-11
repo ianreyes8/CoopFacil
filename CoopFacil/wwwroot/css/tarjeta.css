@@ -1,0 +1,163 @@
+/* Tarjeta virtual de CoopFacil (página Transferencias y panel de perfil) */
+.tarjeta-wrap {
+    perspective: 1000px;
+}
+
+.tarjeta {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1.586 / 1;
+    width: 100%;
+    max-width: 26rem;
+    margin-inline: auto;
+    padding: clamp(1rem, 4.2vw, 1.6rem);
+    border-radius: 1.4rem;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background:
+        radial-gradient(circle at 15% 0%, rgba(16, 185, 129, .55), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(59, 130, 246, .55), transparent 55%),
+        linear-gradient(135deg, #04261f 0%, #0b3b4a 45%, #10244f 100%);
+    box-shadow: 0 25px 50px -12px rgba(2, 20, 40, .6), inset 0 1px 0 rgba(255, 255, 255, .18);
+    border: 1px solid rgba(255, 255, 255, .12);
+    transition: transform .35s ease, box-shadow .35s ease;
+    transform-style: preserve-3d;
+}
+
+.tarjeta:hover {
+    transform: rotateX(4deg) rotateY(-5deg) translateY(-3px);
+    box-shadow: 0 32px 60px -14px rgba(2, 20, 40, .7), inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+
+/* Anillos decorativos y brillo diagonal */
+.tarjeta::before,
+.tarjeta::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .1);
+    pointer-events: none;
+}
+
+.tarjeta::before { width: 16rem; height: 16rem; right: -6rem; top: -7rem; }
+.tarjeta::after  { width: 12rem; height: 12rem; left: -5rem; bottom: -7rem; }
+
+.tarjeta-brillo {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .09) 48%, transparent 60%);
+    pointer-events: none;
+}
+
+.tarjeta-top,
+.tarjeta-pie {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .75rem;
+}
+
+.tarjeta-marca {
+    font-size: clamp(1.05rem, 4.4vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: -.01em;
+    line-height: 1;
+}
+
+.tarjeta-tipo {
+    margin-top: .3rem;
+    font-size: .6rem;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .7);
+}
+
+.tarjeta-nfc {
+    font-size: 1.15rem;
+    transform: rotate(90deg);
+    opacity: .85;
+}
+
+/* Chip dibujado con CSS */
+.tarjeta-chip {
+    position: relative;
+    width: 2.7rem;
+    height: 2.05rem;
+    border-radius: .45rem;
+    background:
+        linear-gradient(90deg, transparent 31%, rgba(120, 80, 0, .45) 32%, rgba(120, 80, 0, .45) 33%, transparent 34%, transparent 65%, rgba(120, 80, 0, .45) 66%, rgba(120, 80, 0, .45) 67%, transparent 68%),
+        linear-gradient(0deg, transparent 46%, rgba(120, 80, 0, .45) 47%, rgba(120, 80, 0, .45) 53%, transparent 54%),
+        linear-gradient(135deg, #f7d774, #d9a93a 55%, #f3cf68);
+    box-shadow: inset 0 0 0 1px rgba(120, 80, 0, .35);
+}
+
+.tarjeta-numero {
+    position: relative;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(1.02rem, 4.9vw, 1.5rem);
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, .35);
+    white-space: nowrap;
+}
+
+.tarjeta-pie { align-items: flex-end; }
+
+.tarjeta-titular { min-width: 0; }
+
+.tarjeta-titular strong {
+    display: block;
+    max-width: 11.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: .8rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.tarjeta-datos {
+    display: flex;
+    gap: 1.1rem;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.tarjeta-datos strong {
+    display: block;
+    font-size: .85rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.tarjeta-titular span,
+.tarjeta-datos span {
+    display: block;
+    font-size: .52rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, .62);
+    margin-bottom: .15rem;
+}
+
+.tarjeta-cvv-btn {
+    margin-left: .35rem;
+    color: rgba(255, 255, 255, .75);
+    cursor: pointer;
+    font-size: .7rem;
+    background: none;
+    border: 0;
+    padding: 0;
+}
+
+.tarjeta-cvv-btn:hover { color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+    .tarjeta, .tarjeta:hover { transition: none; transform: none; }
+}
