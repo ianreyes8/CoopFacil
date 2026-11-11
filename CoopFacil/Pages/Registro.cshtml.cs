@@ -94,8 +94,8 @@ namespace CoopFacil.Pages
                         numeroSocio = BancoDatos.GenerarNumeroSocioUnico(con, tx);
 
                         string insertUserQuery = @"
-                            INSERT INTO Usuarios (NombreCompleto, Email, Password, TipoAcceso, NumeroSocio, Saldo, CDT, Prestamo, NumeroCuenta)
-                            VALUES (@Nombre, @Email, @Password, @TipoAcceso, @NumeroSocio, @Saldo, 0.00, 0.00, @NumeroCuenta)";
+                            INSERT INTO Usuarios (NombreCompleto, Email, Password, TipoAcceso, NumeroSocio, Saldo, CDT, Prestamo, NumeroCuenta, FechaRegistro)
+                            VALUES (@Nombre, @Email, @Password, @TipoAcceso, @NumeroSocio, @Saldo, 0.00, 0.00, @NumeroCuenta, @FechaRegistro)";
 
                         using (MySqlCommand insertCmd = new MySqlCommand(insertUserQuery, con, tx))
                         {
@@ -106,15 +106,17 @@ namespace CoopFacil.Pages
                             insertCmd.Parameters.AddWithValue("@NumeroSocio", numeroSocio);
                             insertCmd.Parameters.AddWithValue("@Saldo", BancoDatos.SaldoBienvenida);
                             insertCmd.Parameters.AddWithValue("@NumeroCuenta", numeroCuenta);
+                            insertCmd.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
 
                             insertCmd.ExecuteNonQuery();
                             idUsuarioCreado = Convert.ToInt32(insertCmd.LastInsertedId);
                         }
 
                         using (MySqlCommand movCmd = new MySqlCommand(@"
-                            INSERT INTO Movimientos (IdUsuario, Descripcion, Monto, SaldoResultante, Estado, EsPositivo, Tipo)
-                            VALUES (@Id, 'Bono de bienvenida CoopFacil', @Monto, @Monto, 'Completado', 1, 'Bono')", con, tx))
+                            INSERT INTO Movimientos (IdUsuario, Fecha, Descripcion, Monto, SaldoResultante, Estado, EsPositivo, Tipo)
+                            VALUES (@Id, @Fecha, 'Bono de bienvenida CoopFacil', @Monto, @Monto, 'Completado', 1, 'Bono')", con, tx))
                         {
+                            movCmd.Parameters.AddWithValue("@Fecha", DateTime.Now);
                             movCmd.Parameters.AddWithValue("@Id", idUsuarioCreado);
                             movCmd.Parameters.AddWithValue("@Monto", BancoDatos.SaldoBienvenida);
                             movCmd.ExecuteNonQuery();

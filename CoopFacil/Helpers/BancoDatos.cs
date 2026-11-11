@@ -251,9 +251,10 @@ namespace CoopFacil.Helpers
             }
 
             using (var mov = new MySqlCommand(@"
-                INSERT INTO Movimientos (IdUsuario, Descripcion, Monto, SaldoResultante, Estado, EsPositivo, Tipo, Referencia)
-                VALUES (@id, @desc, @monto, @saldo, 'Completado', @pos, @tipo, @ref)", con, tx))
+                INSERT INTO Movimientos (IdUsuario, Fecha, Descripcion, Monto, SaldoResultante, Estado, EsPositivo, Tipo, Referencia)
+                VALUES (@id, @fecha, @desc, @monto, @saldo, 'Completado', @pos, @tipo, @ref)", con, tx))
             {
+                mov.Parameters.AddWithValue("@fecha", DateTime.Now);
                 mov.Parameters.AddWithValue("@id", idUsuario);
                 mov.Parameters.AddWithValue("@desc", descripcion.Length > 255 ? descripcion.Substring(0, 255) : descripcion);
                 mov.Parameters.AddWithValue("@monto", monto);
@@ -345,9 +346,10 @@ namespace CoopFacil.Helpers
             // 3. Registrar la transferencia y los dos movimientos
             string referencia = "TRF-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-" + idOrigen + idDestino;
             using (var ins = new MySqlCommand(@"
-                INSERT INTO Transferencias (Referencia, IdOrigen, IdDestino, Monto, Concepto)
-                VALUES (@ref, @o, @d, @m, @c)", con, tx))
+                INSERT INTO Transferencias (Referencia, IdOrigen, IdDestino, Monto, Concepto, Fecha)
+                VALUES (@ref, @o, @d, @m, @c, @fecha)", con, tx))
             {
+                ins.Parameters.AddWithValue("@fecha", DateTime.Now);
                 ins.Parameters.AddWithValue("@ref", referencia);
                 ins.Parameters.AddWithValue("@o", idOrigen);
                 ins.Parameters.AddWithValue("@d", idDestino);
