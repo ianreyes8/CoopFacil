@@ -17,8 +17,8 @@ if (!string.IsNullOrWhiteSpace(puerto))
 
 builder.Services.AddRazorPages(opciones =>
 {
-    // Web Forms abría Default.aspx al entrar a la raíz del sitio.
-    opciones.Conventions.AddPageRoute("/Default", "");
+    // La raíz del sitio muestra la página principal pública (Index). El inicio de sesión sigue en Default.aspx.
+    opciones.Conventions.AddPageRoute("/Index", "");
 });
 
 // Railway termina el HTTPS delante de la aplicación: confiar en sus cabeceras X-Forwarded-*.
