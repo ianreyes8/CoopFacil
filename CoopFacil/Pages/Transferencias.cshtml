@@ -25,6 +25,7 @@ tailwind.config = {
 }
 </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/tarjeta.css")" />
     <script>
     (function () {
         const savedTheme = localStorage.getItem('coopfacil-theme');
@@ -89,34 +90,40 @@ tailwind.config = {
 
                 <div class="flex flex-col gap-1">
                     <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Mi cuenta y transferencias</h1>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">Simulación: el dinero se mueve entre cuentas reales de socios dentro de CoopFacil, pero no es dinero verdadero.</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Envía y recibe dinero entre cuentas de socios de CoopFacil, al instante.</p>
                 </div>
 
                 <div class="grid lg:grid-cols-5 gap-8 items-start">
 
                     <!-- TARJETA VIRTUAL -->
                     <section class="lg:col-span-2 flex flex-col gap-4">
-                        <div class="relative overflow-hidden rounded-2xl p-6 text-white shadow-2xl bg-gradient-to-br from-emerald-500 via-emerald-700 to-blue-800 min-h-[210px] flex flex-col justify-between">
-                            <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full bg-white/10"></div>
-                            <div class="absolute -left-12 -bottom-16 w-52 h-52 rounded-full bg-white/10"></div>
-                            <div class="relative flex items-start justify-between">
-                                <div>
-                                    <p class="text-xl font-extrabold tracking-tight leading-none">CoopFacil</p>
-                                    <p class="text-[9px] font-bold tracking-widest uppercase opacity-80 mt-1">Tarjeta virtual · Simulación</p>
-                                </div>
-                                <i class="fa-solid fa-wifi rotate-90 text-lg opacity-90"></i>
-                            </div>
-                            <div class="relative flex flex-col gap-3 mt-6">
-                                <i class="fa-solid fa-microchip text-3xl text-amber-300/90"></i>
-                                <p class="text-xl sm:text-2xl font-bold tracking-[0.18em] font-mono">@BancoDatos.FormatearCuenta(Model.Perfil.NumeroCuenta)</p>
-                                <div class="flex items-end justify-between gap-3">
-                                    <div class="min-w-0">
-                                        <p class="text-[9px] uppercase tracking-widest opacity-75">Titular</p>
-                                        <p class="text-sm font-bold uppercase truncate">@Model.Perfil.Nombre</p>
+                        @{ var tarjeta = BancoDatos.GenerarDatosTarjeta(Model.Perfil.NumeroCuenta); }
+                        <div class="tarjeta-wrap">
+                            <div class="tarjeta" aria-label="Tarjeta virtual de débito CoopFacil">
+                                <div class="tarjeta-brillo"></div>
+                                <div class="tarjeta-top">
+                                    <div>
+                                        <p class="tarjeta-marca">CoopFacil</p>
+                                        <p class="tarjeta-tipo">Débito</p>
                                     </div>
-                                    <div class="text-right shrink-0">
-                                        <p class="text-[9px] uppercase tracking-widest opacity-75">Socio</p>
-                                        <p class="text-xs font-bold">@Model.Perfil.NumeroSocio.Replace("Socio ", "")</p>
+                                    <i class="fa-solid fa-wifi tarjeta-nfc"></i>
+                                </div>
+                                <div class="tarjeta-chip"></div>
+                                <p class="tarjeta-numero">@tarjeta.Numero</p>
+                                <div class="tarjeta-pie">
+                                    <div class="tarjeta-titular">
+                                        <span>Titular</span>
+                                        <strong>@Model.Perfil.Nombre</strong>
+                                    </div>
+                                    <div class="tarjeta-datos">
+                                        <div>
+                                            <span>Vence</span>
+                                            <strong>@tarjeta.Vence</strong>
+                                        </div>
+                                        <div>
+                                            <span>CVV</span>
+                                            <strong><b id="cvvValor" data-cvv="@tarjeta.Cvv">•••</b><button type="button" class="tarjeta-cvv-btn" id="btnCvv" aria-label="Mostrar u ocultar CVV" title="Mostrar u ocultar CVV"><i class="fa-solid fa-eye"></i></button></strong>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -166,8 +173,8 @@ tailwind.config = {
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-piggy-bank"></i></div>
                                 <div>
-                                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Depositar (simulación)</h2>
-                                    <p class="text-xs text-slate-500 dark:text-slate-400">Agrega saldo ficticio a tu cuenta para probar transferencias · máximo $@BancoDatos.DepositoMaximo.ToString("N2") por depósito</p>
+                                    <h2 class="text-lg font-bold text-slate-900 dark:text-white">Depositar saldo</h2>
+                                    <p class="text-xs text-slate-500 dark:text-slate-400">Agrega saldo a tu cuenta · máximo $@BancoDatos.DepositoMaximo.ToString("N2") por depósito</p>
                                 </div>
                             </div>
 
@@ -238,6 +245,16 @@ tailwind.config = {
                 if (ev.key === 'Enter') { ev.preventDefault(); document.getElementById(campo.getAttribute('data-enter')).click(); }
             });
         });
+        // Mostrar u ocultar el CVV de la tarjeta.
+        (function () {
+            var boton = document.getElementById('btnCvv'), valor = document.getElementById('cvvValor');
+            if (!boton || !valor) return;
+            boton.addEventListener('click', function () {
+                var oculto = valor.textContent === '•••';
+                valor.textContent = oculto ? valor.getAttribute('data-cvv') : '•••';
+                boton.firstElementChild.className = oculto ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+            });
+        })();
         // Tras enviar un formulario, volver a la sección donde está el resultado.
         (function () {
             var seccion = '@Model.SeccionMensaje';

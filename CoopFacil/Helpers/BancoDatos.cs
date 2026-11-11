@@ -146,6 +146,36 @@ namespace CoopFacil.Helpers
             public string Referencia { get; set; } = "";
         }
 
+        public class DatosTarjeta
+        {
+            public string Numero { get; set; } = "";
+            public string Vence { get; set; } = "";
+            public string Cvv { get; set; } = "";
+        }
+
+        /// <summary>
+        /// Datos de la tarjeta virtual de débito, derivados siempre igual a partir del número de cuenta
+        /// (no se guardan en la base de datos): número de 16 dígitos, vencimiento MM/AA y CVV de 3 dígitos.
+        /// </summary>
+        public static DatosTarjeta GenerarDatosTarjeta(string numeroCuenta)
+        {
+            string cuenta = new string((numeroCuenta ?? "").Where(char.IsDigit).ToArray()).PadLeft(12, '0');
+            byte[] h = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes("CoopFacil.Tarjeta|" + cuenta));
+
+            string relleno = (BitConverter.ToUInt32(h, 0) % 1000).ToString("D3");
+            string numero = "5" + cuenta.Substring(cuenta.Length - 12) + relleno;
+            int mes = h[4] % 12 + 1;
+            int anio = 30 + h[5] % 3;
+            int cvv = (int)(BitConverter.ToUInt32(h, 8) % 900) + 100;
+
+            return new DatosTarjeta
+            {
+                Numero = string.Join(" ", Enumerable.Range(0, 4).Select(i => numero.Substring(i * 4, 4))),
+                Vence = $"{mes:D2}/{anio:D2}",
+                Cvv = cvv.ToString()
+            };
+        }
+
         public static string FormatearCuenta(string numero)
         {
             string limpio = new string((numero ?? "").Where(char.IsDigit).ToArray());
@@ -243,7 +273,7 @@ namespace CoopFacil.Helpers
             monto = Math.Round(monto, 2);
             if (monto <= 0) return new ResultadoOperacion { Mensaje = "El monto a depositar debe ser mayor que cero." };
             if (monto > DepositoMaximo)
-                return new ResultadoOperacion { Mensaje = $"El depósito de simulación no puede superar ${DepositoMaximo:N2}." };
+                return new ResultadoOperacion { Mensaje = $"El depósito no puede superar ${DepositoMaximo:N2}." };
 
             using var con = new MySqlConnection(Conexion);
             con.Open();
@@ -256,7 +286,7 @@ namespace CoopFacil.Helpers
             }
 
             string referencia = "DEP-" + DateTime.Now.ToString("yyyyMMddHHmmss") + "-" + idUsuario;
-            AplicarMovimiento(con, tx, idUsuario, monto, true, "Depósito (simulación)", "Deposito", referencia);
+            AplicarMovimiento(con, tx, idUsuario, monto, true, "Depósito en cuenta", "Deposito", referencia);
             tx.Commit();
             return new ResultadoOperacion { Exito = true, Referencia = referencia, Mensaje = $"Depósito de ${monto:N2} realizado correctamente." };
         }
