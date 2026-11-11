@@ -1,56 +1,64 @@
-# CoopFacil — migración a ASP.NET Core + MariaDB
+# CoopFacil
 
-Este es el mismo proyecto CoopFacil de Web Forms, **migrado sin rediseñarlo** para poder ejecutarse
-en Linux (Railway) con MariaDB. Las 14 páginas conservan su HTML, su estilo y su código C#.
+Sitio web de una cooperativa de ahorro y crédito: los socios abren su cuenta, solicitan créditos, reciben su
+tarjeta virtual y envían dinero a otros socios, todo desde el navegador.
 
-**Stack:** ASP.NET Core Razor Pages (.NET 10) · MariaDB/MySQL · Tailwind por CDN.
+**Stack:** ASP.NET Core Razor Pages (.NET 10) · MariaDB / MySQL · Tailwind CSS · iTextSharp (PDF) · Resend (correo)
 
-## Cómo se migró (qué NO cambió)
+> Proyecto académico: los saldos, la tarjeta y las transferencias son datos de demostración y no representan
+> dinero real.
 
-- El HTML de cada página es el original (mismos estilos, scripts, textos y rutas: `Default.aspx`,
-  `Index.aspx`, `Pages/CuentaAhorro.aspx`, etc.). Los enlaces siguen funcionando igual.
-- El código de cada página (`*.cshtml.cs`) es el original: `Page_Load`, `btnX_Click`, `Session[...]`,
-  `Response.Redirect(...)`, `txtNombre.Text`, `pnlError.Visible`...
-- `Helpers/ComprobanteServicioHelper.cs` (PDF y correo) y el repositorio en memoria `RepositorioBanco` siguen igual.
-- Para que lo anterior funcione en ASP.NET Core, la carpeta `CoopFacil/Compat/` reproduce los controles de
-  Web Forms (TextBox, Literal, Panel, DropDownList...), el ciclo de vida de la página (IsPostBack, eventos de
-  botones, estado entre envíos) y `Session`. Cada página tiene un archivo `*.controles.cs` (equivale al antiguo
-  `.designer.cs`).
+## Qué incluye
 
-## Cambios obligados por la plataforma (lo único que se tocó en el código)
-
-| Qué | Por qué |
+| Área | Qué hace |
 |---|---|
-| `System.Data.SqlClient` → `MySqlConnector` (`MySqlConnection`, `MySqlCommand`...) | La base ahora es MariaDB, no SQL Server. |
-| `Registro`: se quitó `OUTPUT INSERTED.IdUsuario` y el id se lee con `LastInsertedId` | `OUTPUT` solo existe en SQL Server. |
-| `(int)cmd.ExecuteScalar()` → `Convert.ToInt32(...)` | MariaDB devuelve `COUNT(*)` como `long`. |
-| `iTextSharp` → `iTextSharp.LGPLv2.Core` (mismo código `iTextSharp.text.*`) | iTextSharp 5 solo funciona en .NET Framework. |
-| `File.Exists` → `System.IO.File.Exists` (EducacionFinanciera) | En una página de ASP.NET Core `File` es otro método. |
-| La cadena de conexión y la clave del correo salieron de `Web.config` | Ver "Configuración" más abajo. |
-| Carpetas `Downloads/` y `Pages/Documentos/` movidas a `wwwroot/` | Es donde ASP.NET Core sirve archivos estáticos. |
-| `Response.Redirect` ya no detiene la ejecución en ese punto | Se revisaron los 24 usos: ninguno ejecuta nada dañino después. |
+| **Sitio público** | Inicio, Quiénes somos, Servicios, Educación financiera, Transparencia y Contacto, con tema claro y oscuro. |
+| **Cuentas de socio** | Registro e inicio de sesión. Cada socio recibe número de socio, número de cuenta de 12 dígitos y $100.00 de bienvenida. Las contraseñas se guardan con hash PBKDF2-SHA256. |
+| **Créditos y ahorro** | Solicitud de crédito personal, vehicular e hipotecario, cuenta de ahorro, ahorro programado y simuladores. Cada solicitud genera un comprobante en PDF que se envía por correo. |
+| **Transferencias** | Tarjeta virtual de débito, transferencias por número de cuenta o correo, depósitos y movimientos (rojo: enviado, verde: recibido o depositado). |
+| **Perfil** | Panel de perfil con los datos del socio y accesos rápidos. |
 
-Todo lo demás (incluidos los puntos de mejora que ya conocemos: contraseñas en texto plano, datos en memoria
-en `RepositorioBanco`, etc.) queda **igual que en el original**, para atacarlo después.
+## Estructura
 
-## Requisitos locales
+```
+CoopFacil/
+├── Program.cs              Configuración de la aplicación (rutas, puerto, cultura, configuración)
+├── Pages/                  Páginas: X.cshtml (HTML), X.cshtml.cs (lógica) y X.controles.cs (controles)
+├── Helpers/
+│   ├── BancoDatos.cs       Cuentas, transferencias, depósitos, movimientos y créditos (base de datos)
+│   ├── PasswordHasher.cs   Hash de contraseñas (PBKDF2-SHA256)
+│   └── ComprobanteServicioHelper.cs   Comprobante PDF y envío de correo
+├── Compat/                 Controles de servidor, sesión y ciclo de vida que usan las páginas
+└── wwwroot/                Estilos (css), scripts (Js), documentos y descargas
+sql/coopfacil_mariadb.sql   Estructura de la base de datos
+```
 
-- .NET SDK 10 (`dotnet --version` debe mostrar 10.x)
-- VS Code + extensión **C# Dev Kit**
-- XAMPP con el módulo **MySQL** iniciado
+## Base de datos
+
+| Tabla | Contenido |
+|---|---|
+| `Usuarios` | Socios: datos personales, hash de contraseña, número de socio, número de cuenta y saldo. |
+| `Movimientos` | Historial de cada cuenta (bono, depósitos, transferencias, desembolsos) con el saldo resultante. |
+| `Transferencias` | Una fila por transferencia entre dos socios, con su referencia única. |
+| `Creditos` | Créditos solicitados por cada socio. |
+
+El saldo no puede quedar negativo (restricción `CHECK`) y cada transferencia se ejecuta en una sola transacción:
+o se descuenta y se acredita, o no ocurre nada.
 
 ## Ejecutar en local
 
+**Requisitos:** .NET SDK 10 (`dotnet --version` debe mostrar 10.x), VS Code con la extensión C# Dev Kit y XAMPP
+con el módulo MySQL.
+
 1. Inicia **MySQL** en el panel de XAMPP.
-2. En phpMyAdmin (`http://localhost/phpmyadmin`): si ya existe una base `coopfacil` de pruebas anteriores,
-   elimínala. Luego importa `sql/coopfacil_mariadb.sql` (crea la base y las tablas `Usuarios` y `Movimientos`).
-3. Copia `CoopFacil/appsettings.Local.example.json` como `CoopFacil/appsettings.Local.json` y escribe ahí el
-   correo emisor y su contraseña de aplicación de Gmail (ese archivo no se sube a GitHub).
+2. En phpMyAdmin (`http://localhost/phpmyadmin`) importa `sql/coopfacil_mariadb.sql`. Si ya existe una base
+   `coopfacil` con una estructura anterior, elimínala antes de importar.
+3. Opcional, para el envío de correos: copia `CoopFacil/appsettings.Local.example.json` como
+   `CoopFacil/appsettings.Local.json` y completa tus datos. Ese archivo no se sube a Git.
 4. En la terminal:
 
    ```
    cd CoopFacil
-   dotnet restore
    dotnet run
    ```
 
@@ -60,53 +68,27 @@ en `RepositorioBanco`, etc.) queda **igual que en el original**, para atacarlo d
 
 | Dato | Local | Railway |
 |---|---|---|
-| Base de datos | `ConnectionStrings:CoopFacilDB` en `appsettings.json` (XAMPP: root sin clave) | Variable `MYSQL_URL` |
-| Correo (`SmtpCorreoEmisor`, `SmtpPassword`, `SmtpHost`, `SmtpPort`, `SmtpUser`, `SmtpPass`) | `appsettings.Local.json` | Variables `AppSettings__SmtpCorreoEmisor`, `AppSettings__SmtpPassword`, ... |
-| Correo con Resend (`ResendApiKey`, `ResendRemitente`) | `appsettings.Local.json` | Variables `AppSettings__ResendApiKey`, `AppSettings__ResendRemitente` |
+| Base de datos | `ConnectionStrings:CoopFacilDB` en `appsettings.json` (XAMPP: usuario `root` sin clave) | Variable `MYSQL_URL` |
+| Correo con Resend | `ResendApiKey` y `ResendRemitente` en `appsettings.Local.json` | `AppSettings__ResendApiKey`, `AppSettings__ResendRemitente` |
+| Correo con SMTP (respaldo en local) | `SmtpCorreoEmisor`, `SmtpPassword`, `SmtpHost`, `SmtpPort` | `AppSettings__Smtp...` |
+| Zona horaria | la del equipo | `TZ=America/El_Salvador` |
 
-**Importante:** la contraseña de Gmail que estaba en el `Web.config` original quedó expuesta en el historial
-de GitHub. Revócala en tu cuenta de Google y crea una nueva contraseña de aplicación.
+Si `ResendApiKey` está vacía se usa SMTP; si tampoco hay datos de SMTP, el sitio funciona igual pero no envía correos.
+Nunca subas claves al repositorio: van en `appsettings.Local.json` (ignorado por Git) o en las variables de Railway.
 
-## Desplegar en Railway
+## Despliegue en Railway
 
-1. Sube este repositorio a GitHub.
-2. En Railway: **New Project** → agrega un servicio **MariaDB** (o MySQL).
-3. Ejecuta `sql/coopfacil_mariadb.sql` en esa base **sin las dos primeras sentencias** (`CREATE DATABASE` y `USE`).
-4. Agrega otro servicio **desde el repositorio de GitHub** (Railway detecta ASP.NET Core).
-5. En las variables del servicio web agrega:
-   - `MYSQL_URL` con la referencia a la variable de la base (`${{ NombreDelServicioDB.MYSQL_URL }}`)
-   - las variables `AppSettings__...` del correo
-   - opcional: `TZ=America/El_Salvador` para que `DateTime.Now` use la hora de El Salvador (por defecto Railway usa UTC)
-6. En **Settings → Networking** genera un dominio público.
+1. En Railway crea un proyecto con un servicio **MySQL**.
+2. Importa `sql/coopfacil_mariadb.sql` en esa base, sin las dos primeras sentencias (`CREATE DATABASE` y `USE`).
+3. Agrega un servicio **desde este repositorio de GitHub** (rama `master`); Railway detecta ASP.NET Core.
+4. En las variables del servicio web agrega `MYSQL_URL` (con la referencia `${{ NombreDelServicioDB.MYSQL_URL }}`),
+   las variables `AppSettings__...` del correo y `TZ=America/El_Salvador`.
+5. En **Settings → Networking** genera un dominio público o conecta el tuyo.
 
-Notas de Railway: los archivos del contenedor no persisten entre despliegues y la sesión vive en la memoria del
-servidor (como la sesión InProc de IIS), así que las sesiones abiertas se cierran cada vez que se reinicia o se
-vuelve a desplegar el servicio.
-
-## Estructura
-
-```
-CoopFacil/
-├── Program.cs               Configuración (rutas, puerto, cultura, configuración)
-├── Compat/                  Capa de compatibilidad con Web Forms (controles, ciclo de vida, Session, Response)
-├── Pages/                   Las 14 páginas: X.cshtml (HTML), X.cshtml.cs (código), X.controles.cs (controles)
-├── Helpers/                 ComprobanteServicioHelper.cs (PDF y correo, RepositorioBanco, modelos)
-└── wwwroot/                 css, Js, Downloads y Pages/Documentos
-sql/coopfacil_mariadb.sql    Estructura de la base de datos (mismas tablas y columnas del original)
-```
-
-## Cuentas, transferencias y movimientos (simulación)
-
-- Cada socio recibe al registrarse un número de cuenta de 12 dígitos y $100.00 de bienvenida.
-- **Transferencias** (último enlace del menú): tarjeta virtual, transferir a otra cuenta por número de cuenta o correo, depósito (máximo $5,000 por depósito) y lista de movimientos (rojo = enviado, verde = recibido o depositado).
-- Los créditos aprobados se guardan en la base de datos y se desembolsan en la cuenta del socio.
-- Las contraseñas se guardan con hash PBKDF2-SHA256. Al actualizar desde una versión anterior hay que volver a importar `sql/coopfacil_mariadb.sql` (la base se recrea).
-
-### Correo en Railway
-
-Railway bloquea el SMTP saliente en los planes Free, Trial y Hobby, así que en línea el comprobante se envía con la API de Resend:
-
-1. Crea una cuenta en resend.com y una API key.
-2. Para enviar a cualquier usuario, agrega y verifica tu dominio en Resend (registros DNS) y usa un remitente de ese dominio, por ejemplo `AppSettings__ResendRemitente = CoopFácil <comprobantes@tudominio.com>`.
-3. Sin dominio verificado, Resend solo permite enviar desde `onboarding@resend.dev` al correo de tu propia cuenta de Resend (sirve para pruebas).
-4. Si `ResendApiKey` está vacía, se usa SMTP (útil en local con Gmail).
+Notas:
+- Los archivos del contenedor no persisten entre despliegues y las sesiones viven en la memoria del servidor, así
+  que las sesiones abiertas se cierran cada vez que el servicio se reinicia o se vuelve a desplegar.
+- En los planes Free, Trial y Hobby de Railway el SMTP saliente está bloqueado: en línea el correo se envía con la
+  API de Resend. Para enviar a cualquier usuario hay que verificar un dominio en Resend (registros DNS) y usar un
+  remitente de ese dominio, por ejemplo `CoopFácil <comprobantes@tudominio.com>`. Sin dominio verificado, Resend solo
+  permite enviar desde `onboarding@resend.dev` al correo de la propia cuenta de Resend (sirve para pruebas).
