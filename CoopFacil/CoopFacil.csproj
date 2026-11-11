@@ -8,6 +8,10 @@
     <AssemblyName>CoopFacil</AssemblyName>
     <!-- El código de las páginas viene de Web Forms y no usa anotaciones de nulabilidad. -->
     <NoWarn>$(NoWarn);CS8632;SYSLIB0014</NoWarn>
+    <!-- En Windows, el control de aplicaciones (Smart App Control) bloquea el CoopFacil.exe sin firmar.
+         Sin ese .exe, "dotnet run" arranca la aplicación con el dotnet.exe firmado de Microsoft.
+         En Linux (Railway) se conserva el ejecutable normal. -->
+    <UseAppHost Condition="'$(OS)' == 'Windows_NT'">false</UseAppHost>
   </PropertyGroup>
 
   <ItemGroup>
