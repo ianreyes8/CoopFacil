@@ -17,3 +17,6 @@ appsettings.Local.json
 *.mdf
 *.ldf
 *.sqlite
+
+# Estilos: dependencias de Node (solo para regenerar wwwroot/css/tailwind.css)
+node_modules/

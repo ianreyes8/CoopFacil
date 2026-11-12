@@ -1,0 +1,12 @@
+{
+  "name": "coopfacil-estilos",
+  "private": true,
+  "description": "Compila los estilos de Tailwind CSS a wwwroot/css/tailwind.css. Solo hace falta Node para regenerar los estilos; el servidor no lo necesita.",
+  "scripts": {
+    "css": "tailwindcss -c tailwind.config.js -i Styles/tailwind.input.css -o wwwroot/css/tailwind.css --minify",
+    "css:watch": "tailwindcss -c tailwind.config.js -i Styles/tailwind.input.css -o wwwroot/css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

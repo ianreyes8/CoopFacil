@@ -1,0 +1,106 @@
+/* CoopFacil - capa visual común: detalles de interfaz, animaciones y componentes compartidos */
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { font-feature-settings: "cv02", "cv03", "cv04", "cv11"; text-rendering: optimizeLegibility; }
+
+::selection { background: rgba(16, 185, 129, .3); }
+
+/* Foco visible para teclado */
+:focus { outline: none; }
+:focus-visible { outline: 2px solid #10B981; outline-offset: 3px; border-radius: .5rem; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; }
+
+/* Barras de desplazamiento */
+* { scrollbar-width: thin; scrollbar-color: rgba(100, 116, 139, .5) transparent; }
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, .45); border-radius: 999px; }
+*::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, .75); }
+
+/* Autocompletado del navegador sin fondo amarillo */
+input:-webkit-autofill, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #0F233D inset !important;
+    -webkit-text-fill-color: #e2e8f0 !important;
+    caret-color: #e2e8f0;
+}
+html:not(.dark) input:-webkit-autofill, html:not(.dark) input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #f8fafc inset !important;
+    -webkit-text-fill-color: #0f172a !important;
+    caret-color: #0f172a;
+}
+
+/* ---------- Encabezado ---------- */
+.cf-header { transition: box-shadow .25s ease, background-color .25s ease; }
+.cf-header.cf-scrolled { box-shadow: 0 10px 30px -12px rgba(2, 12, 27, .35); }
+
+.cf-nav-link { position: relative; padding: .5rem .15rem; font-size: .875rem; font-weight: 600; transition: color .2s ease; }
+.cf-nav-link::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; border-radius: 2px;
+    background: #10B981; transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
+}
+.cf-nav-link:hover::after, .cf-nav-link[aria-current="page"]::after { transform: scaleX(1); }
+
+.cf-menu-movil { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+.cf-menu-movil.abierto { grid-template-rows: 1fr; }
+.cf-menu-movil > div { overflow: hidden; }
+
+.cf-burger span { display: block; width: 18px; height: 2px; border-radius: 2px; background: currentColor; transition: transform .25s ease, opacity .2s ease; }
+.cf-burger span + span { margin-top: 4px; }
+.cf-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.cf-burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.cf-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ---------- Tarjetas y botones ---------- */
+.card-hover { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+.card-hover:hover { transform: translateY(-4px); box-shadow: 0 22px 40px -22px rgba(16, 185, 129, .45); border-color: rgba(16, 185, 129, .45); }
+
+button, [type="submit"], a { -webkit-tap-highlight-color: transparent; }
+button:active:not(:disabled), [type="submit"]:active { transform: translateY(1px) scale(.995); }
+
+.btn-cargando { position: relative; pointer-events: none; opacity: .85; }
+.btn-cargando::after {
+    content: ""; display: inline-block; width: 1rem; height: 1rem; margin-left: .6rem; vertical-align: -.15rem;
+    border: 2px solid rgba(255, 255, 255, .45); border-top-color: #fff; border-radius: 50%;
+    animation: cf-giro .7s linear infinite;
+}
+@keyframes cf-giro { to { transform: rotate(360deg); } }
+
+/* ---------- Fondos decorativos ---------- */
+.bg-malla {
+    background-image:
+        linear-gradient(rgba(148, 163, 184, .08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, .08) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+.brillo { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .35; pointer-events: none; }
+.texto-degradado { background: linear-gradient(90deg, #34d399, #60a5fa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* ---------- Aparición al desplazarse ---------- */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.flota { animation: cf-flota 6s ease-in-out infinite; }
+@keyframes cf-flota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* ---------- Formularios de acceso ---------- */
+.cf-campo { position: relative; }
+.cf-campo > i.cf-icono { position: absolute; left: .95rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: .85rem; pointer-events: none; }
+.cf-campo > input, .cf-campo > select { padding-left: 2.6rem; }
+.cf-ojo { position: absolute; right: .5rem; top: 50%; transform: translateY(-50%); width: 2.2rem; height: 2.2rem; display: grid; place-items: center; color: #94a3b8; border-radius: .6rem; cursor: pointer; }
+.cf-ojo:hover { color: #10B981; }
+.cf-fuerza { display: grid; grid-template-columns: repeat(4, 1fr); gap: .3rem; margin-top: .5rem; }
+.cf-fuerza span { height: .28rem; border-radius: 999px; background: rgba(148, 163, 184, .3); transition: background-color .25s ease; }
+.cf-fuerza[data-nivel="1"] span:nth-child(-n+1) { background: #ef4444; }
+.cf-fuerza[data-nivel="2"] span:nth-child(-n+2) { background: #f59e0b; }
+.cf-fuerza[data-nivel="3"] span:nth-child(-n+3) { background: #84cc16; }
+.cf-fuerza[data-nivel="4"] span:nth-child(-n+4) { background: #10B981; }
+
+/* Tablas anchas: desplazamiento horizontal suave en pantallas pequeñas */
+.cf-tabla { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .flota, .btn-cargando::after { animation: none; }
+    .card-hover:hover { transform: none; }
+}
