@@ -10,15 +10,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoopFacil - Iniciar Sesión</title>
-    <meta name="description" content="CoopFacil: cooperativa de ahorro y crédito. Abre tu cuenta, solicita créditos con tasa preferencial y envía dinero a otros socios." />
-    <meta name="theme-color" content="#0B1A30" />
-    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
+        }
+    }
+}
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/estilos.css" asp-append-version="true" />
     <script>
         (function() {
             const savedTheme = localStorage.getItem('coopfacil-theme');
@@ -156,7 +159,6 @@
             updateThemeIcons(isDark);
         });
     </script>
-<script src="~/Js/formularios.js" asp-append-version="true"></script>
 <partial name="_PostBack" />
 </body>
 </html>

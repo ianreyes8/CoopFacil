@@ -10,15 +10,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Servicios Financieros - CoopFacil</title>
-    <meta name="description" content="CoopFacil: cooperativa de ahorro y crédito. Abre tu cuenta, solicita créditos con tasa preferencial y envía dinero a otros socios." />
-    <meta name="theme-color" content="#0B1A30" />
-    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+tailwind.config = {
+    darkMode: 'class',
+    theme: {
+        extend: {
+            colors: { coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' } }
+        }
+    }
+}
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/estilos.css" asp-append-version="true" />
     <script>
         (function () {
             const savedTheme = localStorage.getItem('coopfacil-theme');
@@ -43,7 +46,7 @@
                             <span class="text-xl font-extrabold tracking-tight leading-none text-slate-900 dark:text-white">
                                 Coop<span class="text-emerald-600 dark:text-emerald-400">Facil</span>
                             </span>
-                            <span class="hidden sm:block text-[9px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase mt-1">
+                            <span class="text-[9px] font-bold tracking-widest text-slate-500 dark:text-slate-400 uppercase mt-1">
                                 COOPERATIVA FINANCIERA
                             </span>
                         </div>
@@ -52,13 +55,13 @@
                     @if (Model.pnlBienvenida.Visible) { <partial name="_MenuPerfil" model="Model" /> }
                 </div>
 
-                <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold">
+                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
                     <a href="../Index.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Inicio</a>
                     <a href="QuienesSomos.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Quiénes Somos</a>
                     <a href="Servicios.aspx" class="text-emerald-600 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-1">Servicios</a>
                     <a href="Transparencia.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transparencia</a>
                     <a href="Contacto.aspx" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Contacto</a>
-                    @if (Model.Session["IdUsuario"] != null) { <a href="@Url.Content("~/Pages/Transferencias.aspx")" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transferencias</a> }
+                    <a href="@Url.Content("~/Pages/Transferencias.aspx")" class="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition pb-1 border-b-2 border-transparent">Transferencias</a>
                 </nav>
 
                 <div class="flex items-center gap-3">
@@ -68,11 +71,11 @@
                     </button>
 
                     @if (Model.lnkIniciarSesion.Visible) { <a id="lnkIniciarSesion" class="@Model.lnkIniciarSesion.CssClass" href="@Url.Content(Model.lnkIniciarSesion.NavigateUrl)">
-                        <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> <span class="hidden min-[400px]:inline">Iniciar Sesión</span><span class="sr-only min-[400px]:hidden">Iniciar Sesión</span>
+                        <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                     </a> }
 
                     @if (Model.btnCerrarSesion.Visible) { <a id="btnCerrarSesion" class="@Model.btnCerrarSesion.CssClass" href="javascript:__doPostBack('btnCerrarSesion','')">
-                        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> <span class="hidden min-[400px]:inline">Cerrar Sesión</span><span class="sr-only min-[400px]:hidden">Cerrar Sesión</span>
+                        <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
                     </a> }
                 </div>
 
@@ -296,7 +299,6 @@
             updateThemeIcons(isDark);
         });
     </script>
-<script src="~/Js/menu-movil.js" asp-append-version="true"></script>
 <partial name="_PostBack" />
 </body>
 </html>

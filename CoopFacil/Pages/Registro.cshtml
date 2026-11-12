@@ -10,15 +10,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro de Socio - CoopFacil</title>
-    <meta name="description" content="CoopFacil: cooperativa de ahorro y crédito. Abre tu cuenta, solicita créditos con tasa preferencial y envía dinero a otros socios." />
-    <meta name="theme-color" content="#0B1A30" />
-    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        coop: { darkBg: '#0B1A30', darkCard: '#0F233D', emerald: '#10B981', blue: '#3B82F6' }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/estilos.css" asp-append-version="true" />
     <script>
     (function () {
         const savedTheme = localStorage.getItem('coopfacil-theme');
@@ -27,7 +32,7 @@
     })();
 </script>
 </head>
-<body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 pt-20 pb-8 sm:pt-4 sm:pb-4 transition-colors duration-300 relative">
+<body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex items-center justify-center p-4 transition-colors duration-300 relative">
     
     <!-- BOTÓN CAMBIO DE TEMA EN ESQUINA SUPERIOR DERECHA -->
     <button type="button" onclick="toggleTheme()" id="themeToggleBtn" title="Cambiar Tema" class="absolute top-4 right-4 w-10 h-10 rounded-xl bg-white dark:bg-[#0F233D] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-amber-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center justify-center text-base shadow-sm">
@@ -120,7 +125,6 @@
             updateThemeIcons(isDark);
         });
     </script>
-<script src="~/Js/formularios.js" asp-append-version="true"></script>
 <partial name="_PostBack" />
 </body>
 </html>
