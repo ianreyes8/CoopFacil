@@ -1,0 +1,79 @@
+/* Efectos visuales compartidos por las páginas interiores (Servicios, Quiénes Somos, etc.) */
+
+/* Barra de progreso de lectura, arriba de todo */
+.cf-progreso {
+    position: fixed; top: 0; left: 0; z-index: 60; height: 3px; width: 100%;
+    transform-origin: 0 50%; transform: scaleX(0);
+    background: linear-gradient(90deg, #10b981, #14b8a6, #3b82f6);
+    pointer-events: none;
+}
+
+/* Resplandor ambiental detrás del contenido */
+body.cf-ambiente { position: relative; }
+body.cf-ambiente::before, body.cf-ambiente::after {
+    content: ""; position: fixed; z-index: -1; pointer-events: none; border-radius: 50%; filter: blur(40px);
+    animation: cf-deriva 18s ease-in-out infinite alternate;
+}
+body.cf-ambiente::before { width: 38rem; height: 38rem; top: -14rem; right: -10rem; background: radial-gradient(circle, rgba(16,185,129,.16), transparent 68%); }
+body.cf-ambiente::after  { width: 34rem; height: 34rem; bottom: -14rem; left: -12rem; background: radial-gradient(circle, rgba(59,130,246,.13), transparent 68%); animation-duration: 24s; }
+@keyframes cf-deriva { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(-3rem,2rem,0) scale(1.12); } }
+
+/* Cabecera con sombra al bajar */
+header.cf-scroll { box-shadow: 0 12px 30px -18px rgba(2,12,27,.55); }
+
+/* Aparición al hacer scroll (solo si JS está activo) */
+.cf-js .cf-rev { opacity: 0; transform: translateY(22px) scale(.985); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); transition-delay: var(--cf-d, 0s); }
+.cf-js .cf-rev.cf-vis { opacity: 1; transform: none; }
+
+/* Encabezado de página: etiqueta, título con degradado y subrayado animado */
+main h1 { letter-spacing: -.02em; }
+main h1::after {
+    content: ""; display: block; width: 4.5rem; height: 4px; margin-top: .9rem; border-radius: 99px;
+    background: linear-gradient(90deg, #10b981, #3b82f6);
+    animation: cf-trazo 1s .25s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes cf-trazo { from { width: 0; opacity: 0; } to { width: 4.5rem; opacity: 1; } }
+
+/* Tarjetas: elevación y borde luminoso */
+main [class*="rounded-2xl"][class*="border"], main [class*="rounded-3xl"][class*="border"] {
+    transition: transform .3s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease, border-color .3s ease;
+}
+main [class*="rounded-2xl"][class*="border"]:hover, main [class*="rounded-3xl"][class*="border"]:hover {
+    transform: translateY(-4px);
+    border-color: rgba(16,185,129,.45);
+    box-shadow: 0 22px 44px -22px rgba(16,185,129,.4);
+}
+/* Pero no mover formularios ni tablas grandes */
+main form [class*="rounded-2xl"][class*="border"]:hover, main table:hover, main [class*="overflow-x-auto"]:hover { transform: none; }
+
+/* Iconos: pequeño rebote al pasar por la tarjeta */
+main [class*="rounded-2xl"]:hover > [class*="rounded-xl"] i, main [class*="rounded-2xl"]:hover > div > [class*="rounded-xl"] i { animation: cf-rebote .6s ease; }
+@keyframes cf-rebote { 40% { transform: translateY(-4px) scale(1.12); } 70% { transform: translateY(1px); } }
+
+/* Botones principales: brillo que cruza */
+main a[class*="bg-emerald-"], main button[class*="bg-emerald-"], main input[type="submit"][class*="bg-emerald-"] {
+    position: relative; overflow: hidden; transition: transform .22s ease, box-shadow .22s ease, background-color .22s ease;
+}
+main a[class*="bg-emerald-"]:hover, main button[class*="bg-emerald-"]:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -14px rgba(5,150,105,.8); }
+main a[class*="bg-emerald-"]::after, main button[class*="bg-emerald-"]::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%);
+    transform: translateX(-120%); transition: transform .7s ease;
+}
+main a[class*="bg-emerald-"]:hover::after, main button[class*="bg-emerald-"]:hover::after { transform: translateX(120%); }
+
+/* Entradas de formulario: foco con halo */
+main input:focus, main select:focus, main textarea:focus { box-shadow: 0 0 0 4px rgba(16,185,129,.18); transition: box-shadow .2s ease; }
+
+/* Inicio de sesión y registro: tarjeta que entra con suavidad */
+body > form > div[class*="max-w-"], body > form > div > div[class*="max-w-md"], body > div[class*="max-w-md"] { animation: cf-entrada .7s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes cf-entrada { from { opacity: 0; transform: translateY(24px) scale(.97); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .cf-js .cf-rev { opacity: 1; transform: none; transition: none; }
+    body.cf-ambiente::before, body.cf-ambiente::after, main h1::after { animation: none; }
+    main [class*="rounded-2xl"][class*="border"]:hover { transform: none; }
+}
+
+/* El subrayado del título sigue la alineación del texto */
+.text-center h1::after, h1.text-center::after { margin-inline: auto; }
