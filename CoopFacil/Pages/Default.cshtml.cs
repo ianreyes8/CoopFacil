@@ -78,7 +78,7 @@ namespace CoopFacil
 
             if (string.IsNullOrEmpty(conexionStr))
             {
-                MostrarError("No se encontró la cadena de conexión 'CoopFacilDB' en el Web.config.");
+                MostrarError("No pudimos conectar con el sistema en este momento. Inténtalo de nuevo en unos minutos.");
                 return;
             }
 

@@ -174,7 +174,7 @@ namespace CoopFacil.Pages
             {
                 pnlMensajeExito.CssClass = "mb-5 p-4 bg-amber-500/10 border border-amber-500/40 rounded-xl flex items-center gap-3 text-amber-700 dark:text-amber-300 text-xs sm:text-sm font-medium";
                 litMensaje.Text = "<i class='fa-solid fa-circle-info text-lg text-amber-600 dark:text-amber-400 flex-shrink-0'></i>" +
-                                  "<div><strong>¡Gracias por contactarnos!</strong> Tu mensaje ha sido registrado bajo el ticket N° <strong>" + datos.NumeroTransaccion + "</strong>. (Revisa la configuración SMTP en Web.config para la notificación automática por correo).</div>";
+                                  "<div><strong>¡Gracias por contactarnos!</strong> Tu mensaje ha sido registrado bajo el ticket N° <strong>" + datos.NumeroTransaccion + "</strong>. No pudimos enviar el comprobante a tu correo en este momento; guarda este número de ticket y un asesor te contactará en menos de 4 horas hábiles.</div>";
             }
 
             // Limpieza de campos post-envío
