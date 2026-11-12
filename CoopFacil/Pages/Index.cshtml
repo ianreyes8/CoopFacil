@@ -39,7 +39,7 @@
         <div class="relative isolate">
             <div class="resplandor" aria-hidden="true"></div>
             <!-- 1. BARRA DE NAVEGACIÓN SUPERIOR (STICKY) -->
-            <header class="bg-white/90 dark:bg-[#0B1A30]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 w-full px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4 transition-colors duration-300">
+            <header class="home-header bg-white/90 dark:bg-[#0B1A30]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50 w-full px-4 sm:px-8 py-3.5 flex items-center justify-between gap-4 transition-colors duration-300">
                 
                 <div class="flex items-center gap-4">
                     <a href="Index.aspx" class="flex items-center gap-3 group">
@@ -88,45 +88,86 @@
             </header>
 
             <!-- 2. HERO SECTION (VISUAL INSTITUCIONAL) -->
-            <section class="relative max-w-7xl mx-auto px-6 pt-6 pb-8 flex flex-col items-center text-center gap-6 overflow-hidden">
-                <div class="animar inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-extrabold uppercase tracking-wider shadow-sm">
-                    <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400"></i> "Finanzas que construyen comunidad desde 1987"
+            <section class="home-hero max-w-7xl mx-auto px-6 py-12 sm:py-16 lg:py-20">
+                <div class="home-hero__content">
+                    <div class="animar inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-extrabold uppercase tracking-wider shadow-sm">
+                        <i class="fa-solid fa-shield-halved text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
+                        Finanzas que construyen comunidad desde 1987
+                    </div>
+
+                    <h1 class="animar animar-2 text-4xl sm:text-5xl xl:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.08]">
+                        El impulso financiero que tu futuro necesita con
+                        <span class="home-hero__highlight">garantía solidaria.</span>
+                    </h1>
+
+                    <p class="animar animar-3 text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+                        Somos una institución financiera comprometida con el desarrollo social y económico de nuestros socios. Brindamos servicios integrales de ahorro, crédito e inversión con total transparencia y respaldo.
+                    </p>
+
+                    <div class="animar animar-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
+                        <a href="Pages/Servicios.aspx" class="home-button home-button--primary">
+                            <i class="fa-solid fa-rocket" aria-hidden="true"></i> Explorar servicios
+                            <i class="fa-solid fa-arrow-right home-button__arrow" aria-hidden="true"></i>
+                        </a>
+                        <a href="Pages/Contacto.aspx" class="home-button home-button--secondary">
+                            <i class="fa-solid fa-calendar-check text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i>
+                            Agendar una cita
+                        </a>
+                    </div>
+
+                    <div class="home-hero__assurance animar animar-4">
+                        <span class="home-hero__assurance-icon"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+                        Acompañamiento cercano, claro y confiable
+                    </div>
                 </div>
 
-                <h1 class="animar animar-2 text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight max-w-4xl leading-tight">
-                    El Impulso Financiero que Tu Futuro Necesita con <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-200">Garantía Solidaria</span>
-                </h1>
-
-                <p class="animar animar-3 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
-                    Somos una institución financiera comprometida con el desarrollo social y económico de nuestros socios. Brindamos servicios integrales de ahorro, crédito e inversión con total transparencia y respaldo.
-                </p>
-
-                <div class="animar animar-4 flex flex-wrap items-center justify-center gap-4 mt-2">
-                    <a href="Pages/Servicios.aspx" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm px-7 py-3.5 rounded-xl shadow-xl shadow-emerald-600/20 transition flex items-center gap-2">
-                        <i class="fa-solid fa-rocket"></i> Explorar Portafolio de Servicios
-                    </a>
-                    <a href="Pages/Contacto.aspx" class="bg-white dark:bg-[#0F233D] hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs sm:text-sm px-6 py-3.5 rounded-xl transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-calendar-check text-emerald-600 dark:text-emerald-400"></i> Agendar Cita Presencial
-                    </a>
-                </div>
+                <aside class="home-hero__visual animar animar-3" aria-label="Ahorro y servicios financieros para tus metas">
+                    <div class="home-hero__orbit home-hero__orbit--one" aria-hidden="true"></div>
+                    <div class="home-hero__orbit home-hero__orbit--two" aria-hidden="true"></div>
+                    <div class="home-finance-card">
+                        <div class="home-finance-card__top">
+                            <span class="home-finance-card__brand"><i class="fa-solid fa-users-gear" aria-hidden="true"></i> CoopFacil</span>
+                            <span class="home-finance-card__status"><span></span> Contigo</span>
+                        </div>
+                        <div class="home-finance-card__intro">
+                            <span>Tu futuro, en buenas manos</span>
+                            <strong>Crece con el respaldo de tu comunidad.</strong>
+                        </div>
+                        <div class="home-finance-card__chart" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="home-finance-card__footer">
+                            <span><i class="fa-solid fa-piggy-bank" aria-hidden="true"></i> Ahorro con propósito</span>
+                            <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="home-float-card home-float-card--rate">
+                        <span class="home-float-card__icon"><i class="fa-solid fa-percent" aria-hidden="true"></i></span>
+                        <span><strong>10% anual</strong><small>Tasa especial de crédito</small></span>
+                    </div>
+                    <div class="home-float-card home-float-card--community">
+                        <span class="home-float-card__icon"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i></span>
+                        <span><strong>Estamos contigo</strong><small>Personas primero, siempre</small></span>
+                    </div>
+                </aside>
             </section>
 
             <!-- 3. BARRA DE MÉTRICAS -->
             <section class="max-w-7xl mx-auto px-6 py-4">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-lg transition-colors duration-300">
-                    <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
+                <div class="home-stats reveal grid grid-cols-2 md:grid-cols-4 gap-4 bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-lg transition-colors duration-300">
+                    <div class="home-stats__item flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
                         <span class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">+35 Años</span>
                         <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">De Trayectoria</span>
                     </div>
-                    <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
+                    <div class="home-stats__item flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
                         <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">10.00%</span>
                         <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tasa Especial Crédito</span>
                     </div>
-                    <div class="flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
+                    <div class="home-stats__item flex flex-col items-center text-center gap-1 border-r border-slate-200 dark:border-slate-800/80 last:border-none">
                         <span class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400">100%</span>
                         <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Transparencia</span>
                     </div>
-                    <div class="flex flex-col items-center text-center gap-1">
+                    <div class="home-stats__item flex flex-col items-center text-center gap-1">
                         <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">+15,000</span>
                         <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Socios Activos</span>
                     </div>
@@ -134,14 +175,14 @@
             </section>
 
             <!-- 4. MENÚ DE MÓDULOS PÚBLICOS -->
-            <main class="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-6 flex-grow w-full">
-                <div class="flex flex-col gap-1">
+            <main class="home-content max-w-7xl mx-auto px-6 py-8 flex flex-col gap-6 flex-grow w-full">
+                <div class="home-content__heading reveal flex flex-col gap-1">
                     <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Explora la Cooperativa</span>
                     <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Acceso a Módulos Institucionales</h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <a href="Pages/QuienesSomos.aspx" class="tarjeta-modulo group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                <div class="home-module-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <a href="Pages/QuienesSomos.aspx" class="tarjeta-modulo reveal group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
                         <div class="flex items-start justify-between gap-4">
                             <div class="w-14 h-14 rounded-2xl bg-blue-500/10 dark:bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-users"></i>
@@ -157,7 +198,7 @@
                         </div>
                     </a>
 
-                    <a href="Pages/Servicios.aspx" class="tarjeta-modulo group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-500/60 dark:hover:border-emerald-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                    <a href="Pages/Servicios.aspx" class="tarjeta-modulo reveal group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-500/60 dark:hover:border-emerald-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
                         <div class="flex items-start justify-between gap-4">
                             <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-hand-holding-dollar"></i>
@@ -173,7 +214,7 @@
                         </div>
                     </a>
 
-                    <a href="Pages/Transparencia.aspx" class="tarjeta-modulo group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                    <a href="Pages/Transparencia.aspx" class="tarjeta-modulo reveal group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/60 dark:hover:border-blue-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
                         <div class="flex items-start justify-between gap-4">
                             <div class="w-14 h-14 rounded-2xl bg-blue-500/10 dark:bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-scale-balanced"></i>
@@ -189,7 +230,7 @@
                         </div>
                     </a>
 
-                    <a href="Pages/Contacto.aspx" class="tarjeta-modulo group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-500/60 dark:hover:border-emerald-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
+                    <a href="Pages/Contacto.aspx" class="tarjeta-modulo reveal group bg-white dark:bg-[#0F233D] hover:bg-slate-100/80 dark:hover:bg-[#122B4A] border-2 border-slate-200 dark:border-slate-800 hover:border-emerald-500/60 dark:hover:border-emerald-500/50 rounded-2xl p-6 sm:p-8 transition-all duration-300 shadow-sm hover:shadow-xl flex flex-col justify-between gap-6 relative overflow-hidden">
                         <div class="flex items-start justify-between gap-4">
                             <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl group-hover:scale-110 transition-transform">
                                 <i class="fa-solid fa-envelope-open-text"></i>
@@ -207,7 +248,7 @@
                 </div>
 
                 <!-- 5. SIMULADORES RÁPIDOS (ADAPTABLES Y BOTONES INTERACTIVOS) -->
-                <section class="bg-slate-100 dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm dark:shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 mt-4 transition-colors duration-300">
+                <section class="home-simulator reveal bg-slate-100 dark:bg-[#0F233D] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm dark:shadow-xl flex flex-col lg:flex-row items-center justify-between gap-6 mt-4 transition-colors duration-300">
                     <div class="flex flex-col gap-2 text-center lg:text-left max-w-xl">
                         <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">FINANCIAMIENTO CON TASA DEL 10% ANUAL</span>
                         <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">¿Buscas calcular tus cuotas mensuales?</h3>
@@ -271,6 +312,7 @@
         });
     </script>
 <script src="~/Js/menu-movil.js" asp-append-version="true"></script>
+<script src="~/Js/ui.js" asp-append-version="true"></script>
 <partial name="_PostBack" />
 </body>
 </html>
