@@ -1,0 +1,60 @@
+@page "/Error"
+@model CoopFacil.Pages.ErrorModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>CoopFacil - @Model.Codigo</title>
+    <meta name="theme-color" content="#0B1A30" />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estilos.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/paginas.css" asp-append-version="true" />
+    <style>
+        .error-codigo { font-size: clamp(6rem, 22vw, 11rem); line-height: 1; letter-spacing: -.04em; background: linear-gradient(120deg, #10b981, #14b8a6 45%, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: error-flota 5s ease-in-out infinite; }
+        @@keyframes error-flota { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @@media (prefers-reduced-motion: reduce) { .error-codigo { animation: none; } }
+    </style>
+    <script>
+        (function () {
+            try { if (localStorage.getItem('coopfacil-theme') === 'light') document.documentElement.classList.remove('dark'); } catch (e) { }
+        })();
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#0B1A30]/90 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <a href="~/Index.aspx" class="inline-flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xl">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Coop<span class="text-emerald-600 dark:text-emerald-400">Facil</span></span>
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-6 py-12 text-center">
+        <div class="max-w-lg">
+            <p class="error-codigo font-black" aria-hidden="true">@Model.Codigo</p>
+            <h1 class="mt-4 text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">@Model.Titulo</h1>
+            <p class="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed">@Model.Mensaje</p>
+            <div class="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+                <a href="~/Index.aspx" class="home-button home-button--primary"><i class="fa-solid fa-house" aria-hidden="true"></i> Ir al inicio</a>
+                <a href="~/Default.aspx" class="home-button home-button--secondary"><i class="fa-solid fa-right-to-bracket text-emerald-600 dark:text-emerald-400" aria-hidden="true"></i> Iniciar sesión</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs text-center py-6">
+        <p>© @(DateTime.Now.Year) CoopFacil. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

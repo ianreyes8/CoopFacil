@@ -14,7 +14,7 @@ tarjeta virtual y envían dinero a otros socios, todo desde el navegador.
 |---|---|
 | **Sitio público** | Inicio, Quiénes somos, Servicios, Educación financiera, Transparencia y Contacto, con tema claro y oscuro. |
 | **Cuentas de socio** | Registro e inicio de sesión. Cada socio recibe número de socio, número de cuenta de 12 dígitos y $100.00 de bienvenida. Las contraseñas se guardan con hash PBKDF2-SHA256. |
-| **Créditos y ahorro** | Solicitud de crédito personal, vehicular e hipotecario, cuenta de ahorro, ahorro programado y simuladores. Cada solicitud genera un comprobante en PDF que se envía por correo. |
+| **Créditos y ahorro** | Solicitud de crédito personal, vehicular e hipotecario, cuenta de ahorro, ahorro programado y calculadoras de cuotas. Cada solicitud genera un comprobante en PDF que se envía por correo. |
 | **Transferencias** | Tarjeta virtual de débito, transferencias por número de cuenta o correo, depósitos y movimientos (rojo: enviado, verde: recibido o depositado). |
 | **Perfil** | Panel de perfil con los datos del socio y accesos rápidos. |
 
