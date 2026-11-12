@@ -600,3 +600,16 @@ main iframe {
         border: 0;
     }
 }
+
+/* Tablas de cuotas en el celular: cinco columnas que caben sin desplazar de lado */
+@media (max-width: 639px) {
+    .overflow-x-auto > table th,
+    .overflow-x-auto > table td {
+        padding: .5rem .35rem !important;
+        font-size: 10px !important;
+        white-space: nowrap;
+    }
+    .overflow-x-auto > table th { white-space: normal; line-height: 1.15; vertical-align: bottom; }
+    .overflow-x-auto > table th:first-child,
+    .overflow-x-auto > table td:first-child { padding-left: .6rem !important; }
+}

@@ -36,6 +36,11 @@ var app = builder.Build();
 
 app.UseForwardedHeaders();
 
+// Errores con una página del sitio (404, 500...) en lugar de la pantalla en blanco del navegador.
+// En desarrollo se conserva la página de detalle del error para poder depurar.
+if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
+app.UseStatusCodePagesWithReExecute("/Error", "?codigo={0}");
+
 // Cultura fija para que montos y fechas se interpreten siempre igual,
 // sin importar la configuración regional del equipo o del servidor.
 app.UseRequestLocalization(new RequestLocalizationOptions
