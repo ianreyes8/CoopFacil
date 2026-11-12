@@ -175,7 +175,7 @@ namespace CoopFacil.Pages
                 litMensajeTaller.Text = "<div class='flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-400'>" +
                                         "<i class='fa-solid fa-circle-check text-lg'></i> ¡Inscripción Confirmada con Éxito!</div>" +
                                         "<p class='mt-1 text-slate-700 dark:text-slate-200'>Estimado/a <strong>" + datos.NombreCliente + "</strong>, tu cupo para el evento <strong>\"" + ddlTallerSeleccionado.SelectedItem.Text + "\"</strong> ha sido reservado (N° <strong>" + datos.NumeroTransaccion + "</strong>).</p>" +
-                                        "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Revisa la configuración SMTP en tu Web.config para habilitar la entrega de notificaciones por correo.</p>";
+                                        "<p class='text-xs text-slate-600 dark:text-slate-300 mt-1'>Tu inscripción quedó registrada correctamente, pero no pudimos enviar la confirmación a tu correo en este momento. Guarda tu número de transacción para cualquier consulta.</p>";
             }
 
             // Limpieza parcial de campo post-inscripción (únicamente sin sesión iniciada)
