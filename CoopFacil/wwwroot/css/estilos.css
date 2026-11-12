@@ -613,3 +613,25 @@ main iframe {
     .overflow-x-auto > table th:first-child,
     .overflow-x-auto > table td:first-child { padding-left: .6rem !important; }
 }
+
+/* ===== Barra de navegación compacta y uniforme en todas las páginas ===== */
+header.sticky { padding-top: .6rem !important; padding-bottom: .6rem !important; }
+header.sticky > div:first-child a.group > div:first-child { width: 2.25rem; height: 2.25rem; font-size: 1.05rem; }
+header.sticky a.group span.text-xl { font-size: 1.125rem; }
+header.sticky nav a { white-space: nowrap; font-size: .8125rem; }
+header.sticky nav { gap: 1.5rem !important; }
+header.sticky #themeToggleBtn { width: 2.25rem; height: 2.25rem; }
+header.sticky #btnCerrarSesion,
+header.sticky #lnkIniciarSesion { white-space: nowrap; padding: .45rem .85rem !important; font-size: .75rem !important; gap: .4rem; }
+header.sticky #menuPerfil > button { padding: .3rem .65rem; }
+header.sticky #menuPerfil > button span { max-width: 11rem; }
+
+@media (min-width: 640px) {
+    header.sticky { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+}
+/* Pantallas medianas (portátiles pequeños): se quita el subtítulo y se acercan los enlaces */
+@media (min-width: 1024px) and (max-width: 1279px) {
+    header.sticky nav { gap: 1rem !important; }
+    header.sticky a.group .flex-col > span:nth-child(2) { display: none; }
+    header.sticky #menuPerfil > button span { max-width: 10rem; }
+}
