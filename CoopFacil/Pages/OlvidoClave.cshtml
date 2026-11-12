@@ -1,0 +1,88 @@
+@page "/Pages/OlvidoClave.aspx"
+@model CoopFacil.Pages.OlvidoClaveModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>CoopFacil - Recuperar contraseña</title>
+    <meta name="theme-color" content="#0B1A30" />
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/estilos.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/paginas.css" asp-append-version="true" />
+    <script>
+        (function () {
+            try { if (localStorage.getItem('coopfacil-theme') === 'light') document.documentElement.classList.remove('dark'); } catch (e) { }
+        })();
+    </script>
+</head>
+<body class="bg-slate-50 dark:bg-[#0B1A30] text-slate-800 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#0B1A30]/90 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="~/Index.aspx" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xl">
+                    <i class="fa-solid fa-users-gear"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Coop<span class="text-emerald-600 dark:text-emerald-400">Facil</span></span>
+            </a>
+            <a href="~/Default.aspx" class="text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"><i class="fa-solid fa-arrow-left mr-1"></i> Volver a iniciar sesión</a>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center px-4 py-10">
+        <div class="w-full max-w-md bg-white dark:bg-[#0F233D] border border-slate-200 dark:border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-xl">
+            <div class="text-center mb-6">
+                <div class="mx-auto mb-4 w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl"><i class="fa-solid fa-key"></i></div>
+                <h1 class="text-xl font-extrabold text-slate-900 dark:text-white">Recupera tu contraseña</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Te enviaremos un enlace a tu correo para crear una nueva.</p>
+            </div>
+
+            @if (Model.Enviado)
+            {
+                <div id="pnlEnviado" class="flex items-start gap-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-800 dark:text-emerald-300">
+                    <i class="fa-solid fa-circle-check mt-0.5"></i>
+                    <span>Si el correo está registrado en CoopFacil, recibirás un enlace para restablecer tu contraseña. Es válido por 30 minutos y solo se puede usar una vez. Revisa también la carpeta de spam.</span>
+                </div>
+                <a href="~/Default.aspx" class="mt-5 block text-center text-sm font-bold text-emerald-600 dark:text-emerald-400 hover:underline">Volver a iniciar sesión</a>
+            }
+            else
+            {
+                @if (!string.IsNullOrEmpty(Model.Error))
+                {
+                    <div id="pnlError" class="mb-4 flex items-start gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-700 dark:text-red-300">
+                        <i class="fa-solid fa-circle-exclamation mt-0.5"></i><span>@Model.Error</span>
+                    </div>
+                }
+                <form method="post" autocomplete="off" class="space-y-4">
+                    <div>
+                        <label for="txtCorreo" class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Correo electrónico</label>
+                        <input type="email" id="txtCorreo" name="Correo" value="@Model.Correo" required maxlength="100" autocomplete="email" placeholder="ejemplo@@correo.com"
+                               class="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#0B1A30] px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-emerald-500" />
+                    </div>
+                    <input type="submit" name="btnEnviarEnlace" id="btnEnviarEnlace" value="Enviar enlace"
+                           class="w-full cursor-pointer rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm py-3.5 shadow-lg shadow-emerald-600/20 transition" />
+                </form>
+            }
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs text-center py-6">
+        <p>© @(DateTime.Now.Year) CoopFacil. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+        function toggleTheme() { var d = document.documentElement.classList.toggle('dark'); try { localStorage.setItem('coopfacil-theme', d ? 'dark' : 'light'); } catch (e) { } }
+    </script>
+    <script src="~/Js/formularios.js" asp-append-version="true"></script>
+    <script src="~/Js/efectos.js" asp-append-version="true"></script>
+</body>
+</html>

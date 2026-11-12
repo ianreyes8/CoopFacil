@@ -1,7 +1,7 @@
 -- =====================================================================
 -- CoopFacil - Base de datos para MariaDB (XAMPP) / MySQL (Railway)
 --
--- Tablas: Usuarios, Movimientos, Transferencias y Creditos.
+-- Tablas: Usuarios, Movimientos, Transferencias, Creditos, Sesiones, IntentosAcceso y RecuperacionClave.
 -- El script se puede ejecutar más de una vez sin errores y sin borrar datos (CREATE ... IF NOT EXISTS).
 -- Para recrear la estructura desde cero (por ejemplo, tras un cambio de esquema), elimina antes la base.
 --
@@ -87,5 +87,47 @@ CREATE TABLE IF NOT EXISTS Creditos (
     PRIMARY KEY (IdCredito),
     CONSTRAINT CK_Creditos_Valores CHECK (Monto > 0 AND PlazoMeses > 0 AND CuotaMensual >= 0),
     CONSTRAINT FK_Creditos_Usuarios FOREIGN KEY (IdUsuario)
+        REFERENCES Usuarios (IdUsuario) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 5. TABLA SESIONES (sesiones iniciadas; sobreviven a los reinicios del servidor)
+-- Se guarda el hash SHA-256 del identificador de la cookie, nunca el identificador en sí.
+CREATE TABLE IF NOT EXISTS Sesiones (
+    IdSesionHash CHAR(64)  NOT NULL,
+    IdUsuario    INT       NOT NULL,
+    Creada       DATETIME  NOT NULL,
+    Expira       DATETIME  NOT NULL,
+    PRIMARY KEY (IdSesionHash),
+    KEY IX_Sesiones_Usuario (IdUsuario),
+    KEY IX_Sesiones_Expira (Expira),
+    CONSTRAINT FK_Sesiones_Usuarios FOREIGN KEY (IdUsuario)
+        REFERENCES Usuarios (IdUsuario) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 6. TABLA INTENTOSACCESO (intentos fallidos de inicio de sesión y de recuperación; limita los abusos)
+CREATE TABLE IF NOT EXISTS IntentosAcceso (
+    IdIntento BIGINT       NOT NULL AUTO_INCREMENT,
+    Tipo      VARCHAR(12)  NOT NULL,            -- 'login' o 'recuperar'
+    Correo    VARCHAR(100) NOT NULL,
+    Ip        VARCHAR(45)  NOT NULL,
+    Fecha     DATETIME     NOT NULL,
+    PRIMARY KEY (IdIntento),
+    KEY IX_Intentos_Correo (Tipo, Correo, Fecha),
+    KEY IX_Intentos_Ip (Tipo, Ip, Fecha)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 7. TABLA RECUPERACIONCLAVE (enlaces de un solo uso para restablecer la contraseña)
+-- Se guarda el hash SHA-256 del token; el token real solo viaja en el correo.
+CREATE TABLE IF NOT EXISTS RecuperacionClave (
+    IdRecuperacion INT      NOT NULL AUTO_INCREMENT,
+    IdUsuario      INT      NOT NULL,
+    TokenHash      CHAR(64) NOT NULL,
+    Creada         DATETIME NOT NULL,
+    Expira         DATETIME NOT NULL,
+    Usado          TINYINT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (IdRecuperacion),
+    UNIQUE KEY UQ_Recuperacion_Token (TokenHash),
+    KEY IX_Recuperacion_Usuario (IdUsuario),
+    CONSTRAINT FK_Recuperacion_Usuarios FOREIGN KEY (IdUsuario)
         REFERENCES Usuarios (IdUsuario) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
