@@ -48,7 +48,7 @@ CoopFacil/                          Raíz del repositorio
 └── CoopFacil/                      Proyecto web
     ├── Program.cs                  Arranque: rutas, puerto, cultura, páginas de error, configuración
     ├── appsettings.json            Configuración base (cadena de conexión local)
-    ├── appsettings.Local.example.json   Plantilla para tus claves personales
+    ├── appsettings.Local.json      (lo creas tú; no se sube a Git) claves y ajustes de tu equipo
     ├── Pages/                      Una carpeta lógica por página:
     │   ├── X.cshtml                  HTML de la página (Razor)
     │   ├── X.cshtml.cs               Lógica de la página
@@ -105,10 +105,41 @@ Cada página es un trío de archivos con el mismo nombre. Por ejemplo, `Transfer
    elige `sql/coopfacil_mariadb.sql` y pulsa **Importar**. El script crea la base `coopfacil` y sus siete tablas.
    Se puede volver a importar sin borrar nada: solo agrega lo que falte.
 
-4. **Opcional: correo.** Para que se envíen los comprobantes y los enlaces de recuperación, copia
-   `CoopFacil/appsettings.Local.example.json` como `CoopFacil/appsettings.Local.json` y completa tus datos
-   (ver [Configuración](#configuración)). Ese archivo no se sube a Git. Sin él, el sitio funciona igual pero no
-   envía correos.
+4. **Crea tu archivo de ajustes personales** (`appsettings.Local.json`). Es opcional, pero lo necesitas si
+   quieres que se envíen correos o si tu MySQL **no usa el puerto 3306**. Crea un archivo nuevo llamado
+   `appsettings.Local.json` **dentro de la carpeta `CoopFacil/`** (junto a `appsettings.json`) con este contenido:
+
+   ```json
+   {
+     "AppSettings": {
+       "ResendApiKey": "re_tu_clave_de_resend",
+       "ResendRemitente": "CoopFácil <onboarding@resend.dev>"
+     }
+   }
+   ```
+
+   Ese archivo no se sube a Git, así que tus claves quedan solo en tu equipo. Sin él el sitio funciona igual,
+   pero no envía correos. La clave se crea en [resend.com](https://resend.com) → **API keys**; con
+   `onboarding@resend.dev` solo se puede enviar al correo de tu propia cuenta de Resend.
+
+   > **¿Tu XAMPP usa otro puerto para MySQL?** En el panel de XAMPP, junto al módulo MySQL, aparece el puerto
+   > (por defecto `3306`; hay equipos con `3307` o `3308`). Si el tuyo es otro, el sitio no se conectará y verás
+   > errores `MySqlException`. Agrega al mismo `appsettings.Local.json` la conexión con **tu** puerto:
+   >
+   > ```json
+   > {
+   >   "ConnectionStrings": {
+   >     "CoopFacilDB": "Server=127.0.0.1;Port=3308;Database=coopfacil;User ID=root;Password=;"
+   >   },
+   >   "AppSettings": {
+   >     "ResendApiKey": "re_tu_clave_de_resend",
+   >     "ResendRemitente": "CoopFácil <onboarding@resend.dev>"
+   >   }
+   > }
+   > ```
+   >
+   > Cambia `3308` por el número que muestra tu XAMPP. Si además definiste una contraseña para `root`, escríbela
+   > en `Password=`. Guarda el archivo y vuelve a ejecutar el sitio.
 
 5. **Ejecuta el sitio**
 
@@ -145,7 +176,7 @@ Si la actualización cambió `sql/coopfacil_mariadb.sql`, vuelve a importarlo en
 
 | Dato | Local | Railway |
 |---|---|---|
-| Base de datos | `ConnectionStrings:CoopFacilDB` en `appsettings.json` (XAMPP: usuario `root`, sin clave) | Variable `MYSQL_URL` |
+| Base de datos | `ConnectionStrings:CoopFacilDB` en `appsettings.json` (XAMPP: puerto `3306`, usuario `root`, sin clave). Si tu puerto es otro, sobrescríbela en `appsettings.Local.json` | Variable `MYSQL_URL` |
 | Correo con Resend | `ResendApiKey` y `ResendRemitente` en `appsettings.Local.json` | `AppSettings__ResendApiKey`, `AppSettings__ResendRemitente` |
 | Correo con SMTP (respaldo en local) | `SmtpCorreoEmisor`, `SmtpPassword`, `SmtpHost`, `SmtpPort` | `AppSettings__Smtp...` |
 | Dirección pública del sitio | opcional | `AppSettings__UrlPublica`, por ejemplo `https://tudominio.com` |
@@ -232,7 +263,7 @@ Notas sobre el correo:
 |---|---|
 | `dotnet --version` no muestra 10.x | Instala el SDK de .NET 10 y abre una terminal nueva. |
 | Windows bloquea `CoopFacil.exe` | Ejecuta `dotnet run -p:UseAppHost=false`. |
-| `Unable to connect to any of the specified MySQL hosts` | MySQL no está iniciado en XAMPP, o el puerto/usuario de `appsettings.json` no coincide. |
+| `Unable to connect to any of the specified MySQL hosts` o `MySqlException` | MySQL no está iniciado en XAMPP, o su **puerto** no es el 3306. Mira el puerto en el panel de XAMPP y ajústalo en `appsettings.Local.json` (paso 4 de la instalación). |
 | phpMyAdmin dice que la tabla ya existe | Usa el `sql/coopfacil_mariadb.sql` más reciente (`git pull`); ya no falla al importarlo de nuevo. |
 | El sitio se ve sin estilos o con estilos viejos | Actualiza con `Ctrl + F5`. Si cambiaste clases de Tailwind, corre `npm run css`. |
 | No llegan los correos | Revisa `appsettings.Local.json` y la carpeta de spam. En local, el enlace de recuperación sale en la consola. |
