@@ -29,7 +29,7 @@ tarjeta virtual de débito y envían dinero a otros socios, todo desde el navega
 | Área | Qué hace |
 |---|---|
 | **Sitio público** | Inicio, Quiénes somos, Servicios, Educación financiera, Transparencia y Contacto, con tema claro y oscuro, animaciones suaves y diseño adaptable a celular, tableta y escritorio. |
-| **Cuentas de socio** | Registro e inicio de sesión. Cada socio recibe número de socio, número de cuenta de 12 dígitos y $100.00 de bienvenida. |
+| **Cuentas de socio** | Registro con nombre, correo, DUI (00000000-0) y celular (0000-0000), y inicio de sesión. Cada socio recibe número de socio, número de cuenta de 12 dígitos y $100.00 de bienvenida. |
 | **Recuperar contraseña** | Enlace de un solo uso enviado por correo, válido por 30 minutos. |
 | **Créditos y ahorro** | Solicitud de crédito personal, vehicular e hipotecario, cuenta de ahorro, ahorro programado y calculadoras de cuotas. Cada solicitud genera un comprobante en PDF que se envía por correo. |
 | **Transferencias** | Tarjeta virtual de débito, transferencias por número de cuenta o correo, depósitos y movimientos (rojo: enviado, verde: recibido o depositado). |

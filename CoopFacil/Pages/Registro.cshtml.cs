@@ -4,6 +4,7 @@ using System.Configuration;
 using MySqlConnector;
 using System.Web.UI;
 using CoopFacil.Helpers;
+using System.Text.RegularExpressions;
 
 namespace CoopFacil.Pages
 {
@@ -32,9 +33,11 @@ namespace CoopFacil.Pages
             string password = txtPassword.Text;
             string passwordConfirm = txtPasswordConfirm.Text;
             string tipoAcceso = ddlTipoAcceso.SelectedValue;
+            string dui = SoloDigitos(txtDUI.Text);
+            string telefono = SoloDigitos(txtTelefono.Text);
 
             // 1. VALIDACIONES INICIALES DE REGISTRO
-            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || dui.Length == 0 || telefono.Length == 0)
             {
                 MostrarError("Por favor completa todos los campos requeridos.");
                 return;
@@ -45,6 +48,20 @@ namespace CoopFacil.Pages
                 MostrarError("Ingresa un correo electrónico válido que contenga '@' y un dominio.");
                 return;
             }
+
+            if (dui.Length != 9)
+            {
+                MostrarError("El DUI debe tener 9 dígitos (formato 00000000-0).");
+                return;
+            }
+
+            if (telefono.Length != 8 || (telefono[0] != '6' && telefono[0] != '7'))
+            {
+                MostrarError("Ingresa un celular válido de 8 dígitos que empiece con 6 o 7 (formato 7000-0000).");
+                return;
+            }
+            dui = dui.Substring(0, 8) + "-" + dui.Substring(8);
+            telefono = telefono.Substring(0, 4) + "-" + telefono.Substring(4);
 
             if (password.Length < 8)
             {
@@ -88,14 +105,24 @@ namespace CoopFacil.Pages
                         }
                     }
 
+                    using (MySqlCommand checkDui = new MySqlCommand("SELECT COUNT(*) FROM Usuarios WHERE DUI = @Dui", con))
+                    {
+                        checkDui.Parameters.AddWithValue("@Dui", dui);
+                        if (Convert.ToInt32(checkDui.ExecuteScalar()) > 0)
+                        {
+                            MostrarError("Este DUI ya se encuentra registrado en CoopFacil.");
+                            return;
+                        }
+                    }
+
                     using (MySqlTransaction tx = con.BeginTransaction())
                     {
                         numeroCuenta = BancoDatos.GenerarNumeroCuentaUnico(con, tx);
                         numeroSocio = BancoDatos.GenerarNumeroSocioUnico(con, tx);
 
                         string insertUserQuery = @"
-                            INSERT INTO Usuarios (NombreCompleto, Email, Password, TipoAcceso, NumeroSocio, Saldo, CDT, Prestamo, NumeroCuenta, FechaRegistro)
-                            VALUES (@Nombre, @Email, @Password, @TipoAcceso, @NumeroSocio, @Saldo, 0.00, 0.00, @NumeroCuenta, @FechaRegistro)";
+                            INSERT INTO Usuarios (NombreCompleto, Email, Password, TipoAcceso, NumeroSocio, Saldo, CDT, Prestamo, NumeroCuenta, DUI, Telefono, FechaRegistro)
+                            VALUES (@Nombre, @Email, @Password, @TipoAcceso, @NumeroSocio, @Saldo, 0.00, 0.00, @NumeroCuenta, @Dui, @Telefono, @FechaRegistro)";
 
                         using (MySqlCommand insertCmd = new MySqlCommand(insertUserQuery, con, tx))
                         {
@@ -106,6 +133,8 @@ namespace CoopFacil.Pages
                             insertCmd.Parameters.AddWithValue("@NumeroSocio", numeroSocio);
                             insertCmd.Parameters.AddWithValue("@Saldo", BancoDatos.SaldoBienvenida);
                             insertCmd.Parameters.AddWithValue("@NumeroCuenta", numeroCuenta);
+                            insertCmd.Parameters.AddWithValue("@Dui", dui);
+                            insertCmd.Parameters.AddWithValue("@Telefono", telefono);
                             insertCmd.Parameters.AddWithValue("@FechaRegistro", DateTime.Now);
 
                             insertCmd.ExecuteNonQuery();
@@ -126,16 +155,12 @@ namespace CoopFacil.Pages
                     }
                 }
 
-                // 3. ESTABLECER VARIABLES DE SESIÓN ACTIVA ESTANDARIZADAS
-                Session["IdUsuario"] = idUsuarioCreado;
-                Session["Saldo"] = BancoDatos.SaldoBienvenida;
-                Session["NumeroCuentaAhorro"] = numeroCuenta;
-                Session["NombreCompleto"] = nombre;
-                Session["UsuarioNombre"] = nombre;
-                Session["NombreUsuario"] = nombre;
-                Session["UsuarioCorreo"] = email;
-                Session["CorreoUsuario"] = email;
-                Session["NumeroSocio"] = numeroSocio;
+                // 3. INICIAR SESIÓN: identificador nuevo, datos del socio (incluye DUI y celular) y registro en la base de datos
+                if (!SesionUsuario.Iniciar(Session, idUsuarioCreado))
+                {
+                    Response.Redirect("../Default.aspx");
+                    return;
+                }
 
                 // 4. GENERACIÓN DE COMPROBANTE PDF Y ENVÍO DE BIENVENIDA POR CORREO
                 try
@@ -144,8 +169,8 @@ namespace CoopFacil.Pages
                     {
                         NumeroTransaccion = "REG-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                         NombreCliente = nombre,
-                        DUI = "N/A - Registro Nuevo Socio",
-                        Telefono = "N/A",
+                        DUI = dui,
+                        Telefono = telefono,
                         CorreoCliente = email,
                         NombreServicio = "Registro de Nuevo Socio Cooperativo",
                         Monto = 0.00m,
@@ -164,6 +189,10 @@ namespace CoopFacil.Pages
                 // 5. REDIRECCIÓN AL INICIO
                 Response.Redirect("../Index.aspx");
             }
+            catch (MySqlException ex) when (ex.Number == 1062 && ex.Message.Contains("UQ_Usuarios_DUI"))
+            {
+                MostrarError("Este DUI ya se encuentra registrado en CoopFacil.");
+            }
             catch (MySqlException ex) when (ex.Number == 1062)
             {
                 // Dos registros con el mismo correo al mismo tiempo: gana el primero.
@@ -174,6 +203,11 @@ namespace CoopFacil.Pages
                 Console.Error.WriteLine("[Registro] " + ex);
                 MostrarError("No pudimos completar tu registro en este momento. Inténtalo de nuevo en unos minutos.");
             }
+        }
+
+        private static string SoloDigitos(string texto)
+        {
+            return Regex.Replace(texto ?? "", @"\D", "");
         }
 
         private void MostrarError(string mensaje)
