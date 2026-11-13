@@ -147,7 +147,7 @@ namespace CoopFacil.Pages
                 using (MySqlConnection con = new MySqlConnection(conexionStr))
                 {
                     string query = @"UPDATE Usuarios 
-                                     SET TieneCuentaAhorro = 1, NumeroCuenta = @NumeroCuenta, DUI = CASE WHEN NULLIF(@DUI, '') IS NOT NULL THEN @DUI ELSE DUI END 
+                                     SET TieneCuentaAhorro = 1, NumeroCuenta = @NumeroCuenta, DUI = CASE WHEN DUI IS NULL AND NULLIF(@DUI, '') IS NOT NULL THEN @DUI ELSE DUI END 
                                      WHERE (Email = @Email AND NULLIF(@Email, '') IS NOT NULL) 
                                         OR (DUI = @DUI AND NULLIF(@DUI, '') IS NOT NULL)";
 

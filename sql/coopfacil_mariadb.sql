@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     UNIQUE KEY UQ_Usuarios_Email (Email),
     UNIQUE KEY UQ_Usuarios_NumeroSocio (NumeroSocio),
     UNIQUE KEY UQ_Usuarios_NumeroCuenta (NumeroCuenta),
+    UNIQUE KEY UQ_Usuarios_DUI (DUI),                 -- un DUI, una cuenta (los NULL no cuentan)
     CONSTRAINT CK_Usuarios_Saldo CHECK (Saldo >= 0)   -- el saldo nunca puede quedar negativo
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -131,3 +132,14 @@ CREATE TABLE IF NOT EXISTS RecuperacionClave (
     CONSTRAINT FK_Recuperacion_Usuarios FOREIGN KEY (IdUsuario)
         REFERENCES Usuarios (IdUsuario) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 8. ACTUALIZACION PARA BASES YA CREADAS: un DUI solo puede pertenecer a un socio.
+-- (En una base nueva el indice ya viene en CREATE TABLE; aqui se agrega a las que ya existian.)
+SET @existe_dui := (SELECT COUNT(*) FROM information_schema.statistics
+                    WHERE table_schema = DATABASE() AND table_name = 'Usuarios' AND index_name = 'UQ_Usuarios_DUI');
+-- Si ya hubiera dos socios con el mismo DUI, no se crea el indice (la aplicacion igual impide nuevos duplicados).
+SET @duplicados_dui := (SELECT COUNT(*) FROM (SELECT DUI FROM Usuarios WHERE DUI IS NOT NULL GROUP BY DUI HAVING COUNT(*) > 1) d);
+SET @sql_dui := IF(@existe_dui = 0 AND @duplicados_dui = 0, 'ALTER TABLE Usuarios ADD UNIQUE KEY UQ_Usuarios_DUI (DUI)', 'SELECT 1');
+PREPARE stmt_dui FROM @sql_dui;
+EXECUTE stmt_dui;
+DEALLOCATE PREPARE stmt_dui;
