@@ -9,7 +9,7 @@ namespace CoopFacil.Helpers
     /// <summary>Acceso a la base de datos para cuentas, movimientos y créditos.</summary>
     public static class BancoDatos
     {
-        public const decimal SaldoBienvenida = 100.00m;
+        public const decimal SaldoBienvenida = 10.00m;
 
         public static string Conexion => ConfigurationManager.ConnectionStrings["CoopFacilDB"]?.ConnectionString;
 
