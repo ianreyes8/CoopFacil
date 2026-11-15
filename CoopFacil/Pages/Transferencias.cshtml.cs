@@ -25,7 +25,29 @@ namespace CoopFacil.Pages
                 return;
             }
 
-            if (!IsPostBack) CargarVista();
+            if (!IsPostBack)
+            {
+                // Mensaje que dejó la operación anterior (Post/Redirect/Get): se muestra una sola vez.
+                if (Session["FlashTexto"] != null)
+                {
+                    MensajeTexto = Convert.ToString(Session["FlashTexto"]);
+                    MensajeExito = Session["FlashExito"] is bool b && b;
+                    SeccionMensaje = Convert.ToString(Session["FlashSeccion"]);
+                    Session["FlashTexto"] = null;
+                    Session["FlashExito"] = null;
+                    Session["FlashSeccion"] = null;
+                }
+                CargarVista();
+            }
+        }
+
+        // Evita que al refrescar el navegador se reenvíe el formulario y se repita la operación.
+        private void RedirigirConMensaje()
+        {
+            Session["FlashTexto"] = MensajeTexto;
+            Session["FlashExito"] = MensajeExito;
+            Session["FlashSeccion"] = SeccionMensaje;
+            Response.Redirect("Transferencias.aspx");
         }
 
         private void CargarVista()
@@ -89,7 +111,7 @@ namespace CoopFacil.Pages
                     MensajeTexto = "No se pudo completar la transferencia. No se movió dinero; intenta de nuevo.";
                 }
             }
-            CargarVista();
+            RedirigirConMensaje();
         }
 
         protected void btnDepositar_Click(object sender, EventArgs e)
@@ -113,7 +135,7 @@ namespace CoopFacil.Pages
                     MensajeTexto = "No se pudo completar el depósito. Intenta de nuevo.";
                 }
             }
-            CargarVista();
+            RedirigirConMensaje();
         }
 
         protected void btnCerrarSesion_Click(object sender, EventArgs e)
